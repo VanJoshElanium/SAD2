@@ -18,26 +18,24 @@
      
 3.) Download Composer (https://getcomposer.org/Composer-Setup.exe)
       - Change the location of the PHP to C:\wamp64\bin\php\php7.1.9
-  
-4.) Follow the instructions on the pictures I sent on Messenger
 
-5.) Clone or download the SAD2 project to your preferred destination
+4.) Clone or download the SAD2 project to your preferred destination
 
-6.) Open command prompt and change the directory to the root of the project
+5.) Open command prompt and change the directory to the root of the project
     (ex. if your project is in C:\wamp64\www -> cd C:\wamp64\www\project-name)
     
-7.) type 'composer install'
+6.) type 'composer install'
 
-8.) Copy the contents of .env.example (found in the root of the project) and save
+7.) Copy the contents of .env.example (found in the root of the project) and save
     it to a new file with the name '.env' and make sure its file type is 'all file types'
      
-9.) In the command prompt, type 'php artisan migrate --seed'
+8.) In the command prompt, type 'php artisan migrate --seed'
 
-10.) Lastly, type 'php artisan serve'
+9.) Lastly, type 'php artisan serve'
 
-11.) Check the portnumber of the php artisan serve (usually it 8000) then open your browser
+10.) Check the portnumber of the php artisan serve (usually it 8000) then open your browser
      and type in 'localhost:8000'
      
-12.) Watch the videos in this youtube playlist to learn more about Laravel (https://www.youtube.com/watch?v=a8ZpAf_tNh0&list=PL3ZhWMazGi9IYymniZgqwnYuPFDvaEHJb&index=1)
+11.) Watch the videos in this youtube playlist to learn more about Laravel (https://www.youtube.com/watch?v=a8ZpAf_tNh0&list=PL3ZhWMazGi9IYymniZgqwnYuPFDvaEHJb&index=1)
 
-13.) Happy Laravel Coding! :)
+12.) Happy Laravel Coding! :)
