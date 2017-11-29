@@ -1,6 +1,11 @@
 <html>
     @extends('layouts.app-login')
     @section('content')
+    <head>
+        <style>
+        <link rel="icon" href="public/images/Prince and Princess logo/1.png">
+        </style>
+    </head>
     <div class="container">
         <div class="flexBox vertical-center" style="display: flex; flex-flow: row wrap; justify-content: center;">
             <div class="panel panel-default">
@@ -8,7 +13,7 @@
                     
                     <form class="form-horizontal" method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}
-
+                        
                         <img src="/images/PP.png" class="pp-logo"> <!-- P&P LOGO -->
 
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}"> 
