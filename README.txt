@@ -24,12 +24,12 @@
 5.) Open command prompt and change the directory to the root of the project
     (ex. if your project is in C:\wamp64\www -> cd C:\wamp64\www\project-name)
     
+    ///////////////////////// REPEAT STEPS 6 - 10 when you've done the above and are cloning a project ///////////////////////////////
 6.) type 'composer install'
 
-7.) Copy the contents of .env.example (found in the root of the project) and save
-    it to a new file with the name '.env' and make sure its file type is 'all file types'
-     
-8.) In the command prompt, type 'php artisan migrate --seed'
+7.) In the command prompt, type 'php artisan migrate --seed'
+
+8.) type 'php artisan key:generate'
 
 9.) Lastly, type 'php artisan serve'
 
