@@ -9,7 +9,7 @@
                     </button>
                     <a class="navbar-brand" href="#">Dashboard</a>
                 </div>
-                <div class="collapse navbar-collapse">
+                <div class="collapse navbar-collapse"><!--
                     <ul class="nav navbar-nav navbar-left">
                         <li>
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -39,11 +39,11 @@
                                 <i class="fa fa-search"></i>
                                 <p class="hidden-lg hidden-md">Search</p>
                             </a>
-                        </li>
+                        </li>-->
                     </ul>
 
                     <ul class="nav navbar-nav navbar-right">
-                        <li>
+                        <!--<li>
                            <a href="">
                                <p>Account</p>
                             </a>
@@ -65,7 +65,7 @@
                                 <li class="divider"></li>
                                 <li><a href="#">Separated link</a></li>
                             </ul>
-                        </li>
+                        </li>-->
                         <li>
                             <a href="{{ route('logout') }}"
                                 onclick="event.preventDefault();
