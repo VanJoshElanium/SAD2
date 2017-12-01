@@ -39,7 +39,7 @@
 
                         <div class="col-lg-9 col-lg-offset-1">
                             <div class="form-group text-center">
-                                <button type="submit" class="btn btn-primary btn-block"> 
+                                <button type="submit" class="btn btn-primary btn-block login-btn"> 
                                     Login 
                                 </button>
                             </div>
