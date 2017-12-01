@@ -150,7 +150,7 @@
                                             <div class="{{ $errors->has('fname') ? ' has-error' : '' }}">         
                                                 <div class="col-md-9">    
                                                     <label>First Name</label>
-                                                    <input type="text" id="fname" class="form-control" value="{{ old('fname') }}"> @if ($errors->has('fname'))
+                                                    <input type="text" id="fname" class="form-control"  name="fname" value="{{ old('fname') }}" required> @if ($errors->has('fname'))
                                                         <span class="help-block">
                                                             <strong>{{ $errors->first('fname') }}</strong>
                                                         </span>
@@ -161,7 +161,7 @@
                                             <div class="{{ $errors->has('mname') ? ' has-error' : '' }}"> 
                                                 <div class="col-md-3"> 
                                                     <label>M.I.</label>
-                                                    <input type="text" id="mname" class="form-control" value="{{ old('mname') }}">
+                                                    <input type="text" id="mname" class="form-control" required name="mname" value="{{ old('mname') }}">
                                                     @if ($errors->has('mname'))
                                                         <span class="help-block">
                                                             <strong>{{ $errors->first('mname') }}</strong>
@@ -175,7 +175,7 @@
                                             <div class="{{ $errors->has('lname') ? ' has-error' : '' }}">
                                                 <div class="col-md-12">              
                                                     <label>Last Name</label>
-                                                        <input type="text" id="lname" class="form-control" value="{{ old('lname') }}"> @if ($errors->has('fname'))
+                                                        <input type="text" id="lname" class="form-control" required name="lname" value="{{ old('lname') }}"> @if ($errors->has('lname'))
                                                         <span class="help-block">
                                                             <strong>{{ $errors->first('fname') }}</strong>
                                                         </span>
@@ -190,10 +190,10 @@
                                                 <div class="{{ $errors->has('gender') ? ' has-error' : '' }}">
                                                     <div class="col-md-5">       
                                                       <label for="sel1">Gender</label>
-                                                      <select class="form-control" id="gender" value="{{ old('gender') }}">
+                                                      <select class="form-control" name="gender" required id="gender">
                                                         <option data-hidden="true" value=""></option>
-                                                        <option value="0">Male</option>
-                                                        <option value="1">Female</option>
+                                                        <option value="0" @if (old('gender') == '0') selected="selected" @endif>Male</option>
+                                                        <option value="1" @if (old('gender') == '1') selected="selected" @endif>Female</option>
                                                       </select>         
                                                         @if ($errors->has('gender'))
                                                             <span class="help-block">
@@ -205,7 +205,7 @@
                                                 <div class="{{ $errors->has('bday') ? ' has-error' : '' }}">
                                                     <div class="col-md-7">          
                                                         <label>Birthday</label>
-                                                        <input name="date"  id="bday"class="form-control" type="text" onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'" value="{{ old('bday') }}">
+                                                        <input name="bday"  id="bday"class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'" value="{{ old('bday') }}">
                                                     
                                                         @if ($errors->has('bday'))
                                                             <span class="help-block">
@@ -223,7 +223,7 @@
                                             <div class="{{ $errors->has('cnum') ? ' has-error' : '' }}">
                                                 <div class="col-md-12">  
                                                     <label>Contact Number</label>
-                                                    <input type="text" id="cnum" class="form-control" value="{{ old('cnum') }}">
+                                                    <input type="number" required name="cnum" id="cnum" class="form-control" value="{{ old('cnum') }}">
                                                 
                                                     @if ($errors->has('cnum'))
                                                         <span class="help-block">
@@ -241,7 +241,7 @@
                                                 <div class="{{ $errors->has('username') ? ' has-error' : '' }}">
                                                     <div class="col-md-12">    
                                                         <label>Username</label>
-                                                        <input type="text" class="form-control" id="username" value="{{ old('username') }}">     
+                                                        <input type="text" required name="username" class="form-control" id="username" value="{{ old('username') }}">     
                                                         @if ($errors->has('username'))
                                                             <span class="help-block">
                                                                 <strong>{{ $errors->first('username') }}</strong>
@@ -254,7 +254,7 @@
                                                 <div class="{{ $errors->has('password') ? ' has-error' : '' }}">
                                                     <div class="col-md-12">    
                                                         <label>Password</label>
-                                                        <input type="password" class="form-control" id="password" value="{{ old('password') }}">
+                                                        <input type="password" class="form-control" name="password" id="password" required value="{{ old('password') }}">
                                                         @if ($errors->has('password'))
                                                             <span class="help-block">
                                                                 <strong>{{ $errors->first('password') }}</strong>
@@ -268,13 +268,13 @@
                                                 <div class="{{ $errors->has('user_type') ? ' has-error' : '' }}">
                                                     <div class="col-md-5">
                                                         <label>User Type</label>
-                                                        <select class="form-control" id="user_type" value="{{ old('user_type') }}">
+                                                        <select class="form-control" id="user_type" required name="user_type" value="{{ old('user_type') }}">
                                                             <option data-hidden="true" value=""></option>
-                                                            <option value="0">Administrator</option>
-                                                            <option value="1">Owner</option>
-                                                            <option value="2">Collector</option>
-                                                            <option value="3">Permanent Staff</option>
-                                                            <option value="4">Temporary Staff</option>
+                                                            <option value="0" @if (old('user_type') == '0') selected="selected" @endif>Administrator</option>
+                                                            <option value="1" @if (old('user_type') == '1') selected="selected" @endif>Owner</option>
+                                                            <option value="2" @if (old('user_type') == '2') selected="selected" @endif>Collector</option>
+                                                            <option value="3" @if (old('user_type') == '3') selected="selected" @endif>Permanent Staff</option>
+                                                            <option value="4" @if (old('user_type') == '4') selected="selected" @endif>Temporary Staff</option>
                                                         </select>
                                                         @if ($errors->has('user_type'))
                                                             <span class="help-block">
@@ -294,6 +294,7 @@
                                             </div>
                                         </div>      
                                     </form>
+
                                 </div>
                             </div>
                         </div>
@@ -317,7 +318,7 @@
                                         <tbody>
                                             <tr>
                                                 <td>1</td>
-                                                <td>Dakota Rice</td>
+                                                <td><a href="/html/user.html>">Dakota Rice</a></td>
                                                 <td>$36,738</td>
                                                 <td>Niger</td>
                                                 <td>Oud-Turnhout</td>
