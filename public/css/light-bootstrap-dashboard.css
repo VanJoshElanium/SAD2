@@ -69,7 +69,7 @@ td,
 button.close {
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
-    font-family: "Roboto","Helvetica Neue",Arial,sans-serif;
+    font-family: "Century Gothic",sans-serif;
     font-weight: 400;
 }
 
@@ -1841,7 +1841,7 @@ fieldset[disabled] .btn-neutral.active {
 }
 
 .navbar-default {
-    background-color: rgba(255, 255, 255, 0.96);
+    background-color: rgb(252, 243, 207);
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
