@@ -15,7 +15,7 @@
                             <!-- USER ICON-->
                             <img src= "/images/user.png" class="email-tb"> 
 
-                            <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus placeholder="Username">
+                            <input id="email" type="text" class="form-control" name="email" value="{{ old('email') }}" required autofocus placeholder="Username">
 
                             @if ($errors->has('email'))
                                 <span class="help-block">
