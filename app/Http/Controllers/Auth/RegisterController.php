@@ -27,7 +27,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/usrmgmt';
 
     /**
      * Create a new controller instance.
@@ -48,9 +48,15 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            'fname' => 'required|string|max:50|alpha',
+            'mname' => 'required|string|max:50|alpha',
+            'lname' => 'required|string|max:50|alpha',
+            'username' => 'required|string|max:50|alpha|unique:users',
+            'password' => 'required|string|digits_between:4,255|confirmed',
+            'gender' => 'required|digits:1',
+            'bday' => 'required|date',
+            'cnum' => 'required|digits:11',
+            'user_type' => 'required|digits:1|',
         ]);
     }
 
@@ -63,9 +69,16 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => $data['password']
+            'fname' => $data['fname'],
+            'mname' => $data['mname'],
+            'lname' => $data['lname'],
+            'username' => $data['username'],
+            'password' => $data['password'],
+            'gender' => $data['gender'],
+            'bday' => $data['bday'],
+            'cnum' => $data['cnum'],
+            'user_type' => $data['user_type'],
+            'user_status' => 1
         ]);
     }
 }

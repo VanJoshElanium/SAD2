@@ -19,3 +19,6 @@ Auth::routes();
 
 Route::get('/home', 'DashboardController@index')->name('dashboard');
 
+Route::get('/usrmgmt', 'DashboardController@toUsrmgmt')->name('usrmgmt');
+
+
