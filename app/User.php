@@ -27,20 +27,22 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function setNameAttribute($value){
-        $this->attributes['name'] = ucfirst($value);
+    public function setFnameAttribute($value){
+        $this->attributes['fname'] = ucfirst($value);
     }
+
+    public function setMnameAttribute($value){
+        $this->attributes['mname'] = ucfirst($value);
+    }
+
+
+    public function setLnameAttribute($value){
+        $this->attributes['lname'] = ucfirst($value);
+    }
+
 
     public function setPasswordAttribute($value){
         $this->attributes['password'] = bcrypt($value);
     }
 
-    public function getNameAttribute($value){
-        return 'User: '.$value;
-        return strtoupper($value);
-    }
-
-    public function getEmailAttribute($value){
-        return strtok($value, '@');
-    }
 }
