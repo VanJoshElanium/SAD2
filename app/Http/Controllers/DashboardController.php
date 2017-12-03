@@ -26,8 +26,10 @@ class DashboardController extends Controller
         return view('dashboard');
     }
 
+    /*
     public function toUsrmgmt()
     {
-        return view('usrmgmt');
+        return view('usrmgmt.usrmgmt');
     }
+    */
 }
