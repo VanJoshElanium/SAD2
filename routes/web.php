@@ -16,9 +16,11 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+Route::resource('create_users', 'UserController');
 
 Route::get('/home', 'DashboardController@index')->name('dashboard');
 
-Route::get('/usrmgmt', 'DashboardController@toUsrmgmt')->name('usrmgmt');
+Route::get('/usrmgmt', 'UserController@index')->name('usrmgmt');
 
+Route::get('getUser/{id}', 'UserController@getUser');
 
