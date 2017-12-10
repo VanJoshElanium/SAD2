@@ -46,7 +46,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/public/html/user.html"
+                        <a href="/public/html/user.html">
                             <i class="pe-7s-user"></i>
                             <p>User Profile</p>
                         </a>
