@@ -36,7 +36,7 @@
     <div class="wrapper">
 
         <!-- SIDEBAR -->
-        <div class="sidebar" data-color="purple" data-image="/images/sidebar-5.jpg">
+        <div class="sidebar" data-color="none" data-image="/images/lol.png">
             <div class="sidebar-wrapper">
                 <div class="logo">
                     <a href="{{ route('dashboard') }}" class="simple-text">
@@ -47,7 +47,7 @@
                 <ul class="nav">
                     <li class="active">
                         <a href="{{ route('dashboard') }}">
-                            <i class="pe-7s-graph"></i>
+                            <i class="pe-7s-note"></i>
                             <p>Dashboard</p>
                         </a>
                     </li>
@@ -58,32 +58,26 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/html/table.html">
-                            <i class="pe-7s-note2"></i>
-                            <p>Table List</p>
+                        <a href="#">
+                            <i class="pe-7s-graph"></i>
+                            <p>Term Management</p>
                         </a>
                     </li>
                     <li>
-                        <a href="/html/typography.html">
-                            <i class="pe-7s-news-paper"></i>
-                            <p>Typography</p>
+                        <a href="#">
+                            <i class="pe-7s-drawer"></i>
+                            <p>Inventory Management</p>
                         </a>
                     </li>
                     <li>
-                        <a href="/html/icons.html">
-                            <i class="pe-7s-science"></i>
-                            <p>Icons</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/html/notifications.html">
-                            <i class="pe-7s-bell"></i>
-                            <p>Notifications</p>
+                        <a href="{{route('suppliers') }}">
+                            <i class="pe-7s-box1"></i>
+                            <p>Supplier Management</p>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('usrmgmt') }}">
-                            <i class="pe-7s-settings"></i>
+                            <i class="pe-7s-users"></i>
                             <p>User Management</p>
                         </a>
                     </li>
@@ -108,7 +102,14 @@
                     <div class="collapse navbar-collapse">
                         <ul class="nav navbar-nav navbar-right">
                             <li>
-                                <a href="{{ route('logout') }}"
+                                <a href="{{ route('profile') }}">
+                                        {{$curr_usr->fname}} {{$curr_usr->mname}} {{$curr_usr->lname}}  
+                                        <!-- Full Name of currently logged in user -->
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="flip-animate" href="{{ route('logout') }}"
                                     onclick="event.preventDefault();
                                     document.getElementById('logout-form').submit();">
                                     Logout
@@ -250,17 +251,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- FOOTER -->
-            <footer class="footer">
-                <div class="container-fluid">
-                    <p class="copyright pull-right">
-                        &copy; <script>document.write(new Date().getFullYear())</script> 
-                        GMR
-                    </p>
-                </div>
-            </footer>
-
         </div>
     </div>
 </body>
