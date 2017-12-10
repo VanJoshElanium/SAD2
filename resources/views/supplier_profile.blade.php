@@ -34,7 +34,7 @@
             <div class="sidebar-wrapper">
                 <div class="logo">
                     <a href="{{ route('dashboard') }}" class="simple-text">
-                        Prince & Princess
+                        Prince &#38; Princess
                     </a>
                 </div>
 
