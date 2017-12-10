@@ -40,7 +40,7 @@
     <div class="wrapper">
         
         <!-- SIDEBAR -->
-        <div class="sidebar" data-color="purple" data-image="/images/sidebar-5.jpg">
+        <div class="sidebar" data-color="none" data-image="/images/lol.png">
             <div class="sidebar-wrapper">
                 <div class="logo">
                     <a href="{{ route('dashboard') }}" class="simple-text">
