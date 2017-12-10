@@ -18,7 +18,7 @@ class CreateSuppliersTable extends Migration
             $table->string('supplier_name', '50')->unique();
             $table->string('supplier_addr', '70');
             $table->string('supplier_email', '50');
-            $table->integer('supplier_cnum');        
+            $table->string('supplier_cnum', '11');        
             $table->integer('supplier_status')->default(1);
             $table->rememberToken();
             $table->timestamps();
