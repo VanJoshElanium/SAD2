@@ -15,7 +15,7 @@ class Supply extends Model
 
     protected $fillable = ['supply_supplier_id', 'supply_name', 'supply_price', 'supply_status'];
 
-    public $sortable = ['supply_name', 'supply_price'];
+    public $sortable = [ 'supply_id','supply_name', 'supply_price'];
 
     protected $hidden = [
        'remember_token',
