@@ -65,7 +65,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('inventory') }}">
+                        <a href="/public/html/notifications.html">
                             <i class="pe-7s-box2"></i>
                             <p>Inventory</p>
                         </a>

@@ -40,7 +40,7 @@
     <div class="wrapper">
         
         <!-- SIDEBAR -->
-        <div class="sidebar" data-color="none" data-image="/images/lol.png">
+        <div class="sidebar" data-color="purple" data-image="/images/sidebar-5.jpg">
             <div class="sidebar-wrapper">
                 <div class="logo">
                     <a href="{{ route('dashboard') }}" class="simple-text">
@@ -56,7 +56,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/public/html/user.html"
+                        <a href="/public/html/user.html">
                             <i class="pe-7s-user"></i>
                             <p>User Profile</p>
                         </a>
@@ -69,7 +69,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('inventory') }}">
+                         <a href="/public/html/notifications.html">
                             <i class="pe-7s-box2"></i>
                             <p>Inventory</p>
                         </a>
