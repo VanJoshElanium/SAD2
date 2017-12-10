@@ -25,7 +25,7 @@ class CreateUsersTable extends Migration
             $table->date('bday', '6');
             $table->string('cnum', '11');
             $table->integer('user_type');
-            $table->integer('user_status');
+            $table->integer('user_status')->default(1);
             $table->rememberToken();
             $table->timestamps();
         });
