@@ -177,10 +177,9 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        /* new ones */
-        Kyslik\ColumnSortable\ColumnSortableServiceProvider::class,
-        Laravel\Scout\ScoutServiceProvider::class,
-        TeamTNT\Scout\TNTSearchScoutServiceProvider::class,
+        /* INSERT NEW ONES HERE */
+        
+        //////////////////////////
 
     ],
 
