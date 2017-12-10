@@ -36,7 +36,7 @@ HOW TO LARAVEL, A TUTORIAL BY ANN HIHI :>
     (ex. if your project is in C:\wamp64\www the type 'cd C:\wamp64\www\project-name, 
      where project-name is SAD2-master or what your renamed the project to) 
 
-8.) Then, type 'composer install'
+8.) Then, type 'composer install' and after 'composer dump-autoload'
 
 9.) (In Command Prompt) composer require laravel/scout
 
