@@ -3958,5 +3958,310 @@
             "testing",
             "xunit"
         ]
+    },
+    {
+        "name": "kyslik/column-sortable",
+        "version": "5.5.4",
+        "version_normalized": "5.5.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Kyslik/column-sortable.git",
+            "reference": "36c5698bd53139d0de59a1621635cd278700e2ec"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Kyslik/column-sortable/zipball/36c5698bd53139d0de59a1621635cd278700e2ec",
+            "reference": "36c5698bd53139d0de59a1621635cd278700e2ec",
+            "shasum": ""
+        },
+        "require": {
+            "illuminate/database": "5.5.*",
+            "illuminate/support": "5.5.*",
+            "php": ">=7.0"
+        },
+        "require-dev": {
+            "orchestra/testbench": "3.5.*",
+            "phpunit/phpunit": "^6.0"
+        },
+        "time": "2017-11-29T12:30:09+00:00",
+        "type": "package",
+        "extra": {
+            "laravel": {
+                "providers": [
+                    "Kyslik\\ColumnSortable\\ColumnSortableServiceProvider"
+                ]
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Kyslik\\ColumnSortable\\": "src/ColumnSortable/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Martin Kiesel",
+                "email": "martin.kiesel@gmail.com",
+                "role": "Developer and maintainer"
+            }
+        ],
+        "description": "Package for handling column sorting in Laravel 5.x",
+        "keywords": [
+            "column",
+            "laravel",
+            "sort",
+            "sortable",
+            "sorting"
+        ]
+    },
+    {
+        "name": "laravel/scout",
+        "version": "v3.0.12",
+        "version_normalized": "3.0.12.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/laravel/scout.git",
+            "reference": "0d97152e9006481e1608ad4286e53acf20a3c110"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/laravel/scout/zipball/0d97152e9006481e1608ad4286e53acf20a3c110",
+            "reference": "0d97152e9006481e1608ad4286e53acf20a3c110",
+            "shasum": ""
+        },
+        "require": {
+            "illuminate/bus": "~5.4",
+            "illuminate/contracts": "~5.4",
+            "illuminate/database": "~5.4",
+            "illuminate/pagination": "~5.4",
+            "illuminate/queue": "~5.4",
+            "illuminate/support": "~5.4",
+            "php": ">=5.6.4"
+        },
+        "require-dev": {
+            "algolia/algoliasearch-client-php": "^1.10",
+            "mockery/mockery": "~0.9",
+            "phpunit/phpunit": "~5.0"
+        },
+        "suggest": {
+            "algolia/algoliasearch-client-php": "Required to use the Algolia engine (^1.10)."
+        },
+        "time": "2017-12-07T22:15:01+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "3.0-dev"
+            },
+            "laravel": {
+                "providers": [
+                    "Laravel\\Scout\\ScoutServiceProvider"
+                ]
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Laravel\\Scout\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Taylor Otwell",
+                "email": "taylor@laravel.com"
+            }
+        ],
+        "description": "Laravel Scout provides a driver based solution to searching your Eloquent models.",
+        "keywords": [
+            "algolia",
+            "laravel",
+            "search"
+        ]
+    },
+    {
+        "name": "teamtnt/tntsearch",
+        "version": "v1.0.7",
+        "version_normalized": "1.0.7.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/teamtnt/tntsearch.git",
+            "reference": "97e31a259fe289e21519386b0f326b7fdf27579e"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/teamtnt/tntsearch/zipball/97e31a259fe289e21519386b0f326b7fdf27579e",
+            "reference": "97e31a259fe289e21519386b0f326b7fdf27579e",
+            "shasum": ""
+        },
+        "require": {
+            "ext-mbstring": "*",
+            "ext-pdo_sqlite": "*",
+            "ext-sqlite3": "*",
+            "php": "~5.5|~7.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "5.*"
+        },
+        "time": "2017-09-09T21:43:22+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "TeamTNT\\TNTSearch\\": "src"
+            },
+            "files": [
+                "helper/helpers.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Nenad Tičarić",
+                "email": "nticaric@gmail.com",
+                "homepage": "http://www.tntstudio.us",
+                "role": "Developer"
+            }
+        ],
+        "description": "A fully featured full text search engine written in PHP",
+        "homepage": "https://github.com/teamtnt/tntsearch",
+        "keywords": [
+            "Fuzzy search",
+            "fulltext",
+            "geosearch",
+            "search",
+            "teamtnt",
+            "tntsearch"
+        ]
+    },
+    {
+        "name": "teamtnt/laravel-scout-tntsearch-driver",
+        "version": "v3.0.4",
+        "version_normalized": "3.0.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/teamtnt/laravel-scout-tntsearch-driver.git",
+            "reference": "a58861c7b549a96d629051129867966cc68752ec"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/teamtnt/laravel-scout-tntsearch-driver/zipball/a58861c7b549a96d629051129867966cc68752ec",
+            "reference": "a58861c7b549a96d629051129867966cc68752ec",
+            "shasum": ""
+        },
+        "require": {
+            "illuminate/bus": "~5.4",
+            "illuminate/contracts": "~5.4",
+            "illuminate/database": "~5.4",
+            "illuminate/pagination": "~5.4",
+            "illuminate/queue": "~5.4",
+            "illuminate/support": "~5.4",
+            "laravel/scout": "*",
+            "php": ">=5.6.4",
+            "teamtnt/tntsearch": "1.0.*"
+        },
+        "require-dev": {
+            "mockery/mockery": "~0.9",
+            "phpunit/phpunit": "~5.0"
+        },
+        "suggest": {
+            "teamtnt/tntsearch": "Required to use the TNTSearch engine."
+        },
+        "time": "2017-08-31T19:45:22+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0-dev"
+            },
+            "laravel": {
+                "providers": [
+                    "TeamTNT\\Scout\\TNTSearchScoutServiceProvider"
+                ]
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "TeamTNT\\Scout\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "TNT Studio",
+                "email": "info@tntstudio.hr"
+            }
+        ],
+        "description": "Driver for Laravel Scout search package based on https://github.com/teamtnt/tntsearch",
+        "keywords": [
+            "laravel",
+            "scout",
+            "search",
+            "tntsearch"
+        ]
+    },
+    {
+        "name": "algolia/algoliasearch-client-php",
+        "version": "1.23.1",
+        "version_normalized": "1.23.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/algolia/algoliasearch-client-php.git",
+            "reference": "3f0a012c88d69f3b092edaf9e6a8d69699d55dfc"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/algolia/algoliasearch-client-php/zipball/3f0a012c88d69f3b092edaf9e6a8d69699d55dfc",
+            "reference": "3f0a012c88d69f3b092edaf9e6a8d69699d55dfc",
+            "shasum": ""
+        },
+        "require": {
+            "ext-mbstring": "*",
+            "php": ">=5.3"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^4.8 || ^5.0",
+            "satooshi/php-coveralls": "0.6.*"
+        },
+        "time": "2017-11-07T09:38:14+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "AlgoliaSearch": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Algolia Team",
+                "email": "contact@algolia.com"
+            },
+            {
+                "name": "Ryan T. Catlin",
+                "email": "ryan.catlin@gmail.com"
+            },
+            {
+                "name": "Jonathan H. Wage",
+                "email": "jonwage@gmail.com"
+            }
+        ],
+        "description": "Algolia Search API Client for PHP",
+        "homepage": "https://github.com/algolia/algoliasearch-client-php"
     }
 ]

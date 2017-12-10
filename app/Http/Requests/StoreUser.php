@@ -30,9 +30,9 @@ class StoreUser extends FormRequest
                          'regex:/^[a-zA-Z-]/'), 
             'mname' => array(
                          'required',
-                         'max:3',
+                         'max:1',
                          'string',
-                         'regex:/^[a-zA-Z][.]/'),
+                         'regex:/^[a-zA-Z]/'),
             'lname' => array(
                          'required',
                          'max:50',

@@ -2,15 +2,21 @@
 
 namespace App;
 
+use Laravel\Scout\Searchable;
+use Kyslik\ColumnSortable\Sortable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+    use Searchable;
+    use Sortable;
     /* The attributes that are mass assignable. */
     protected $fillable = [
         'fname', 'mname', 'lname', 'username','password', 'gender', 'bday', 'cnum', 'user_type', 'user_status'
     ];
+
+    public $sortable = ['id', 'fname', 'mname', 'lname', 'cnum', 'user_type'];
 
     protected $hidden = [
         'password', 'remember_token',
@@ -35,10 +41,6 @@ class User extends Authenticatable
         $this->attributes['password'] = bcrypt($value);
     }
 
-    public function setUserTypeAttribute($value){
-        $this->attributes['user_type'] = 1;
-    }
-
 
     /* ACCESSORS */
     public function getIdAttribute($value){
@@ -58,15 +60,19 @@ class User extends Authenticatable
             return "Administrator";
 
         else if ($this->attributes['user_type'] == 1) 
-            return "Collector";
+            return "Owner";
 
         else if ($this->attributes['user_type']== 2) 
-            return "Peddler";
+            return "Collector";
 
         else if ($this->attributes['user_type'] == 3) 
-            return "Staff";
+            return "Peddler";
             
-        else return "Worker";
+        else return "Staff";
     }
 
+    public function searchableAs()
+    {
+        return 'users_index';
+    }
 }
