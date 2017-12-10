@@ -60,14 +60,14 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('usrprofile') }}"
+                        <a href="/public/html/user.html"
                             <i class="pe-7s-user"></i>
                             <p>User Profile</p>
                         </a>
                     </li>
 
                     <li>
-                        <a href="{{ route('term') }}">
+                        <a href="/public/html/icons.html">
                             <i class="pe-7s-rocket"></i>
                             <p>Terms</p>
                         </a>
@@ -85,7 +85,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('logs') }}">
+                        <a href="/public/html/template.html">
                             <i class="pe-7s-folder"></i>
                             <p>Logs</p>
                         </a>
@@ -99,7 +99,6 @@
                 </ul>
             </div>
         </div>
-
         <div class="main-panel bgd">
 
             <!-- NAVBAR -->
