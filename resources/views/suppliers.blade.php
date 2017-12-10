@@ -30,43 +30,50 @@
 <body>
     <div class="wrapper">
         <!-- SIDEBAR -->
-        <div class="sidebar" data-color="none" data-image="/images/lol.png">
+        <div class="sidebar" data-color="purple" data-image="/images/sidebar-5.jpg">
             <div class="sidebar-wrapper">
                 <div class="logo">
                     <a href="{{ route('dashboard') }}" class="simple-text">
-                        Prince & Princess
+                        Prince &#38; Princess
                     </a>
                 </div>
 
                 <ul class="nav">
-                    <li>
+                    <li class="active">
                         <a href="{{ route('dashboard') }}">
-                            <i class="pe-7s-note"></i>
+                            <i class="pe-7s-graph"></i>
                             <p>Dashboard</p>
                         </a>
                     </li>
                     <li>
-                        <a href="/html/user.html">
+                        <a href="{{ route('usrprofile') }}"
                             <i class="pe-7s-user"></i>
                             <p>User Profile</p>
                         </a>
                     </li>
+
                     <li>
-                        <a href="#">
-                            <i class="pe-7s-graph"></i>
-                            <p>Term Management</p>
+                        <a href="{{ route('term') }}">
+                            <i class="pe-7s-rocket"></i>
+                            <p>Terms</p>
                         </a>
                     </li>
                     <li>
-                        <a href="#">
-                            <i class="pe-7s-drawer"></i>
-                            <p>Inventory Management</p>
+                        <a href="{{ route('inventory') }}">
+                            <i class="pe-7s-box2"></i>
+                            <p>Inventory</p>
                         </a>
                     </li>
-                    <li class="active">
-                        <a href="{{route('suppliers') }}">
+                    <li>
+                        <a href="{{ route('suppliers') }}">
                             <i class="pe-7s-box1"></i>
-                            <p>Supplier Management</p>
+                            <p>Suppliers</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('logs') }}">
+                            <i class="pe-7s-folder"></i>
+                            <p>Logs</p>
                         </a>
                     </li>
                     <li>
