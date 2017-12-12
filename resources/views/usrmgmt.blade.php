@@ -6,7 +6,7 @@
     <link rel="icon" type="image/png" href="/img/favicon.ico">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-    <title>Light Bootstrap Dashboard by Creative Tim</title>
+    <title>User Management</title>
 
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
@@ -34,6 +34,15 @@
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
     <link href="/css/pe-icon-7-stroke.css" rel="stylesheet" />
+        <style>
+        .bgd{
+            background-image: url(../images/bg-6-full.jpg);
+        }
+        .box{
+            border: 0px solid #888888;
+            box-shadow: 5px 5px 8px 5px #888888;
+        }
+    </style>
 </head>
 
 <body>
@@ -69,7 +78,7 @@
                         </a>
                     </li>
                     <li>
-                         <a href="/public/html/notifications.html">
+                         <a href="{{ route('inventory') }}">
                             <i class="pe-7s-box2"></i>
                             <p>Inventory</p>
                         </a>
@@ -97,7 +106,7 @@
         </div>
 
 
-        <div class="main-panel">
+        <div class="main-panel bgd">
 
             <!-- NAVBAR -->
             <nav class="navbar navbar-default">
@@ -142,7 +151,7 @@
                     <div class="row">
                         <!-- TABLE OF USERS -->
                         <div class="col-md-12">      
-                            <div class="card">
+                            <div class="card box">
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="header">
@@ -151,17 +160,17 @@
                                     </div>
 
                                     <form method="GET" action="{{ route('searchUsers') }}">
-                                        <div class="col-md-4" style="margin-top:10px">
-                                            <input type="text" name="titlesearch" class="form-control" placeholder="Search . . ." value="{{ old('titlesearch') }}"">
+                                        <div class="col-sm-4" style="margin-top:10px">
+                                            <input type="text" name="titlesearch" class="form-control" placeholder="Search . . ." value="{{ old('titlesearch') }}">
                                         </div>
                                     
-                                        <div class="col-md-2" style="margin-top:10px">
+                                        <div class="col-sm-2" style="margin-top:10px">
                                             <button style="height: 40px;"; class="btn btn-success pe-7s-search"></button>
                                         </div>
                                     </form>
 
-                                    <div class="col-md-2" style="margin-top:8px;">
-                                        <button type="button" data-target="#addModal" data-toggle="modal" class="btn btn-success btn-fill" id="add-btn"> 
+                                    <div class="col-sm-2" style="margin-top:8px;">
+                                        <button style="margin-top:4%;" type="button" data-target="#addModal" data-toggle="modal" class="btn btn-success btn-fill" id="add-btn"> 
                                             Add User
                                         </button>
                                     </div> 
@@ -200,12 +209,13 @@
                                                   </td>
                                                 </tr>
                                             @empty
-                                                <h1> No users stored. </h1>
+                                            <div class="header">
+                                                <center><h3 class="title"> No users stored </h3></center>
+                                            </div>
                                             @endforelse
                                         </tbody>
                                     </table>
                                 </div>
-
                                 <div style="margin-left: 1%"> 
                                     {{$users->links()}} 
                                 </div>
