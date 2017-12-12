@@ -6,7 +6,7 @@
     <link rel="icon" type="image/png" href="/images/favicon.ico">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-    <title>Light Bootstrap Dashboard by Creative Tim</title>
+    <title>Supplier Profile</title>
 
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
@@ -139,7 +139,7 @@
 
                                         <form method="GET" action="{{ route('searchSupplies') }}">
                                             <div class="col-md-4" style="margin-top:10px">
-                                                <input type="text" name="titlesearch" class="form-control" placeholder="Search . . ." value="{{ old('titlesearch') }}"">
+                                                <input type="text" name="titlesearch" class="form-control" placeholder="Search . . ." value="{{ old('titlesearch') }}">
                                             </div>
                                         
                                             <div class="col-md-2" style="margin-top:10px">
@@ -181,7 +181,9 @@
                                                       </td>
                                                     </tr>
                                                 @empty
-                                                    <h1> No supplied items stored. </h1>
+                                                <div class="header">
+                                                    <center><h3 class="title"> No suppliers stored. </h3></center>
+                                                </div>
                                                 @endforelse
                                             </tbody>
                                         </table>

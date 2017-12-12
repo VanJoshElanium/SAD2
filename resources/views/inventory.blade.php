@@ -3,10 +3,10 @@
 @section('content')
 <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/png" href="/img/favicon.ico">
+    <link rel="icon" type="image/png" href="/public/images/Prince and Princes logo/6.png">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-    <title>Light Bootstrap Dashboard by Creative Tim</title>
+    <title>Inventory</title>
 
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
@@ -135,7 +135,7 @@
             <!-- CONTENT -->
             <div class="content">
                 <div class="container-fluid">
-                    <div class="col-md-12 animated fadeInUp">
+                    <div class="col-md-12">
                         <div class="card box">
                                  <div>
                                         <!-- Nav tabs -->
