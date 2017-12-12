@@ -36,3 +36,8 @@ Route::get('/usrmgmt', 'UserController@index')->name('usrmgmt');
 Route::get('getUser/{id}', 'UserController@getUser');
 Route::get('/searchUsers', ['as'=>'searchUsers','uses'=>'UserController@index']);
 
+//Invneotry
+Route::resource('inventory', 'InventoryController');
+Route::get('/inventory', 'InventoryController@index')->name('inventory');
+
+?>
