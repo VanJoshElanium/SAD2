@@ -329,6 +329,7 @@
 }
 .pe-7s-plus:before {
 	content: "\e623";
+	font-size: 21px;
 }
 .pe-7s-left-arrow:before {
 	content: "\e6a2";
@@ -452,6 +453,7 @@
 }
 .pe-7s-less:before {
 	content: "\e644";
+	font-size: 21px;
 }
 .pe-7s-keypad:before {
 	content: "\e645";
