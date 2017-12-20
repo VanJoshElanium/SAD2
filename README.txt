@@ -75,3 +75,7 @@ HOW TO LARAVEL, A TUTORIAL BY ANN HIHI :>
 21.) Watch the videos in this youtube playlist to learn more about Laravel (https://www.youtube.com/watch?v=a8ZpAf_tNh0&list=PL3ZhWMazGi9IYymniZgqwnYuPFDvaEHJb&index=1)
 
 22.) Happy Laravel Programming! :)
+
+
+VUE JS plugin instruction video for installation and build:
+	https://www.youtube.com/watch?v=20xpzlv-aFA&list=PL9q0eNDLXnF16GY2oBHlHo6lJ7I4JMm9l
