@@ -6,7 +6,7 @@
     <link rel="icon" type="image/png" href="/images/favicon.ico">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-    <title>Supplier Profile</title>
+    <title>Light Bootstrap Dashboard by Creative Tim</title>
 
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
@@ -29,51 +29,44 @@
 </head>
 <body>
     <div class="wrapper">
-       <!-- SIDEBAR -->
-        <div class="sidebar" data-color="purple" data-image="/images/sidebar-5.jpg">
+        <!-- SIDEBAR -->
+        <div class="sidebar" data-color="none" data-image="/images/lol.png">
             <div class="sidebar-wrapper">
                 <div class="logo">
                     <a href="{{ route('dashboard') }}" class="simple-text">
-                        Prince &#38; Princess
+                        Prince & Princess
                     </a>
                 </div>
 
                 <ul class="nav">
-                    <li class="active">
+                    <li>
                         <a href="{{ route('dashboard') }}">
-                            <i class="pe-7s-graph"></i>
+                            <i class="pe-7s-note"></i>
                             <p>Dashboard</p>
                         </a>
                     </li>
                     <li>
-                        <a href="/public/html/user.html">
+                        <a href="/html/user.html">
                             <i class="pe-7s-user"></i>
                             <p>User Profile</p>
                         </a>
                     </li>
-
                     <li>
-                        <a href="/public/html/icons.html">
-                            <i class="pe-7s-rocket"></i>
-                            <p>Terms</p>
+                        <a href="#">
+                            <i class="pe-7s-graph"></i>
+                            <p>Term Management</p>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('inventory') }}">
-                            <i class="pe-7s-box2"></i>
-                            <p>Inventory</p>
+                        <a href="{{route('inventory') }}">
+                            <i class="pe-7s-drawer"></i>
+                            <p>Inventory Management</p>
                         </a>
                     </li>
-                    <li>
-                        <a href="{{ route('suppliers') }}">
+                    <li class="active">
+                        <a href="{{route('suppliers') }}">
                             <i class="pe-7s-box1"></i>
-                            <p>Suppliers</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/public/html/template.html">
-                            <i class="pe-7s-folder"></i>
-                            <p>Logs</p>
+                            <p>Supplier Management</p>
                         </a>
                     </li>
                     <li>
@@ -158,9 +151,11 @@
                                         <table id="suppliers-table" class="table table-hover table-striped" cellspacing="0" width="100%">
                                             <thead>
                                                 <tr>
+                                                    @if(count($supplies)>0)
                                                     <th>@sortablelink('supplier_id', 'ID')</th>
                                                     <th>@sortablelink('supply_name', 'Name')</th>
                                                     <th>@sortablelink('supply_price', 'Price')</th>
+                                                    @endif
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -171,7 +166,7 @@
                                                         <td>{{$supply->supply_price}}</td>
                                                         <td> 
                                                         <button data-target="#editModal" data-toggle="modal" data-id='{{$supply->supply_id}}' class="edit-btn btn btn-primary btn-fill">
-                                                            Edit
+                                                            View
                                                         </button>
                                                        </td>
                                                       <td>
@@ -181,9 +176,7 @@
                                                       </td>
                                                     </tr>
                                                 @empty
-                                                <div class="header">
-                                                    <center><h3 class="title"> No suppliers stored. </h3></center>
-                                                </div>
+                                                    <h3 style="text-align: center"> No supplied items stored. </h3>
                                                 @endforelse
                                             </tbody>
                                         </table>
@@ -223,7 +216,7 @@
         </div>
     </div>
 
-    !-- ADD MODAL -->
+    <!-- ADD MODAL -->
     <div class="modal fade" role="dialog" id="addModal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -313,7 +306,7 @@
                                     <div class="{{$errors->has('supply_name') ? ' has-error' : ''}}"> 
                                         <div class="col-md-8">    
                                             <label>Item Name</label>
-                                            <input type="text" id="supply_name" class="form-control"  name="supply_name" required> 
+                                            <input type="text" id="edit_supply_name" class="form-control"  name="edit_supply_name" required> 
                                             @if ($errors->has('supply_name'))
                                                 <span class="help-block">
                                                     <strong>
@@ -327,7 +320,7 @@
                                     <div class="{{$errors->has('supply_price') ? ' has-error' : ''}}"> 
                                         <div class="col-md-4">    
                                             <label>Item Price</label>
-                                            <input type="number" id="supply_price" class="form-control"  name="supply_price" required> 
+                                            <input type="number" id="edit_supply_price" class="form-control"  name="edit_supply_price" required> 
                                             @if ($errors->has('supply_price'))
                                                 <span class="help-block">
                                                     <strong>
@@ -412,19 +405,19 @@
         //EDIT USER
         $(document).on("click", ".edit-btn", function () {
             var id = $(this).data('id');
-
+            //alert(id);
             //VIEW USER
             $.ajax({
-                url: "getSupply/" + id,
+                url: "/getSupply/" +id,
                 type: 'GET',             
                 data: { 'id' : id },
                 success: function(response){
                     // DEBUGGING
-                    console.log(response.supply_id);
+                    console.log(response.supply_name);
 
                     // SET FORM INPUTS
-                    $('#supply_name').val(response.supply_name);
-                    $('#supply_price').val(response.supply_price); 
+                    $('#edit_supply_name').val(response.supply_name);
+                    $('#edit_supply_price').val(response.supply_price); 
 
                     // MODAL
                     $("#editModal").modal('show'); 
@@ -438,7 +431,7 @@
             });
           
             //FORM
-            $("#view-edit-profile").attr("action", "supplies/" +id);
+            $("#view-edit-profile").attr("action", id);
             
             //MODAL
             $(".modal-title").text = "Edit Supplied Item";; 
@@ -452,7 +445,7 @@
             var id = $(this).data('id');
 
             //FORM
-            $("#delete-profile").attr("action", +id);
+            $("#delete-profile").attr("action", id);
 
             //MODAL
             $(".modal-title").html = "Remove Supplied Item";

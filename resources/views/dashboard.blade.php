@@ -3,10 +3,10 @@
 @section('content')
 <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/png" href="/public/images/pp-logo-black.png">
+    <link rel="icon" type="image/png" href="/img/favicon.ico">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-    <title>Dashboard</title>
+    <title>Light Bootstrap Dashboard by Creative Tim</title>
 
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
@@ -31,63 +31,48 @@
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
     <link href="/css/pe-icon-7-stroke.css" rel="stylesheet" />
 </head>
-    <style>
-        .bgd{
-            background-image: url(../images/bg-6-full.jpg);
-        }
-        .box{
-            border: 0px solid #888888;
-            box-shadow: 5px 5px 8px 5px #888888;
-        }
-    </style>
+
 <body>
     <div class="wrapper">
 
         <!-- SIDEBAR -->
-        <div class="sidebar" data-color="purple" data-image="/images/sidebar-5.jpg">
+        <div class="sidebar" data-color="none" data-image="/images/lol.png">
             <div class="sidebar-wrapper">
                 <div class="logo">
                     <a href="{{ route('dashboard') }}" class="simple-text">
-                        Prince &#38; Princess
+                        Prince & Princess
                     </a>
                 </div>
 
                 <ul class="nav">
                     <li class="active">
                         <a href="{{ route('dashboard') }}">
-                            <i class="pe-7s-graph"></i>
+                            <i class="pe-7s-note"></i>
                             <p>Dashboard</p>
                         </a>
                     </li>
                     <li>
-                        <a href="/public/html/user.html">
+                        <a href="/html/user.html">
                             <i class="pe-7s-user"></i>
                             <p>User Profile</p>
                         </a>
                     </li>
-
                     <li>
-                        <a href="icons.html">
-                            <i class="pe-7s-rocket"></i>
-                            <p>Terms</p>
+                        <a href="#">
+                            <i class="pe-7s-graph"></i>
+                            <p>Term Management</p>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('inventory') }}">
-                            <i class="pe-7s-box2"></i>
-                            <p>Inventory</p>
+                        <a href="{{route('inventory') }}">
+                            <i class="pe-7s-drawer"></i>
+                            <p>Inventory Management</p>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('suppliers') }}">
+                        <a href="{{route('suppliers') }}">
                             <i class="pe-7s-box1"></i>
-                            <p>Suppliers</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/public/html/template.html">
-                            <i class="pe-7s-folder"></i>
-                            <p>Logs</p>
+                            <p>Supplier Management</p>
                         </a>
                     </li>
                     <li>
@@ -100,7 +85,7 @@
             </div>
         </div>
 
-        <div class="main-panel bgd">
+        <div class="main-panel">
 
             <!-- NAVBAR -->
             <nav class="navbar navbar-default navbar-fixed">
@@ -262,6 +247,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
