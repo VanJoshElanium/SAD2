@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\User;
-use Illuminate\Http\Response;
+use Validator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Response;
 use App\Http\Requests\StoreUser;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;  
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Input;
 
 class UserController extends Controller
 {
@@ -47,23 +49,50 @@ class UserController extends Controller
         return $usrdata;
     }
 
-    public function update(StoreUser $request, $id)
+    public function update(Request $request, $id)
     {
-        dd($id); //for debugging purposes
-        $user = User::find($id);
-        $user -> fname = $request->input('profile_fname');
-        $user -> mname = $request->input('profile_mname');
-        $user -> lname = $request->input('profile_lname');
-        $user -> gender = $request->input('profile_gender');
-        $user -> bday = $request->input('profile_bday');
-        $user -> cnum = $request->input('profile_gender');
-        $user -> username = $request->input('profile_username');
-        $user -> user_type =$request->input('profile_user_type');
-        $user -> save();
+         $validator = Validator::make($request->all(), [
+            'profile_fname' => array(
+                         'required',
+                         'max:50',
+                         'string',
+                         'regex:/^[a-zA-Z-]/'), 
+            'profile_mname' => array(
+                         'required',
+                         'max:1',
+                         'string',
+                         'regex:/^[a-zA-Z]/'),
+            'profile_lname' => array(
+                         'required',
+                         'max:50',
+                         'string',
+                         'regex:/^[a-zA-Z-]/'),
+            'profile_gender' => 'required|string',
+            'profile_bday' => 'required|date',
+            'profile_cnum' => 'required|digits:11',
+            'profile_user_type' => 'required|string'
+        ]);
 
-        // //Session::flash('message', 'User has been successfully updated!');
-        $request->session()->flash('message', 'User has been successfully updated!');
-        // return redirect('/usrmgmt');
+        if ($validator->fails()) {
+            return redirect('usrmgmt')
+                ->withErrors($validator, 'editUser')
+                ->withInput($request->all())
+                ->with('error_id', $id);
+        }
+        else{
+            $user = User::find($id);
+            //dd($request-> all()); //for debugging purposes
+            $user -> fname = $request-> profile_fname;
+            $user -> mname = $request-> profile_mname;
+            $user -> lname = $request-> profile_lname;
+            $user -> gender = $request-> profile_gender;
+            $user -> bday = $request-> profile_bday;
+            $user -> cnum = $request-> profile_cnum;
+            $user -> username = $request-> profile_username;
+            $user -> user_type =$request-> profile_user_type;
+            $user -> save();
+            return redirect('usrmgmt');
+        }
     }
 
     public function destroy($id)
@@ -84,5 +113,14 @@ class UserController extends Controller
     public function edit($id)
     {
         //
+    }
+
+    public function changePassword(Request $request, $id){
+        $user = User::find($id);
+
+        //Change Password
+        $user -> password = $request-> new_password;
+        $user -> save();
+        return redirect('usrmgmt');
     }
 }

@@ -15,6 +15,8 @@ Auth::routes();
 
 Route::get('/', function () {return view('auth.login');});
 
+Route::post('/changePassword/{id}','UserController@changePassword');
+
 Route::get('/home', 'DashboardController@index')->name('dashboard');
 Route::get('/profile', 'ProfileController@index')->name('profile');
 
@@ -26,9 +28,9 @@ Route::get('/searchSuppliers', ['as'=>'searchSuppliers','uses'=>'SupplierControl
 
 //SUPPLY MANAGEMENT
 Route::resource('supplies', 'SupplyController');
+Route::get('supplies/{id}', 'SupplyController@show');
 Route::get('getSupply/{id}', 'SupplyController@getSupply');
 Route::get('/searchSupplies', ['as'=>'searchSupplies','uses'=>'SupplyController@index']);
-Route::get('supplies/{id}', 'SupplyController@show');
 
 //USER MANAGEMENT
 Route::resource('create_users', 'UserController');
@@ -36,3 +38,10 @@ Route::get('/usrmgmt', 'UserController@index')->name('usrmgmt');
 Route::get('getUser/{id}', 'UserController@getUser');
 Route::get('/searchUsers', ['as'=>'searchUsers','uses'=>'UserController@index']);
 
+
+//INVENTORY
+Route::resource('inventory', 'InventoryController');
+Route::get('getItem/{id}', 'InventoryController@getItem');
+Route::get('/searchItems', ['as'=>'searchItems','uses'=>'InventoryController@index']);
+Route::get('items/{id}', 'InventoryController@show');
+Route::get('/inventory', 'InventoryController@index')->name('inventory');

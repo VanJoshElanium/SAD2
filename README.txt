@@ -1,7 +1,7 @@
 HOW TO LARAVEL, A TUTORIAL BY ANN HIHI :>
 
-/* DO STEPS 1-5  IF YOU JUST ARE USING LARAVEL FOR THE FIRST TIME */
-/* IF THIS IS NOT YOUR FIRST TIME WITH LARAVEL AND WANT TO DOWNLOAD THE PROJECT FOLLOW STEPS 2,6-22*/
+/* FOLLOW STEPS #'s 1-5, #7, and #'s 19-20  IF YOU ARE USING LARAVEL FOR THE FIRST TIME */
+/* OTHERWISE, FOLLOW STEPS: #2 AND #'s 6-22*/
 
 1. Download Wamp Server (http://www.wampserver.com/en/)
     - Set up Wamp to your preffered location, text editor, and web browser.
@@ -16,7 +16,6 @@ HOW TO LARAVEL, A TUTORIAL BY ANN HIHI :>
     - Navigate to the 'PHP folder' -> Versions -> 7.1.9
     - Restart WAMP services, after a while, the icon should be GREEN.
     
-/* ONLY FOLLOW THIS STEP IF YOUR ON THE P&P DEVELOPMENT TEAM */
 2.) Go to your web browser and type in, localhost:8080/phpmyadmin/
      - Username: root, Password(is blank): 
      - Create a new database called 'laravel'
@@ -33,12 +32,12 @@ HOW TO LARAVEL, A TUTORIAL BY ANN HIHI :>
 6.) Clone or download the SAD2-master project to C:\wamp64\www (64-bit WAMP) or C:\wamp\www (32-bit WAMP) directory
 
 7.) Open command prompt and change the directory to the root of the project
-    (ex. if your project is in C:\wamp64\www the type 'cd C:\wamp64\www\project-name, 
-     where project-name is SAD2-master or what your renamed the project to) 
+    (ex. if your project is in C:\wamp64\www then type 'cd C:\wamp64\www\project-name, 
+     where project-name is SAD2-master or whatever your renamed the project to) 
 
 8.) Then, type 'composer install' and after 'composer dump-autoload'
 
-9.) (In Command Prompt) composer require laravel/scout
+9.) Next, type 'composer require laravel/scout'
 
 10.) Open this file in a text editor: config/app.php
 
@@ -54,12 +53,12 @@ HOW TO LARAVEL, A TUTORIAL BY ANN HIHI :>
 
 13.) In the command prompt type, php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"
 
-14.) Then type, composer require algolia/algoliasearch-client-php
+14.) Then type, 'composer require algolia/algoliasearch-client-php'
 
-15.) Then, composer require kyslik/column-sortable
+15.) Then, 'composer require kyslik/column-sortable'
 
-15.) Open config/app.php in a text editor again, on the next line after Laravel\Scout\ScoutServiceProvider::class, add exactly:
-	Kyslik\ColumnSortable\ColumnSortableServiceProvider::class,
+15.) Open config/app.php in a text editor again, on the next line after Laravel\Scout\ScoutServiceProvider::class, add 
+	'Kyslik\ColumnSortable\ColumnSortableServiceProvider::class',
     
 16.) In command prompt type, php artisan vendor:publish --provider="Kyslik\ColumnSortable\ColumnSortableServiceProvider" --tag="config"
 
@@ -77,5 +76,11 @@ HOW TO LARAVEL, A TUTORIAL BY ANN HIHI :>
 22.) Happy Laravel Programming! :)
 
 
-VUE JS plugin instruction video for installation and build:
+!!! IMPORTANT LINKS !!!
+1.) VUE JS plugin instruction video for installation and build:
 	https://www.youtube.com/watch?v=20xpzlv-aFA&list=PL9q0eNDLXnF16GY2oBHlHo6lJ7I4JMm9l
+2.) FULL TEXT SEARCHING USING SCOUT AND ALGOLIA
+	http://itsolutionstuff.com/post/laravel-5-full-text-search-example-using-scout-and-algolia-packagesexample.html
+3.) COLUMN SORTING WITH PAGINATION USING KYSLIK
+	http://itsolutionstuff.com/post/laravel-5-column-sorting-with-pagination-example-from-scratchexample.html
+	https://github.com/Kyslik/column-sortable#laravels-55-auto-discovery
