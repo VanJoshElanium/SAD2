@@ -100,9 +100,13 @@ class SupplyController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $supply = Supply::find($id);
+        //dd($request-> all()); //for debugging purposes
+        $supply -> supply_name = $request-> edit_supply_name;
+        $supply -> supply_price = $request-> edit_supply_price;
+        $supply -> save();
+        return redirect('/supplies/' .$supply-> supply_supplier_id);
     }
-
     /**
      * Remove the specified resource from storage.
      *
