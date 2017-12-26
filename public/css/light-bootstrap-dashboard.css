@@ -50,6 +50,12 @@
     }
 }
 
+/* ANN's styles */
+
+.usrmgmt-h5 {
+    margin:0px;
+}
+
 /*           Font Smoothing      */
 body,
 h1, .h1,
@@ -69,7 +75,7 @@ td,
 button.close {
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
-    font-family: "Roboto","Helvetica Neue",Arial,sans-serif;
+    font-family: "century gothic";
     font-weight: 400;
 }
 
@@ -100,6 +106,7 @@ h5, .h5 {
     font-size: 16px;
     margin-bottom: 15px;
 }
+
 
 h6, .h6 {
     font-size: 14px;
@@ -1846,7 +1853,7 @@ fieldset[disabled] .btn-neutral.active {
 }
 
 .navbar-default .navbar-nav > li > a:not(.btn) {
-    color: #9A9A9A;
+    color: #B3995D;
 }
 
 .navbar-default .navbar-nav > .active > a,

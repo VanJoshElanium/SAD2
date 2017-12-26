@@ -80,6 +80,7 @@
 }
 .pe-7s-next-2:before {
 	content: "\e6bc";
+	font-size: 17px;
 }
 .pe-7s-paint-bucket:before {
 	content: "\e6bd";
@@ -317,6 +318,7 @@
 }
 .pe-7s-power:before {
 	content: "\e621";
+	font-size: 16px;
 }
 .pe-7s-medal:before {
 	content: "\e6a0";
@@ -329,7 +331,6 @@
 }
 .pe-7s-plus:before {
 	content: "\e623";
-	font-size: 21px;
 }
 .pe-7s-left-arrow:before {
 	content: "\e6a2";
@@ -453,7 +454,6 @@
 }
 .pe-7s-less:before {
 	content: "\e644";
-	font-size: 21px;
 }
 .pe-7s-keypad:before {
 	content: "\e645";
