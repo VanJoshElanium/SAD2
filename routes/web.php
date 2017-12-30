@@ -43,5 +43,5 @@ Route::get('/searchUsers', ['as'=>'searchUsers','uses'=>'UserController@index'])
 Route::resource('inventory', 'InventoryController');
 Route::get('getItem/{id}', 'InventoryController@getItem');
 Route::get('/searchItems', ['as'=>'searchItems','uses'=>'InventoryController@index']);
-Route::get('items/{id}', 'InventoryController@show');
+Route::get('getSupply/{id}', 'InventoryController@getSupply');
 Route::get('/inventory', 'InventoryController@index')->name('inventory');
