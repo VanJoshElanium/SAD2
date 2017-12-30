@@ -75,7 +75,7 @@ td,
 button.close {
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
-    font-family: "Roboto","Helvetica Neue",Arial,sans-serif;
+    font-family: "century gothic";
     font-weight: 400;
 }
 
@@ -170,7 +170,7 @@ body {
 }
 
 a {
-    color: #9A9A9A;
+    color: #1DC7EA;
 }
 
 a:hover, a:focus {
@@ -1853,7 +1853,7 @@ fieldset[disabled] .btn-neutral.active {
 }
 
 .navbar-default .navbar-nav > li > a:not(.btn) {
-    color: #9A9A9A;
+    color: #B3995D;
 }
 
 .navbar-default .navbar-nav > .active > a,
