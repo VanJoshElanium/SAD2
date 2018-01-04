@@ -45,3 +45,18 @@ Route::get('getItem/{id}', 'InventoryController@getItem');
 Route::get('/searchItems', ['as'=>'searchItems','uses'=>'InventoryController@index']);
 Route::get('getSupply/{id}', 'InventoryController@getSupply');
 Route::get('/inventory', 'InventoryController@index')->name('inventory');
+
+//Terms
+Route::resource('terms', 'TermsController');
+Route::get('/terms', 'TermsController@index')->name('terms');
+
+//Terms Profile
+Route::resource('termsprofile', 'TermsProfileController');
+Route::get('/termsprofile', 'TermsProfileController@index')->name('termsprofile');
+
+//Logs
+Route::resource('logs', 'LogsController');
+Route::get('/logs', 'LogsController@index')->name('logs');
+
+
+?>
