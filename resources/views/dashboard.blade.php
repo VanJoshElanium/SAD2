@@ -6,7 +6,7 @@
     <link rel="icon" type="image/png" href="/img/favicon.ico">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-    <title>Light Bootstrap Dashboard by Creative Tim</title>
+    <title>Dashboard</title>
 
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
@@ -30,7 +30,15 @@
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
     <link href="/css/pe-icon-7-stroke.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
+        .bgd{
+            background-image: url(../images/bg-6-full.jpg);
+        }
+        .box{
+            border: 0px solid #888888;
+            box-shadow: 5px 5px 8px 5px #888888;
+        }
+    </style>
 </head>
 
 <body>
@@ -41,7 +49,7 @@
             <div class="sidebar-wrapper">
                 <div class="logo">
                     <a href="{{ route('dashboard') }}" class="simple-text">
-                        Prince & Princess Enterprises
+                        Prince & Princess
                     </a>
                 </div>
 
@@ -59,13 +67,13 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="{{route('terms') }}">
                             <i class="pe-7s-graph"></i>
                             <p>Term Management</p>
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="{{route('inventory') }}">
                             <i class="pe-7s-drawer"></i>
                             <p>Inventory Management</p>
                         </a>
@@ -82,11 +90,17 @@
                             <p>User Management</p>
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('logs') }}">
+                            <i class="pe-7s-note2"></i>
+                            <p>Logs</p>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
 
-        <div class="main-panel">
+        <div class="main-panel bgd">
 
             <!-- NAVBAR -->
             <nav class="navbar navbar-default navbar-fixed">
@@ -108,11 +122,12 @@
                                         <!-- Full Name of currently logged in user -->
                                 </a>
                             </li>
-                                        <!-- Log out part -->
+
                             <li>
                                 <a class="flip-animate" href="{{ route('logout') }}"
                                     onclick="event.preventDefault();
-                                    document.getElementById('logout-form').submit();"><i class= "glyphicon glyphicon-log-out"></i><span>&nbsp;&nbsp;Log out</span>
+                                    document.getElementById('logout-form').submit();">
+                                    Logout
                                 </a>
 
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -130,7 +145,7 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="card ">
+                            <div class="card box">
                                 <div class="header">
                                     <h4 class="title">Notes</h4>
                                 </div>

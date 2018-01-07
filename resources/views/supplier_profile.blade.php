@@ -6,7 +6,7 @@
     <link rel="icon" type="image/png" href="/images/favicon.ico">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-    <title>Light Bootstrap Dashboard by Creative Tim</title>
+    <title>Supplier Profile</title>
 
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
@@ -26,6 +26,15 @@
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
     <link href="/css/pe-icon-7-stroke.css" rel="stylesheet" />
+    <style>
+        .bgd{
+            background-image: url(../images/bg-6-full.jpg);
+        }
+        .box{
+            border: 0px solid #888888;
+            box-shadow: 5px 5px 8px 5px #888888;
+        }
+    </style>
 </head>
 <body>
     <div class="wrapper">
@@ -53,12 +62,12 @@
                     </li>
                     <li>
                         <a href="#">
-                            <i class="pe-7s-graph"></i>
+                            <i class="{{route('terms') }}"></i>
                             <p>Term Management</p>
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="{{route('inventory') }}">
                             <i class="pe-7s-drawer"></i>
                             <p>Inventory Management</p>
                         </a>
@@ -75,11 +84,17 @@
                             <p>User Management</p>
                         </a>
                     </li>
+                                        <li>
+                        <a href="{{ route('logs') }}">
+                            <i class="pe-7s-note2"></i>
+                            <p>Logs</p>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
 
-        <div class="main-panel">
+        <div class="main-panel bgd">
             <!-- NAVBAR -->
             <nav class="navbar navbar-default">
                 <div class="container-fluid">
@@ -122,7 +137,7 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-8">
-                            <div class="card">
+                            <div class="card box">
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="header">
@@ -132,7 +147,7 @@
 
                                         <form method="GET" action="{{ route('searchSupplies') }}">
                                             <div class="col-md-4" style="margin-top:10px">
-                                                <input type="text" name="titlesearch" class="form-control" placeholder="Search . . ." value="{{ old('titlesearch') }}"">
+                                                <input type="text" name="titlesearch" class="form-control" placeholder="Search . . ." value="{{ old('titlesearch') }}">
                                             </div>
                                         
                                             <div class="col-md-2" style="margin-top:10px">
@@ -151,9 +166,11 @@
                                         <table id="suppliers-table" class="table table-hover table-striped" cellspacing="0" width="100%">
                                             <thead>
                                                 <tr>
+                                                    @if(count($supplies)>0)
                                                     <th>@sortablelink('supplier_id', 'ID')</th>
                                                     <th>@sortablelink('supply_name', 'Name')</th>
                                                     <th>@sortablelink('supply_price', 'Price')</th>
+                                                    @endif
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -164,7 +181,7 @@
                                                         <td>{{$supply->supply_price}}</td>
                                                         <td> 
                                                         <button data-target="#editModal" data-toggle="modal" data-id='{{$supply->supply_id}}' class="edit-btn btn btn-primary btn-fill">
-                                                            Edit
+                                                            View
                                                         </button>
                                                        </td>
                                                       <td>
@@ -174,7 +191,7 @@
                                                       </td>
                                                     </tr>
                                                 @empty
-                                                    <h1> No supplied items stored. </h1>
+                                                    <h3 style="text-align: center"> No supplied items stored. </h3>
                                                 @endforelse
                                             </tbody>
                                         </table>
@@ -214,7 +231,7 @@
         </div>
     </div>
 
-    !-- ADD MODAL -->
+    <!-- ADD MODAL -->
     <div class="modal fade" role="dialog" id="addModal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -304,7 +321,7 @@
                                     <div class="{{$errors->has('supply_name') ? ' has-error' : ''}}"> 
                                         <div class="col-md-8">    
                                             <label>Item Name</label>
-                                            <input type="text" id="supply_name" class="form-control"  name="supply_name" required> 
+                                            <input type="text" id="edit_supply_name" class="form-control"  name="edit_supply_name" required> 
                                             @if ($errors->has('supply_name'))
                                                 <span class="help-block">
                                                     <strong>
@@ -318,7 +335,7 @@
                                     <div class="{{$errors->has('supply_price') ? ' has-error' : ''}}"> 
                                         <div class="col-md-4">    
                                             <label>Item Price</label>
-                                            <input type="number" id="supply_price" class="form-control"  name="supply_price" required> 
+                                            <input type="number" id="edit_supply_price" class="form-control"  name="edit_supply_price" required> 
                                             @if ($errors->has('supply_price'))
                                                 <span class="help-block">
                                                     <strong>
@@ -403,19 +420,19 @@
         //EDIT USER
         $(document).on("click", ".edit-btn", function () {
             var id = $(this).data('id');
-
+            //alert(id);
             //VIEW USER
             $.ajax({
-                url: "getSupply/" + id,
+                url: "/getSupply/" +id,
                 type: 'GET',             
                 data: { 'id' : id },
                 success: function(response){
                     // DEBUGGING
-                    console.log(response.supply_id);
+                    console.log(response.supply_name);
 
                     // SET FORM INPUTS
-                    $('#supply_name').val(response.supply_name);
-                    $('#supply_price').val(response.supply_price); 
+                    $('#edit_supply_name').val(response.supply_name);
+                    $('#edit_supply_price').val(response.supply_price); 
 
                     // MODAL
                     $("#editModal").modal('show'); 
@@ -429,7 +446,7 @@
             });
           
             //FORM
-            $("#view-edit-profile").attr("action", "supplies/" +id);
+            $("#view-edit-profile").attr("action", id);
             
             //MODAL
             $(".modal-title").text = "Edit Supplied Item";; 
@@ -443,7 +460,7 @@
             var id = $(this).data('id');
 
             //FORM
-            $("#delete-profile").attr("action", +id);
+            $("#delete-profile").attr("action", id);
 
             //MODAL
             $(".modal-title").html = "Remove Supplied Item";

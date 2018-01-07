@@ -6,7 +6,7 @@
     <link rel="icon" type="image/png" href="/img/favicon.ico">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-    <title>Light Bootstrap Dashboard by Creative Tim</title>
+    <title>Supplier List</title>
 
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
@@ -26,6 +26,15 @@
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
     <link href="/css/pe-icon-7-stroke.css" rel="stylesheet" />
+    <style>
+        .bgd{
+            background-image: url(../images/bg-6-full.jpg);
+        }
+        .box{
+            border: 0px solid #888888;
+            box-shadow: 5px 5px 8px 5px #888888;
+        }
+    </style>
 </head>
 <body>
     <div class="wrapper">
@@ -52,13 +61,13 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="{{route('terms') }}">
                             <i class="pe-7s-graph"></i>
                             <p>Term Management</p>
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="{{route('inventory') }}">
                             <i class="pe-7s-drawer"></i>
                             <p>Inventory Management</p>
                         </a>
@@ -75,12 +84,18 @@
                             <p>User Management</p>
                         </a>
                     </li>
+                                        <li>
+                        <a href="{{ route('logs') }}">
+                            <i class="pe-7s-note2"></i>
+                            <p>Logs</p>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
 
 
-        <div class="main-panel">
+        <div class="main-panel bgd">
 
             <!-- NAVBAR -->
             <nav class="navbar navbar-default">
@@ -125,7 +140,7 @@
                     <div class="row">
                         <!-- TABLE OF USERS -->
                         <div class="col-md-12">      
-                            <div class="card">
+                            <div class="card box">
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="header">
@@ -154,24 +169,26 @@
                                     <table id="suppliers-table" class="table table-hover table-striped" cellspacing="0" width="100%">
                                         <thead>
                                             <tr>
+                                                @if(count($suppliers)>0)
                                                 <th>@sortablelink('supplier_id', 'ID')</th>
                                                 <th>@sortablelink('supplier_name', 'Name')</th>
                                                 <th>@sortablelink('supplier_addr', 'Address')</th>
                                                 <th>E-Mail</th>
                                                 <th>Contact Number</th>
+                                                @endif
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @forelse($suppliers as $supplier)
-                                                <tr class="clickable-row" data-href="{{ route('supplies.show', ['supply' => $supplier->supplier_id]) }}">    
-                                                  <td>{{$supplier->supplier_id}}</td>
-                                                  <td>{{$supplier->supplier_name}}</td>
-                                                  <td>{{$supplier->supplier_addr}}</td>
-                                                  <td>{{$supplier->supplier_email}}</td>
-                                                  <td>{{$supplier->supplier_cnum}}</td>
+                                                <tr>    
+                                                  <td class="clickable-row" data-href="{{ route('supplies.show', ['supply' => $supplier->supplier_id]) }}">{{$supplier->supplier_id}}</td>
+                                                  <td class="clickable-row" data-href="{{ route('supplies.show', ['supply' => $supplier->supplier_id]) }}">{{$supplier->supplier_name}}</td>
+                                                  <td class="clickable-row" data-href="{{ route('supplies.show', ['supply' => $supplier->supplier_id]) }}">{{$supplier->supplier_addr}}</td>
+                                                  <td class="clickable-row" data-href="{{ route('supplies.show', ['supply' => $supplier->supplier_id]) }}">{{$supplier->supplier_email}}</td>
+                                                  <td class="clickable-row" data-href="{{ route('supplies.show', ['supply' => $supplier->supplier_id]) }}">{{$supplier->supplier_cnum}}</td>
                                                   <td> 
                                                     <button data-target="#editModal" data-toggle="modal" data-id='{{$supplier->supplier_id}}' class="edit-btn btn btn-primary btn-fill">
-                                                        Edit
+                                                        View
                                                     </button>
                                                    </td>
                                                   <td>
@@ -181,7 +198,7 @@
                                                   </td>
                                                 </tr>
                                             @empty
-                                                <h1> No suppliers stored. </h1>
+                                            <h3 style="text-align: center"> No suppliers stored. </h3>
                                             @endforelse
                                         </tbody>
                                     </table>
@@ -322,7 +339,7 @@
                                     <div class="{{$errors->has('supplier_name') ? ' has-error' : ''}}"> 
                                         <div class="col-md-12">    
                                             <label>Supplier Name</label>
-                                            <input type="text" id="supplier_name" class="form-control"  name="supplier_name" required> 
+                                            <input type="text" id="edit_supplier_name" class="form-control"  name="edit_supplier_name" required> 
                                             @if ($errors->has('supplier_name'))
                                                 <span class="help-block">
                                                     <strong>
@@ -338,7 +355,7 @@
                                     <div class="{{$errors->has('supplier_addr') ? ' has-error' : ''}}"> 
                                         <div class="col-md-12"> 
                                             <label>Supplier Address</label>
-                                            <textarea id="supplier_addr" class="form-control" required name="supplier_addr" rows="2"> </textarea>
+                                            <textarea id="edit_supplier_addr" class="form-control" required name="edit_supplier_addr" rows="2"> </textarea>
                                             @if ($errors->has('supplier_addr'))
                                                 <span class="help-block">
                                                     <strong>
@@ -355,7 +372,7 @@
                                     <div class="{{ $errors->has('supplier_email') ? ' has-error' : '' }}">
                                         <div class="col-md-12">  
                                             <label>Email</label>
-                                            <input type="text" required name="supplier_email" id="supplier_email" class="form-control" >
+                                            <input type="text" required name="edit_supplier_email" id="edit_supplier_email" class="form-control" >
                                                                                 
                                             @if ($errors->has('supplier_email'))
                                                 <span class="help-block">
@@ -370,7 +387,7 @@
                                     <div class="{{ $errors->has('supplier_cnum') ? ' has-error' : '' }}">
                                         <div class="col-md-12">  
                                             <label>Contact Number</label>
-                                            <input type="supplier_number" required name="supplier_cnum" id="supplier_cnum" class="form-control">
+                                            <input type="number" required name="edit_supplier_cnum" id="edit_supplier_cnum" class="form-control">
                                                                                 
                                             @if ($errors->has('supplier_cnum'))
                                                 <span class="help-block">
@@ -381,8 +398,6 @@
                                     </div>
                                 </div>
 
-                                <!-- IN-SYSTEM USER DETAILS -->
-                                <input type="hidden" value="1" name="supplier_status" id="supplier_status">
                             
                                 <!-- SUBMIT BUTTON -->
                                 <button type="submit" class="btn btn-info btn-fill pull-right" id="form-button-edit">
@@ -443,9 +458,9 @@
     <!--KEEP CREATE/EDIT MODAL OPEN IF THERE ARE VALIDATION ERRORS-->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            if ({{(count($errors))}} > 0)
-                $('#addModal').modal();
-           });
+            if ({!!count($errors)!!} > 0)
+                $("#addModal").modal();    
+        }, false);
     </script>
 
     <script>
@@ -459,7 +474,7 @@
         //EDIT USER
         $(document).on("click", ".edit-btn", function () {
             var id = $(this).data('id');
-
+            //alert(id);
             //VIEW USER
             $.ajax({
                 url: "getSupplier/" + id,
@@ -467,13 +482,13 @@
                 data: { 'id' : id },
                 success: function(response){
                     // DEBUGGING
-                    console.log(response.supplier_id);
+                    console.log(response.supplier_name);
 
                     // SET FORM INPUTS
-                    $('#supplier_name').val(response.supplier_name);
-                    $('#supplier_addr').val(response.supplier_addr); 
-                    $('#supplier_email').val(response.supplier_email);
-                    $('#supplier_cnum').val(response.supplier_cnum);
+                    $('#edit_supplier_name').val(response.supplier_name);
+                    $('#edit_supplier_addr').val(response.supplier_addr); 
+                    $('#edit_supplier_email').val(response.supplier_email);
+                    $('#edit_supplier_cnum').val(response.supplier_cnum);
 
                     // MODAL
                     $("#editModal").modal('show'); 

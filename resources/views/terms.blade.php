@@ -1,39 +1,35 @@
-@extends('layouts.app')
-
-@section('content')
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/png" href="/img/favicon.ico">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta charset="utf-8" />
+	<link rel="icon" type="image/png" href="../../../images/Prince and Princes logo/1.png">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-    <title>User Management</title>
-
-    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+	<title>Terms</title>
+    
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
 
-    <!-- addedd -->
-    <!-- <script src="//code.jquery.com/jquery-1.12.3.js"></script>
-    <script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"> -->
 
-    <!-- Bootstrap core CSS 3.3.7    -->
-    <link href="/css/bootstrap.min.css">
+    <!-- Bootstrap core CSS     -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
 
     <!-- Animation library for notifications   -->
     <link href="/css/animate.min.css" rel="stylesheet"/>
 
     <!--  Light Bootstrap Table core CSS    -->
-    <link href="/css/light-bootstrap-dashboard.css" rel="stylesheet"/>
+    <link href="/css/light-bootstrap-dashboard.css?v=1.4.0" rel="stylesheet"/>
+
 
     <!--  CSS for Demo Purpose, don't include it in your project     -->
     <link href="/css/demo.css" rel="stylesheet" />
+
 
     <!--     Fonts and icons     -->
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
     <link href="/css/pe-icon-7-stroke.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <style>
         .bgd{
             background-image: url(../images/bg-6-full.jpg);
@@ -43,13 +39,12 @@
             box-shadow: 5px 5px 8px 5px #888888;
         }
     </style>
-</head>
 
+</head>
 <body>
-    <div class="wrapper">
-        
-        <!-- SIDEBAR -->
-        <div class="sidebar" data-color="none" data-image="/images/lol.png">
+
+<div class="wrapper">
+<div class="sidebar" data-color="none" data-image="/images/lol.png">
             <div class="sidebar-wrapper">
                 <div class="logo">
                     <a href="{{ route('dashboard') }}" class="simple-text">
@@ -70,13 +65,13 @@
                             <p>User Profile</p>
                         </a>
                     </li>
-                    <li>
-                        <a href="{{ route('terms') }}">
+                    <li class="active">
+                        <a href="{{route('terms') }}">
                             <i class="pe-7s-graph"></i>
                             <p>Term Management</p>
                         </a>
                     </li>
-                    <li>
+                    <li >
                         <a href="{{route('inventory') }}">
                             <i class="pe-7s-drawer"></i>
                             <p>Inventory Management</p>
@@ -88,7 +83,7 @@
                             <p>Supplier Management</p>
                         </a>
                     </li>
-                    <li class="active">
+                    <li>
                         <a href="{{ route('usrmgmt') }}">
                             <i class="pe-7s-users"></i>
                             <p>User Management</p>
@@ -104,11 +99,8 @@
             </div>
         </div>
 
-
-        <div class="main-panel bgd">
-
-            <!-- NAVBAR -->
-            <nav class="navbar navbar-default">
+    <div class="main-panel bgd">
+                   <nav class="navbar navbar-default">
                 <div class="container-fluid">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
@@ -117,13 +109,13 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="#">User Management</a>
+                        <a class="navbar-brand" href="#">Terms</a>
                    </div>
                     <div class="collapse navbar-collapse">
                         <ul class="nav navbar-nav navbar-right">
                             <li>
                                 <a href="/html/user.html">
-                                        {{$curr_usr->fname}} {{$curr_usr->mname}} {{$curr_usr->lname}}  
+<!--                                          -->
                                         <!-- Full Name of currently logged in user -->
                                 </a>
                             </li>
@@ -135,7 +127,7 @@
                                 </a>
 
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                    {{ csrf_field() }}
+<!--                                 -->
                                 </form>
                             </li>
                             <li class="separator hidden-lg"></li>
@@ -144,7 +136,7 @@
                 </div>
             </nav>
 
-            <!-- CONTENT -->
+
             <div class="content">
                 <div class="container-fluid">
                     <div class="row">
@@ -154,7 +146,7 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="header">
-                                            <h4 class="title"> System Users</h4> 
+                                            <h4 class="title">List of Terms</h4> 
                                         </div> 
                                     </div>
 
@@ -174,60 +166,8 @@
                                         </button>
                                     </div> 
                                 </div>
-
-                                <div class="content table-responsive table-full-width">
-                                    <table id="users-table" class="table table-hover table-striped" cellspacing="0" width="100%">
-                                        <thead>
-                                            <tr>
-                                                @if(count($users)>0)
-                                                <th>@sortablelink('id', 'ID')</th>
-                                                <th>@sortablelink('fname', 'First Name')</th>
-                                                <th>@sortablelink('mname', 'Middle Initial')</th>
-                                                <th>@sortablelink('lname', 'Last Name')</th>
-                                                <th>Contact Number</th>
-                                                <th>@sortablelink('user_type', 'Position')</th>
-                                                @endif
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @forelse($users as $user)
-                                                <tr onclick="readOnly()" data-target="profileModal" data-toggle="modal" class="view-edit-modal" data-id='{{$user->id}}'>    
-                                                    <td>{{$user->id}}</td>
-                                                    <td>{{$user->fname}}</td>
-                                                    <td>{{$user->mname}}</td>
-                                                    <td>{{$user->lname}}</td>
-                                                    <td>{{$user->cnum}}</td>
-                                                    <td>{{$user->user_type}}</td>
-                                                    <td> 
-                                                        <button data-target="#profileModal" id="view-edit-{{$user->id}}" data-toggle="modal" data-id='{{$user->id}}' class="edit-btn btn btn-primary btn-fill">
-                                                            View
-                                                        </button>
-                                                    </td>
-                                                    <td>
-                                                        <button data-target="#profileModal" data-toggle="modal" data-id='{{$user->id}}' class="del-btn btn btn-danger btn-fill">
-                                                            Remove
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            @empty
-                                                <h3 style="text-align: center"> No users stored. </h3>
-                                            @endforelse
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <div style="margin-left: 1%"> 
-                                    {{$users->links()}} 
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ADD MODAL -->
+                                
+                                  <!-- ADD MODAL -->
     <div class="modal fade" role="dialog" id="addModal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -705,18 +645,25 @@
                         <button type="submit" class="btn btn-info btn-fill pull-right">    Change
                         </button>
                     </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+        
         </div>
     </div>
+</div>
+
+
 </body>
 
     <!--   Core JS Files   -->
     <script src="/js/jquery.3.2.1.min.js" type="text/javascript"></script>
-    <script src="/js/bootstrap.min.js" type="text/javascript"></script>
+	<script src="/js/bootstrap.min.js" type="text/javascript"></script>
 
-    <!--  Charts Plugin -->
-    <script src="/js/chartist.min.js"></script>
+	<!--  Charts Plugin -->
+	<script src="/js/chartist.min.js"></script>
 
     <!--  Notifications Plugin    -->
     <script src="/js/bootstrap-notify.js"></script>
@@ -725,12 +672,12 @@
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
 
     <!-- Light Bootstrap Table Core javascript and methods for Demo purpose -->
-    <script src="/js/light-bootstrap-dashboard.js?v=1.4.0"></script>
+	<script src="/js/light-bootstrap-dashboard.js?v=1.4.0"></script>
 
-    <!-- Light Bootstrap Table DEMO methods, don't include it in your project! -->
-    <script src="/js/demo.js"></script>
-    
-    <!--KEEP CREATE/EDIT MODAL OPEN IF THERE ARE VALIDATION ERRORS-->
+	<!-- Light Bootstrap Table DEMO methods, don't include it in your project! -->
+	<script src="/js/demo.js"></script>
+
+	 <!--KEEP CREATE/EDIT MODAL OPEN IF THERE ARE VALIDATION ERRORS-->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             if ({!!count($errors->addUser)!!} > 0)
@@ -850,4 +797,4 @@
             $("#change-pass").attr("action", "/changePassword/" +id);
         }); 
     </script>
-@endsection
+</html>
