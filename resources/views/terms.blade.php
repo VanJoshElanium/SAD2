@@ -100,7 +100,9 @@
         </div>
 
     <div class="main-panel bgd">
-                   <nav class="navbar navbar-default">
+        
+            <!--NAVBAR-->
+            <nav class="navbar navbar-default">
                 <div class="container-fluid">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
@@ -137,46 +139,177 @@
             </nav>
 
 
-            <div class="content">
-                <div class="container-fluid">
-                    <div class="row">
-                        <!-- TABLE OF USERS -->
-                        <div class="col-md-12">      
-                            <div class="card box">
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card box">
+                            <div class="header">
                                 <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="header">
-                                            <h4 class="title">List of Terms</h4> 
-                                        </div> 
-                                    </div>
-
-                                    <form method="GET" action="{{ route('searchUsers') }}">
-                                        <div class="col-md-4" style="margin-top:10px">
-                                            <input type="text" name="titlesearch" class="form-control search" placeholder="Search . . ." value="{{ old('titlesearch') }}">
-                                        </div>
-                                    
-                                        <div class="col-md-2" style="margin-top:10px">
-                                            <button style="height: 40px;"; class="btn btn-success pe-7s-search"></button>
-                                        </div>
-                                    </form>
-
-                                    <div class="col-md-2" style="margin-top:8px;">
-                                        <button type="button" data-target="#addModal" data-toggle="modal" class="btn btn-success btn-fill" id="add-btn"> 
-                                            Add User
+                                    <div class="col-md-10"><h4 class="title">List of ongoing Terms</h4></div>
+                                    <div class="col-md-2">
+                                        <button data-target="#AddTerm" id="" data-toggle="modal" data-id='' class="edit-btn btn btn-success btn-fill">
+                                            Add New Term
                                         </button>
+                                    </div>
+                                </div>
+                                <p class="category">Here the terms that are still ongoing and are not fully paid yet.</p>
+                            </div>
+                            <div class="content table-responsive table-full-width">
+                                <table class="table table-hover table-striped">
+                                    <thead>
+                                        <th>ID</th>
+                                    	<th>Date Started</th>
+                                    	<th>Collector</th>
+                                        <th>View Details</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                        	<td>1</td>
+                                        	<td>02/12/17</td>
+                                        	<td>Jules Barbarona</td>
+                                        	<td>
+                                            <button data-id='' class="edit-btn btn btn-primary btn-fill">
+                                                View
+                                            </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-12">
+                        <div class="card box">
+                            <div class="header">
+                            <div class="row">
+                                <div class="col-md-6">
+                                <h4 class="title">List of finished Terms</h4>
+                                <p class="category">Here are the list of terms that were fully paid by the collectors.</p>
+                                </div>    
+                                <div class="col-md-4">
+                                <input name="initialTerm_Date"  id="initT_Date" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'">
+                                </div>
+                            </div>    
+                            </div>    
+                            
+                            <div class="content table-responsive table-full-width">
+                                <table class="table table-hover table-striped">
+                                    <thead>
+                                        <th>ID</th>
+                                    	<th>Date Started</th>
+                                    	<th>Date Ended</th>
+                                    	<th>Collector</th>
+                                        <th>View Details</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                        	<td>1</td>
+                                        	<td>02/12/17</td>
+                                        	<td>02/12/18</td>
+                                        	<td>Jules Barbarona</td>
+                                        	<td>
+                                                <!--This will open the termsprofile-->
+                                            <button data-id='' class="edit-btn btn btn-primary btn-fill">
+                                                View
+                                            </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            </div>
+                        </div>
+                    
+                </div>
+            </div>
+        </div>    
+        </div>   
+    </div>   
+</div>
+<!--Modal for Adding Term-->
+    
+    <!-- VIEW/EDIT/DELETE PROFILE MODAL -->
+    <div class="modal fade" role="dialog" id="AddTerm">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add New Term</h4>
+                </div>
+                                    
+                <div class="modal-body">
+                    <div id="view-edit-content" class="row">
+                        <!-- Term edit form-->
+                        <div class="col-md-12"> 
+                            <form method="POST" class="form-horizontal" id="view-edit-profile">      
+                                
+                                
+
+                                <!-- Collector initialization-->                                    
+                                <div class="row form-group">                       
+                                    <div class=""> 
+                                        <div class="col-md-8">    
+                                            <label class="sel1">Collector Name</label>
+                                              <form>
+                                                  <!-- Generate list of collectors-->
+                                                  <select class="form-control" id="sel1">
+                                                    <option>David Mark</option>
+                                                  </select>
+                                              </form>
+                                            
+                                                <span class="help-block">
+                                                    <strong>
+                                                        
+                                                    </strong>
+                                                </span>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Term Date initialization.-->                                            
+                                <div class="row form-group">
+                                    <div class="">
+                                            <div class="col-md-6">
+                                                <label>Date Started</label>
+                                                <input name="initialTerm_Date"  id="initT_Date" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'">
+                                                                                    
+                                                    <span class="help-block">
+                                                        <strong>  </strong>
+                                                    </span>
+                                            
+                                            </div>
                                     </div> 
+                                </div>
+                                                                    
+                                <!-- Term Address -->
+                                <div class="row form-group">
+                                    <div class="">
+                                        <div class="col-md-12">  
+                                            <label>Address</label>
+                                            <input type="text" required name="Term_address" id="T_address" class="form-control">
+                                                                                
+                                                <span class="help-block">
+                                                    
+                                                </span>
+                                
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="modal-footer">
+                      <center>
+                          <!--ADD New Term button-->
+                          <button type="button" class="btn btn-bg btn-success btn-fill">Add</button>
+                          <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
+                    </div>
                 </div>
             </div>
-        
         </div>
-    </div>
-</div>
-
-
 </body>
 
     <!--   Core JS Files   -->
