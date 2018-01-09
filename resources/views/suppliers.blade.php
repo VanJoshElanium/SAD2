@@ -150,7 +150,7 @@
 
                                     <form method="GET" action="{{ route('searchSuppliers') }}">
                                         <div class="col-md-4" style="margin-top:10px">
-                                            <input type="text" name="titlesearch" class="form-control" placeholder="Search . . ." value="{{ old('titlesearch') }}"">
+                                            <input type="text" name="titlesearch" class="form-control" placeholder="Search . . ." value="{{ old('titlesearch') }}">
                                         </div>
                                     
                                         <div class="col-md-2" style="margin-top:10px">
@@ -158,7 +158,7 @@
                                         </div>
                                     </form>
 
-                                    <div class="col-md-2" style="margin-top:8px;">
+                                    <div class="col-md-2" style="margin-top:1.2%;">
                                         <button type="button" data-target="#addModal" data-toggle="modal" class="btn btn-success btn-fill" id="add-btn"> 
                                             Add Supplier
                                         </button>
@@ -188,7 +188,7 @@
                                                   <td class="clickable-row" data-href="{{ route('supplies.show', ['supply' => $supplier->supplier_id]) }}">{{$supplier->supplier_cnum}}</td>
                                                   <td> 
                                                     <button data-target="#editModal" data-toggle="modal" data-id='{{$supplier->supplier_id}}' class="edit-btn btn btn-primary btn-fill">
-                                                        View
+                                                        Edit
                                                     </button>
                                                    </td>
                                                   <td>

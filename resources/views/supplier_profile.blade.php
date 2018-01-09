@@ -132,7 +132,7 @@
                 </div>
             </nav>
 
-            <!-- CONTENT -->
+            <!-- List of supplied items that the supplier supplies -->
             <div class="content">
                 <div class="container-fluid">
                     <div class="row">
@@ -155,7 +155,7 @@
                                             </div>
                                         </form>
 
-                                        <div class="col-md-2" style="margin-top:8px;">
+                                        <div class="col-md-2" style="margin-top:1.7%;">
                                             <button type="button" data-target="#addModal" data-toggle="modal" class="btn btn-success btn-fill" id="add-btn"> 
                                                 Add Item
                                             </button>
@@ -178,10 +178,10 @@
                                                     <tr>    
                                                         <td>{{$supply->supply_id}}</td>
                                                         <td>{{$supply->supply_name}}</td>
-                                                        <td>{{$supply->supply_price}}</td>
+                                                        <td>&#8369; {{$supply->supply_price}}</td>
                                                         <td> 
                                                         <button data-target="#editModal" data-toggle="modal" data-id='{{$supply->supply_id}}' class="edit-btn btn btn-primary btn-fill">
-                                                            View
+                                                            Edit
                                                         </button>
                                                        </td>
                                                       <td>
@@ -217,10 +217,10 @@
                                         </a>
                                     </div>
                                     <hr>
-                                    <p class="description text-center"> 
+                                    <h4 class="title text-center"> 
                                         {{$supplier->supplier_email}} <br>
                                         {{$supplier->supplier_cnum}}
-                                    </p>
+                                    </h4>
                                 </div>
                             </div>
                         </div>
