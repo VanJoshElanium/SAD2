@@ -179,10 +179,7 @@
                                             <div class="header">
                                                 <div class="col-md-4"><h4 class="title">List of Peddlers</h4></div>
                                                 <div class="col-md-8">
-                                                    <span class="pull-right">
-                                                    <button type="button" data-target="#removePeddler" data-toggle="modal" class="btn btn-danger btn-fill" id="add-btn"> 
-                                                    Remove Peddler
-                                                    </button>      
+                                                    <span class="pull-right">      
                                                     <button type="button" data-target="#addPeddler" data-toggle="modal" class="btn btn-success btn-fill" id="add-btn">Add Peddler</button>  
                                                     </span>
                                                 </div>
@@ -193,6 +190,7 @@
                                                         <th>Name</th>
                                                         <th>Position</th>
                                                         <th>Edit</th>
+                                                        <th>Remove</th>
                                                     </thead>
                                                     <tbody>
                                                         <tr>
@@ -200,9 +198,14 @@
                                                             <td>Team Leader</td>
                                                             <td>
                                                             <span data-toggle="tooltip" data-placement="bottom" title="Edit the position of the peddler."> 
-                                                            <button type="button" data-target="#editPeddler" data-toggle="modal" class="btn btn-warning btn-fill" id="add-btn"> 
+                                                            <button type="button" data-target="#editPeddler" data-toggle="modal" class="btn btn-sm btn-warning btn-fill" id="add-btn"> 
                                                             Edit
                                                             </button></span>
+                                                            </td>
+                                                            <td>
+                                                            <button type="button" data-target="#removePeddler" data-toggle="modal" class="btn btn-sm btn-danger btn-fill" id="add-btn"> 
+                                                            Remove Peddler
+                                                            </button>   
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -500,15 +503,10 @@
                                 <!-- Collector initialization-->                                    
                                 <div class="row form-group">                       
                                     <div class=""> 
-                                        <div class="col-md-8">   
-                                            <!--Generates the list of pedlers that is within the term. Use term ID for indication which term the workers are.-->
-                                            <label class="sel1">Peddler Name:</label>
-                                              <form>
-                                                  <!-- Generate list of collectors-->
-                                                  <select class="form-control" id="sel1">
-                                                    <option>David Mark</option>
-                                                  </select>
-                                              </form>
+                                        <div class="col-md-12">   
+                                                <center><h4 class="title">Are you sure you want to remove <br>
+                                                <span>Marko G. Garduvilia</span> ? <!--The collectors name is inside the span tag or just just the code itself is fine.-->
+                                                    </h4></center>
                                             
                                                 <span class="help-block">
                                                     <strong>
@@ -526,7 +524,7 @@
                     <div class="modal-footer">
                       <center>
                           <!--ADD New Term button-->
-                          <button type="button" class="btn btn-bg btn-success btn-fill">Add</button>
+                          <button type="button" class="btn btn-bg btn-success btn-fill">Remove</button>
                           <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
                     </div>
                 </div>
@@ -780,20 +778,6 @@
                                 
                                         </div>
                                     </div>  
-                                </div>
-                                <div class="row">
-                                    <div class="">
-                                        <div class="col-md-6">  
-                                            <!--Note: Must not exceed with the existing quantity.-->
-                                            <label>Sold Quantity:</label>
-                                            <input type="number" required name="cnum" id="cnum2" class="form-control" value="">
-                                                                                
-                                                <span class="help-block">
-                                                    
-                                                </span>
-                                
-                                        </div>
-                                    </div>
                                 </div>
                             <div class="row">
                                     <div class="">
