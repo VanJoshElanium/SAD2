@@ -38,6 +38,13 @@
             border: 0px solid #888888;
             box-shadow: 5px 5px 8px 5px #888888;
         }
+        .modal-title{
+            text-align:center;
+            color: whitesmoke;
+        }
+        .modal-header{
+            background-color:darkgray;
+        }
     </style>
 
 </head>
@@ -169,7 +176,7 @@
                                         	<td>02/12/17</td>
                                         	<td>Jules Barbarona</td>
                                         	<td>
-                                            <button data-id='' class="edit-btn btn btn-primary btn-fill">
+                                            <button data-id='' class="btn btn-sm btn-info btn-fill">
                                                 View
                                             </button>
                                             </td>
@@ -190,6 +197,7 @@
                                 <p class="category">Here are the list of terms that were fully paid by the collectors.</p>
                                 </div>    
                                 <div class="col-md-4">
+                                    <center><label>Select Date:</label></center>
                                 <input name="initialTerm_Date"  id="initT_Date" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'">
                                 </div>
                             </div>    
@@ -212,7 +220,7 @@
                                         	<td>Jules Barbarona</td>
                                         	<td>
                                                 <!--This will open the termsprofile-->
-                                            <button data-id='' class="edit-btn btn btn-primary btn-fill">
+                                            <button data-id='' class="btn btn-sm btn-info btn-fill">
                                                 View
                                             </button>
                                             </td>
@@ -298,6 +306,7 @@
                                         </div>
                                     </div>
                                 </div>
+                            </form>
                             </div>
                         </div>
                     </div>
