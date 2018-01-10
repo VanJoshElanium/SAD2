@@ -1,6 +1,8 @@
+<!doctype html>
 @extends('layouts.app')
 
 @section('content')
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/png" href="/public/images/Prince and Princes logo/6.png">
@@ -39,7 +41,7 @@
         }
         .modal-title{
             text-align:center;
-            color: whitesmoke;
+            color: white;
         }
         .modal-header{
             background-color:darkgray;
@@ -174,6 +176,7 @@
                                 <!-- Workers and location Tab -->
                                 <div role="tabpanel" class="tab-pane fade in active" id="mbrNloc">
                                       <div class="row">
+                                        <div class="col-md-12">
                                         <div class="col-md-8">
                                             <div class="card">
                                             <div class="header">
@@ -226,12 +229,13 @@
                                                     </center>
                                                 </div>
                                             </div>
-                                        </div>      
-                                    </div>
+                                        </div>     
+                                        </div>  
+                                      </div>
 </div>
                                 <!-- Items Tab -->
                                 <div role="tabpanel" class="tab-pane fade" id="itm_list">
-                                                <div class="row">
+                                <div class="row">
                                     <div class="col-md-12">
                                         <div class="col-md-10">
                                             <div class="card">
@@ -307,7 +311,8 @@
                                 <!-- Expense Tab -->
                                 <div role="tabpanel" class="tab-pane fade" id="expense">
                                       <div class="row">
-                                        <div class="col-md-8">
+                                        <div class="col-md-12">
+                                            <div class="col-md-8">
                                             <div class="card">
                                             <div class="header">
                                                 <div class="col-md-4"><h4 class="title">Expense List</h4></div>
@@ -350,13 +355,15 @@
                                                     </center>
                                                 </div>
                                             </div>
+                                        </div>  
                                         </div>
                                     </div>
 </div>
                                 <!-- Collection Tab -->
                                 <div role="tabpanel" class="tab-pane fade" id="sales">
                                       <div class="row">
-                                        <div class="col-md-8">
+                                          <div class="col-md-12">
+                                            <div class="col-md-8">
                                             <div class="card">
                                             <div class="header">
                                                 <div class="col-md-4"><h4 class="title">Collection List</h4></div>
@@ -408,6 +415,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                          </div>
                                     </div>
 </div>
                             </div>
@@ -942,7 +950,7 @@
                                     <div class="">
                                             <div class="col-md-6">
                                                 <label>Date</label>
-                                                <!--I think this should be initialized for current date rather than adding is manualy? Just incase I'm putting this.-->
+                                                <!--I think this should be initialized for current date rather than adding this manualy? Just incase I'm putting this.-->
                                                 <input name="initialTerm_Date"  id="initT_Date" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'">
                                                                                     
                                                     <span class="help-block">
@@ -1056,13 +1064,13 @@
                                         <p class="category">
                                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac dolor non nunc ullamcorper imperdiet nec at odio. Sed pellentesque consectetur nisl. Nullam vitae tellus diam. Suspendisse quis ipsum id felis aliquet tincidunt non sed eros. Nam vel fringilla diam. Vivamus vitae aliquam neque. Donec convallis sem diam.
 
-Sed bibendum tincidunt blandit. Proin consequat faucibus dolor, sed egestas purus gravida nec. Aliquam erat volutpat. Nulla ultricies dolor nec elit porttitor, eget consectetur eros maximus. Ut tincidunt lectus eget lectus aliquet mollis. Maecenas vel porta ex. Cras consequat augue sem, eget placerat nisl placerat vitae. Cras eros felis, auctor et justo at, bibendum cursus dolor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Phasellus vitae ipsum neque. Sed elementum magna orci, quis commodo eros egestas at. Donec non turpis massa. Sed maximus diam eu ipsum semper luctus.
+                                        Sed bibendum tincidunt blandit. Proin consequat faucibus dolor, sed egestas purus gravida nec. Aliquam erat volutpat. Nulla ultricies dolor nec elit porttitor, eget consectetur eros maximus. Ut tincidunt lectus eget lectus aliquet mollis. Maecenas vel porta ex. Cras consequat augue sem, eget placerat nisl placerat vitae. Cras eros felis, auctor et justo at, bibendum cursus dolor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Phasellus vitae ipsum neque. Sed elementum magna orci, quis commodo eros egestas at. Donec non turpis massa. Sed maximus diam eu ipsum semper luctus.
 
-Pellentesque luctus vestibulum ligula vel iaculis. Pellentesque convallis velit ut efficitur commodo. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc placerat nibh ac neque suscipit rutrum. Vestibulum nec tortor augue. Aliquam blandit, tortor nec tristique pulvinar, augue ligula euismod felis, eu finibus mi velit eget urna. Praesent placerat neque in euismod luctus.
+                                        Pellentesque luctus vestibulum ligula vel iaculis. Pellentesque convallis velit ut efficitur commodo. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc placerat nibh ac neque suscipit rutrum. Vestibulum nec tortor augue. Aliquam blandit, tortor nec tristique pulvinar, augue ligula euismod felis, eu finibus mi velit eget urna. Praesent placerat neque in euismod luctus.
 
-Donec non quam augue. Praesent quis justo id odio egestas blandit nec ut libero. Pellentesque id accumsan lorem. Phasellus imperdiet suscipit accumsan. In bibendum diam vitae risus suscipit, vitae aliquam erat ornare. Suspendisse potenti. Integer fringilla metus vitae dolor hendrerit ullamcorper. Nam faucibus vel arcu eu maximus. Praesent ullamcorper pretium vulputate.
+                                        Donec non quam augue. Praesent quis justo id odio egestas blandit nec ut libero. Pellentesque id accumsan lorem. Phasellus imperdiet suscipit accumsan. In bibendum diam vitae risus suscipit, vitae aliquam erat ornare. Suspendisse potenti. Integer fringilla metus vitae dolor hendrerit ullamcorper. Nam faucibus vel arcu eu maximus. Praesent ullamcorper pretium vulputate.
 
-Mauris vitae pretium felis, sed blandit turpis. Sed id tempor erat, quis feugiat ante. Curabitur eu sem vel turpis facilisis vestibulum. Maecenas id vehicula massa, pellentesque tempus risus. Nullam eleifend sem id nunc iaculis, ac suscipit erat mattis. Nunc accumsan eget nisl ullamcorper condimentum. Mauris tincidunt ligula non leo pharetra finibus. Sed metus nulla, eleifend nec purus eu, consectetur posuere leo. Cras nunc nisl, porta quis ultrices vitae, lacinia at sapien.
+                                        Mauris vitae pretium felis, sed blandit turpis. Sed id tempor erat, quis feugiat ante. Curabitur eu sem vel turpis facilisis vestibulum. Maecenas id vehicula massa, pellentesque tempus risus. Nullam eleifend sem id nunc iaculis, ac suscipit erat mattis. Nunc accumsan eget nisl ullamcorper condimentum. Mauris tincidunt ligula non leo pharetra finibus. Sed metus nulla, eleifend nec purus eu, consectetur posuere leo. Cras nunc nisl, porta quis ultrices vitae, lacinia at sapien.
                                         </p><!--The note's contents are here-->
                                         </div>
                                     </div> 
@@ -1091,9 +1099,6 @@ Mauris vitae pretium felis, sed blandit turpis. Sed id tempor erat, quis feugiat
 
     <!--  Notifications Plugin    -->
     <script src="/js/bootstrap-notify.js"></script>
-
-    <!--  Google Maps Plugin    -->
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
 
     <!-- Light Bootstrap Table Core javascript and methods for Demo purpose -->
     <script src="/js/light-bootstrap-dashboard.js?v=1.4.0"></script>
@@ -1129,4 +1134,4 @@ Mauris vitae pretium felis, sed blandit turpis. Sed id tempor erat, quis feugiat
         })
     </script>
 @endsection
-
+</html>
