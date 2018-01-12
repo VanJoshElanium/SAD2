@@ -265,7 +265,6 @@
                                                         <th>Damaged Quantity</th>
                                                         <th>Returns Quantity</th>
                                                         <th>Sold Quantity</th>
-                                                        <th>Note</th>
                                                     </thead>
                                                     <tbody class="qtty">
                                                         <tr>
@@ -275,10 +274,6 @@
                                                             <td>4</td>
                                                             <td>7</td>
                                                             <td>34</td>
-                                                            <td>
-                                                            <span data-toggle="tooltip" data-placement="bottom" title="View if there are any comments or payment changes.">
-                                                                <button type="button" data-target="#viewNote" data-toggle="modal" class="btn btn-sm btn-info btn-fill" id="add-btn">View Note</button></span>
-                                                            </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -377,6 +372,8 @@
                                                         <th>Date</th>
                                                         <th>Amount</th>
                                                         <th>Edit</th>
+                                                        <th><span data-toggle="tooltip" data-placement="bottom" title="View note contains the details in where a payment isn't cash.">
+                                                            View Note</span></th>
                                                     </thead>
                                                     <tbody>
                                                         <tr>
@@ -386,6 +383,10 @@
                                                             <button type="button" data-target="#editCollection" data-toggle="modal" class="btn btn-sm btn-warning btn-fill" id="add-btn"> 
                                                                 Edit Collection
                                                             </button>
+                                                            </td>
+                                                            <td>
+                                                            <span data-toggle="tooltip" data-placement="bottom" title="View if there are any comments or payment changes.">
+                                                                <button type="button" data-target="#viewNote" data-toggle="modal" class="btn btn-sm btn-info btn-fill" id="add-btn">View Note</button></span>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -408,9 +409,11 @@
                                                     <h4 class="title">Total Payment</h4>    
                                                     <p class="category">&#8369; 10,500.00</p>
                                                     <br><br><br>   
+                                                    <div class="modal-footer">
                                                     <h4 class="title">Current Payment</h4>    
                                                     <p class="category">&#8369; 250.00</p>
                                                     <br><br>
+                                                    </div>
                                                     <hr>     
                                                 </div>
                                             </div>
@@ -787,20 +790,7 @@
                                         </div>
                                     </div>  
                                 </div>
-                            <div class="row">
-                                    <div class="">
-                                        <div class="col-md-12">  
-                                            <!--Note: Must not exceed with the existing quantity.-->
-                                            <label>Note:</label>
-                                            <textarea rows="8" required name="cnum" id="cnum2" class="form-control" value=""></textarea>
-                                                                     
-                                                <span class="help-block">
-                                                    
-                                                </span>
-                                
-                                        </div>
-                                    </div>
-                                </div>
+
                             </form>
                             </div>
                         </div>
@@ -973,6 +963,20 @@
                                             </div>
                                         </div> 
                                         </div>
+                                    <div class="row">
+                                    <div class="">
+                                        <div class="col-md-12">  
+                                            <!--Note: Must not exceed with the existing quantity.-->
+                                            <label>Note:</label>
+                                            <textarea rows="8" required name="cnum" id="cnum2" class="form-control" value=""></textarea>
+                                                                     
+                                                <span class="help-block">
+                                                    
+                                                </span>
+                                
+                                        </div>
+                                    </div>
+                                </div>
                                     </div>
                                 
                             </form>
