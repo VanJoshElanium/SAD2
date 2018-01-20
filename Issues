@@ -1,4 +1,5 @@
 1.) SORTING and SEARCHINg w/ Kyslik and Scout-Algolia Packages
     - Can't sort & search between joined tables
     
-2.) Showing Edit Updates (User/Supplier/Supplied Item/ Change Pass)
+2.) Showing Edit Validation Errors
+    - Can show modal and error msg but cannot show the input causing the error
