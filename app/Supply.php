@@ -11,11 +11,11 @@ class Supply extends Model
     use Searchable;
     use Sortable;
 
-    protected $primaryKey = 'supply_id';
+    protected $primaryKey = 'inventory_id';
 
-    protected $fillable = ['supply_supplier_id', 'supply_name', 'supply_price', 'supply_status'];
+    protected $fillable = ['inventory_supplier_id', 'inventory_name', 'inventory_price', 'inventory_qty'];
 
-    public $sortable = [ 'supply_id','supply_name', 'supply_price'];
+    public $sortable = [ 'inventory_id','inventory_name', 'inventory_price'];
 
     protected $hidden = [
        'remember_token',
@@ -23,7 +23,7 @@ class Supply extends Model
 
 	/* MUTATORS */
     public function setSupplyNameAttribute($value){
-        $this->attributes['supply_name'] = ucfirst($value);
+        $this->attributes['inventory_name'] = ucfirst($value);
     }
 
     public function searchableAs()
