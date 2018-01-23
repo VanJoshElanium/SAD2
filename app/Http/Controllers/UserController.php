@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Profile;
 use Validator;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -22,29 +23,57 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $error_id = null;
+        $pass_error = null;
+
         $curr_usr = Auth::user();
 
         if($request->has('titlesearch')){
-            $users = User::search($request->input('titlesearch')) 
+            $users = User::search($request->input('titlesearch'))
                 -> paginate(5);
+            $users -> load('profiles');
         }else{
-            $users = User::where('user_status' , '=', 1)
+            $users = User::join('profiles as p1',  'users.user_id', '=', 'p1.profile_user_id')
+                -> select('users.*', 'p1.*')
+                -> where([
+                        ['users.user_status' , '=', 1]
+                    ])
                 -> sortable() 
                 -> paginate(5);
+                // -> toSql();
         } 
-        return view('usrmgmt', compact('users', 'curr_usr'));
+        return view('usrmgmt', compact('users', 'curr_usr', 'error_id', 'pass_error'));
     }
 
     public function store(StoreUser $request)
     {
-        User::create($request->all());
-        session()->flash('message', 'Successfully created a new user!');
+        $user = User::create([
+                'username' => $request-> username,
+                'password' => $request-> password,
+                'user_type' => $request-> user_type,
+                'user_status' => $request-> user_status
+            ]);
+
+        $profile = new Profile;
+        $profile -> profile_user_id = $user -> user_id;
+        $profile -> fname = $request-> fname;
+        $profile -> mname = $request-> mname;
+        $profile -> lname = $request-> lname;
+        $profile -> gender = $request-> gender;
+        $profile -> bday = $request-> bday;
+        $profile -> cnum = $request-> cnum;
+        $profile -> save();
+        
+        //session()->flash('message', 'Successfully created a new user!');
         return redirect('/usrmgmt');
     }
 
     public function getUser($id)
     {
-        $usrdata = User::find($id);
+        $usrdata = User::join('profiles as p2', 'p2.profile_user_id', '=', 'users.user_id')
+                  -> select('users.*', 'p2.*')
+                  -> where('user_id', '=', $id)
+                  -> get();
         //Session::flash('message', 'User has been successfully created!');
         return $usrdata;
     }
@@ -81,16 +110,22 @@ class UserController extends Controller
         }
         else{
             $user = User::find($id);
+
             //dd($request-> all()); //for debugging purposes
-            $user -> fname = $request-> profile_fname;
-            $user -> mname = $request-> profile_mname;
-            $user -> lname = $request-> profile_lname;
-            $user -> gender = $request-> profile_gender;
-            $user -> bday = $request-> profile_bday;
-            $user -> cnum = $request-> profile_cnum;
+            
             $user -> username = $request-> profile_username;
             $user -> user_type =$request-> profile_user_type;
             $user -> save();
+
+            $profile = User::find($id)-> profile;
+            $profile -> fname = $request-> profile_fname;
+            $profile -> mname = $request-> profile_mname;
+            $profile -> lname = $request-> profile_lname;
+            $profile -> gender = $request-> profile_gender;
+            $profile -> bday = $request-> profile_bday;
+            $profile -> cnum = $request-> profile_cnum;
+            $profile -> save();
+
             return redirect('usrmgmt');
         }
     }
@@ -118,9 +153,29 @@ class UserController extends Controller
     public function changePassword(Request $request, $id){
         $user = User::find($id);
 
-        //Change Password
-        $user -> password = $request-> new_password;
-        $user -> save();
-        return redirect('usrmgmt');
+        $validator = Validator::make($request->all(), [
+            'new_password' => 'required|string|min:4|confirmed|different:current_password',
+            'current_password' => 'required',
+            'new_password_confirmation' => 'required'
+        ]);
+
+        if (!(Hash::check($request->get('current_password'), $user-> password))) {
+            // The passwords matches
+           $validator->getMessageBag()->add('password', 'Your current password does not match with the password you provided. Please try again.');
+           return redirect('usrmgmt')
+                ->withErrors($validator, 'editPass')
+                ->with("pass_error","Your current password does not match with the password you provided. Please try again.");
+        }
+
+        if ($validator->fails()) {
+            return redirect('usrmgmt')
+                ->withErrors($validator, 'editPass');
+        }
+        else{
+            //Change Password
+            $user -> password = $request-> new_password;
+            $user -> save();
+            return redirect('usrmgmt');
+        }
     }
 }

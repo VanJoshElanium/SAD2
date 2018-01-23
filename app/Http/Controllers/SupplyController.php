@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Supply;
+use App\Inventory;
 use App\Supplier;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
@@ -24,12 +25,12 @@ class SupplyController extends Controller
         $curr_usr = Auth::user();
 
         if($request->has('titlesearch')){
-            $users = Supply::search($request->input('titlesearch')) 
+            $users = Inventory::search($request->input('titlesearch')) 
                 -> paginate(5);
         }else{
-            $users = Supply::where('supply_status' , '=', 1)
-                -> sortable() 
-                -> paginate(5);
+            // $users = Supply::where('supply_status' , '=', 1)
+            //     -> sortable() 
+            //     -> paginate(5);
         } 
         return view('usrmgmt', compact('users', 'curr_usr'));
     }
@@ -50,10 +51,17 @@ class SupplyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreSupply $request)
     {
-        Supply::create($request->all());
-        session()->flash('message', 'Successfully created a new supplier!');
+        //dd($request);
+        $item = new Inventory;
+        $item -> inventory_supplier_id = $request -> supply_supplier_id;
+        $item -> inventory_name = $request-> supply_name;
+        $item -> inventory_desc = $request-> supply_desc;
+        $item -> inventory_qty = 0;
+        $item -> inventory_price = $request-> supply_price;
+        $item -> save();
+        //session()->flash('message', 'Successfully created a new supplier!');
         return redirect()->back();
     }
 
@@ -69,10 +77,12 @@ class SupplyController extends Controller
         $supplier = Supplier::find($id);
 
         if($request->has('titlesearch')){
-            $supplies = Supply::search($request->input('titlesearch')) 
+            $supplies = Inventory::search($request->input('titlesearch')) 
                 -> paginate(5);
         }else{
-            $supplies = Supply::where([['supply_supplier_id' , '=', $id], ['supply_status', '=', 1]])
+            $supplies = Inventory::where([
+                    ['inventory_supplier_id' , '=', $id], 
+                ])
                 -> sortable() 
                 -> paginate(5);
             //dd($supplies); //debugging purposes
@@ -99,13 +109,30 @@ class SupplyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        $supply = Supply::find($id);
+    {   
+        $supply = Inventory::find($id);
         //dd($request-> all()); //for debugging purposes
-        $supply -> supply_name = $request-> edit_supply_name;
-        $supply -> supply_price = $request-> edit_supply_price;
-        $supply -> save();
-        return redirect('/supplies/' .$supply-> supply_supplier_id);
+
+        $validator = Validator::make($request->all(), [
+            'supply_name' => 'required|string',
+            'supply_desc' => 'required|string',
+            'supply_price' => 'required|numeric'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('/supplies/' .$supply-> supply_supplier_id)
+                ->withErrors($validator, 'editSupply')
+                ->withInput($request->all())
+                ->with('error_id', $id);
+        }
+        else{
+            $supply -> inventory_name = $request-> edit_supply_name;
+            $supply -> inventory_price = $request-> edit_supply_price;
+            $supply -> inventory_desc = $request-> edit_supply_desc;
+            $supply -> save();
+            return redirect('/supplies/' .$supply-> inventory_supplier_id);
+        }
+        
     }
     /**
      * Remove the specified resource from storage.
@@ -115,17 +142,17 @@ class SupplyController extends Controller
      */
     public function destroy($id)
     {
-        $supply = Supply::find($id);
-        $supply -> supply_status = 0;
+        $supply = Inventory::find($id);
+        $supply -> inventory_status = 0;
         $supply -> save();
         //dd($supply); //for debugging purposes
         return redirect('/supplies/' .$supply-> supply_supplier_id);
         //Session::flash('message', 'User has been successfully removed!');*/
     }
 
-     public function getSupply($id)
+     public function getSuppliedItem($id)
     {
-        $supplydata = Supply::find($id);
+        $supplydata = Inventory::find($id);
         //Session::flash('message', 'User has been successfully created!');
         return $supplydata;
     }

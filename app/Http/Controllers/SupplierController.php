@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use Validator;
 use App\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -59,7 +60,7 @@ class SupplierController extends Controller
     public function store(StoreSupplier $request)
     {
         Supplier::create($request->all());
-        session()->flash('message', 'Successfully created a new supplier!');
+        //session()->flash('message', 'Successfully created a new supplier!');
         return redirect('/suppliers');
     }
 
@@ -94,15 +95,35 @@ class SupplierController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $supplier = Supplier::find($id);
-        //dd($request-> all()); //for debugging purposes
-        //dd($request->all());
-        $supplier -> supplier_name = $request-> edit_supplier_name;
-        $supplier -> supplier_addr = $request-> edit_supplier_addr;
-        $supplier -> supplier_email = $request-> edit_supplier_email;
-        $supplier -> supplier_cnum = $request-> edit_supplier_cnum;
-        $supplier -> save();
-        return redirect('/suppliers');
+        $validator = Validator::make($request->all(), [
+            'edit_supplier_name' => array(
+                         'required',
+                         'max:50',
+                         'string'),
+            'edit_supplier_addr' => array(
+                         'required',
+                         'max:100',
+                         'string'),
+            'edit_supplier_email' => 'required|email',
+            'edit_supplier_cnum' => 'required|digits:11'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('/suppliers')
+                ->withErrors($validator, 'editSupplier')
+                ->withInput($request->all())
+                ->with('error_id', $id);
+        }
+        else{
+            $supplier = Supplier::find($id);
+            //dd($request-> all()); //for debugging purposes
+            $supplier -> supplier_name = $request-> edit_supplier_name;
+            $supplier -> supplier_addr = $request-> edit_supplier_addr;
+            $supplier -> supplier_email = $request-> edit_supplier_email;
+            $supplier -> supplier_cnum = $request-> edit_supplier_cnum;
+            $supplier -> save();
+            return redirect('/suppliers');
+        }  
     }
 
     /**
