@@ -34,7 +34,7 @@ HOW TO LARAVEL, A TUTORIAL BY ANN HIHI :>
 7.) Open command prompt and change the directory to the root of the project
     (ex. if your project is in C:\wamp64\www then type 'cd C:\wamp64\www\project-name, 
      where project-name is SAD2-master or whatever your renamed the project to) 
-
+//FOR ONES THAT JUST DOWNLOADED THE ENTIRE FILE & FINISHED INSTALLING WAMP & COMPOSER START HERE
 8.) Then, type 'composer install' and after 'composer dump-autoload'
 
 9.) Next, type 'composer require laravel/scout'
@@ -58,8 +58,8 @@ HOW TO LARAVEL, A TUTORIAL BY ANN HIHI :>
 15.) Then, 'composer require kyslik/column-sortable'
 
 15.) Open config/app.php in a text editor again, on the next line after Laravel\Scout\ScoutServiceProvider::class, add 
-	'Kyslik\ColumnSortable\ColumnSortableServiceProvider::class',
-    
+	Kyslik\ColumnSortable\ColumnSortableServiceProvider::class,
+    
 16.) In command prompt type, php artisan vendor:publish --provider="Kyslik\ColumnSortable\ColumnSortableServiceProvider" --tag="config"
 
 17.) Next, type 'php artisan migrate --seed'
