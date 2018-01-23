@@ -1,4 +1,4 @@
-1.) SORTING and SEARCHINg w/ Kyslik and Scout-Algolia Packages
+1.) SORTING and SEARCHING w/ Kyslik and Scout-Algolia Packages
     - Can't sort & search between joined tables
     
 2.) Showing Edit Validation Errors
@@ -7,3 +7,9 @@
 3.) Encountering 'MethodNotAllowedException'
     - 1st Attempt: Validation Error
     - 2nd Attempt: No Error
+    
+    
+4.) Adding Undamaged Inventory
+    - How to validate items entered (no repeating)
+
+
