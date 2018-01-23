@@ -35,12 +35,12 @@
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
     <link href="/css/pe-icon-7-stroke.css" rel="stylesheet" />
     <style>
-        .bgd{
-            background-image: url(../images/bg-6-full.jpg);
-        }
         .box{
             border: 0px solid #888888;
             box-shadow: 5px 5px 8px 5px #888888;
+        }
+        .modal-title{
+            text-align:center;
         }
     </style>
 </head>
@@ -104,7 +104,6 @@
             </div>
         </div>
 
-
         <div class="main-panel bgd">
 
             <!-- NAVBAR -->
@@ -154,7 +153,7 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="header">
-                                            <h4 class="title"> System Users</h4> 
+                                            <h4 class="title">Users</h4> 
                                         </div> 
                                     </div>
 
@@ -180,19 +179,19 @@
                                         <thead>
                                             <tr>
                                                 @if(count($users)>0)
-                                                <th>@sortablelink('id', 'ID')</th>
-                                                <th>@sortablelink('fname', 'First Name')</th>
-                                                <th>@sortablelink('mname', 'Middle Initial')</th>
-                                                <th>@sortablelink('lname', 'Last Name')</th>
+                                                <th>@sortablelink('user.id', 'ID')</th>
+                                                <th>@sortablelink('profile.fname', 'First Name')</th>
+                                                <th>@sortablelink('profile.mname', 'Middle Initial')</th>
+                                                <th>@sortablelink('profile.lname', 'Last Name')</th>
                                                 <th>Contact Number</th>
-                                                <th>@sortablelink('user_type', 'Position')</th>
+                                                <th>@sortablelink('user.user_type', 'Position')</th>
                                                 @endif
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @forelse($users as $user)
                                                 <tr onclick="readOnly()" data-target="profileModal" data-toggle="modal" class="view-edit-modal" data-id='{{$user->id}}'>    
-                                                    <td>{{$user->id}}</td>
+                                                    <td>{{$user->user_id}}</td>
                                                     <td>{{$user->fname}}</td>
                                                     <td>{{$user->mname}}</td>
                                                     <td>{{$user->lname}}</td>
@@ -235,197 +234,194 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">New User</h4>
                 </div>
-                                    
-                <div class="modal-body">
-                    <div class="row">
-                        <!-- USER ADD FORM -->
-                        <div class="col-md-12"> 
-                            <form class="form-horizontal" method="POST" action="/create_users">
 
-                            {{ csrf_field() }}
+                <form class="form-horizontal" method="POST" action="/create_users">
+                {{ csrf_field() }}                    
+                    <div class="modal-body">
+                        <div class="row">
+                            <!-- USER ADD FORM -->
+                            <div class="col-md-12"> 
 
-                            <!-- USER NAME DETAILS-->                                    
-                            <div class="row form-group"> 
-                               
-                                <div class="{{$errors->addUser->has('fname') ? ' has-error' : ''}}"> 
-                                    <div class="col-md-9">    
-                                        <label>First Name</label>
-                                        <input type="text" id="fname" class="form-control"  name="fname" required  value="{{ old('fname') }}"> 
-                                        @if ($errors->addUser->has('fname'))
-                                            <span class="help-block">
-                                                <strong>
-                                                    {{ $errors->addUser->first('fname') }}
-                                                </strong>
-                                            </span>
-                                        @endif
-                                    </div>
-                                </div>
-
-                                <div class="{{$errors->addUser->has('mname') ? ' has-error' : ''}}"> 
-                                    <div class="col-md-3"> 
-                                        <label>M.I.</label>
-                                        <input type="text" id="mname" class="form-control" required name="mname" value="{{ old('mname') }}">
-                                        @if ($errors->addUser->has('mname'))
-                                            <span class="help-block">
-                                                <strong>
-                                                    {{ $errors->addUser->first('mname') }}
-                                                </strong>
-                                            </span>
-                                        @endif                   
-                                    </div>      
-                                </div>
-                            </div>
-                                                                        
-                            <div class="row form-group">
-                                <div class="{{$errors->addUser->has('lname') ? ' has-error' : ''}}">
-                                    <div class="col-md-12">              
-                                        <label>Last Name</label>
-                                         <input type="text" id="lname" class="form-control" required name="lname" value="{{ old('lname') }}"> 
-                                         @if ($errors->addUser->has('lname'))
-                                             <span class="help-block">
-                                                <strong>
-                                                    {{ $errors->addUser->first('lname') }}</strong>
-                                             </span>
-                                        @endif
-                                    </div>
-                                </div> 
-                            </div>
-
-                            <!-- BIRTHDAY AND GENDER -->
-                            <div class="other-details">
-                                <div class="row form-group">
-                                    <div class="{{ $errors->addUser->has('gender') ? ' has-error' : '' }}">
-                                        <div class="col-md-5">
-                                            <label for="sel1">Gender</label>
-                                            <select class="form-control" name="gender" required id="gender">
-                                                <option value="" data-hidden="true"  
-                                                    selected="selected">
-                                                </option>
-
-                                                <option value="0" 
-                                                    @if (old('gender') == 0) 
-                                                        selected="selected"  @endif>
-                                                    Male
-                                                </option>
-                                                
-                                                <option value="1" 
-                                                    @if (old('gender') == 1) 
-                                                        selected="selected" @endif>
-                                                    Female
-                                                </option>
-                                            </select>         
-                                            @if ($errors->addUser->has('gender'))
+                                <!-- USER NAME DETAILS-->                                    
+                                <div class="row form-group">                   
+                                    <div class="{{$errors->has('fname') ? ' has-error' : ''}}"> 
+                                        <div class="col-md-9">    
+                                            <label>First Name</label>
+                                            <input type="text" id="fname" class="form-control"  name="fname" required  value="{{ old('fname') }}"> 
+                                            @if ($errors->has('fname'))
                                                 <span class="help-block">
-                                                    <strong>{{ $errors->addUser->first('gender') }}</strong>
+                                                    <strong>
+                                                        {{ $errors->first('fname') }}
+                                                    </strong>
                                                 </span>
                                             @endif
                                         </div>
                                     </div>
-                                    <div class="{{ $errors->addUser->has('bday') ? ' has-error' : '' }}">
-                                        <div class="col-md-7">
-                                            <label>Birthday</label>
-                                            <input name="bday"  id="bday" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'" value="{{ old('bday') }}">
-                                                                                
-                                            @if ($errors->addUser->has('bday'))
+
+                                    <div class="{{$errors->has('mname') ? ' has-error' : ''}}"> 
+                                        <div class="col-md-3"> 
+                                            <label>M.I.</label>
+                                            <input type="text" id="mname" class="form-control" required name="mname" value="{{ old('mname') }}">
+                                            @if ($errors->has('mname'))
                                                 <span class="help-block">
-                                                    <strong>{{ $errors->addUser->first('bday') }}</strong>
+                                                    <strong>
+                                                        {{ $errors->first('mname') }}
+                                                    </strong>
                                                 </span>
-                                            @endif
-                                        </div>
+                                            @endif                   
+                                        </div>      
                                     </div>
                                 </div>
-                            </div>
-                                                                
-
-                            <!-- USER CONTACT DETAILS -->
-                            <div class="row form-group">
-                                <div class="{{ $errors->addUser->has('cnum') ? ' has-error' : '' }}">
-                                    <div class="col-md-12">  
-                                        <label>Contact Number</label>
-                                        <input type="number" required name="cnum" id="cnum2" class="form-control" value="{{ old('cnum') }}">
                                                                             
-                                        @if ($errors->addUser->has('cnum'))
-                                            <span class="help-block">
-                                                <strong>{{$errors->addUser->first('cnum')}}</strong>
-                                            </span>
-                                        @endif
+                                <div class="row form-group">
+                                    <div class="{{$errors->has('lname') ? ' has-error' : ''}}">
+                                        <div class="col-md-12">              
+                                            <label>Last Name</label>
+                                             <input type="text" id="lname" class="form-control" required name="lname" value="{{ old('lname') }}"> 
+                                             @if ($errors->has('lname'))
+                                                 <span class="help-block">
+                                                    <strong>
+                                                        {{ $errors->first('lname') }}</strong>
+                                                 </span>
+                                            @endif
+                                        </div>
+                                    </div> 
+                                </div>
+
+                                <!-- BIRTHDAY AND GENDER -->
+                                <div class="other-details">
+                                    <div class="row form-group">
+                                        <div class="{{ $errors->has('gender') ? ' has-error' : '' }}">
+                                            <div class="col-md-5">
+                                                <label for="sel1">Gender</label>
+                                                <select class="form-control" name="gender" required id="gender">
+                                                    <option value="" data-hidden="true"  
+                                                        selected="selected">
+                                                    </option>
+
+                                                    <option value="0" 
+                                                        @if (old('gender') == 0) 
+                                                            selected="selected"  @endif>
+                                                        Male
+                                                    </option>
+                                                    
+                                                    <option value="1" 
+                                                        @if (old('gender') == 1) 
+                                                            selected="selected" @endif>
+                                                        Female
+                                                    </option>
+                                                </select>         
+                                                @if ($errors->has('gender'))
+                                                    <span class="help-block">
+                                                        <strong>{{ $errors->first('gender') }}</strong>
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="{{ $errors->has('bday') ? ' has-error' : '' }}">
+                                            <div class="col-md-7">
+                                                <label>Birthday</label>
+                                                <input name="bday"  id="bday" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'" value="{{ old('bday') }}">
+                                                                                    
+                                                @if ($errors->has('bday'))
+                                                    <span class="help-block">
+                                                        <strong>{{ $errors->first('bday') }}</strong>
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <!-- IN-SYSTEM USER DETAILS -->
-                            <div class="in-sys-details">
+                                                                    
+                                <!-- USER CONTACT DETAILS -->
                                 <div class="row form-group">
-                                    <div class="{{ $errors->addUser->has('username') ? ' has-error' : '' }}">
-                                        <div class="col-md-12">    
-                                            <label>Username</label>
-                                            <input type="text" required name="username" class="form-control" id="username" value="{{ old('username') }}">     
-                                            @if ($errors->addUser->has('username'))
+                                    <div class="{{ $errors->has('cnum') ? ' has-error' : '' }}">
+                                        <div class="col-md-12">  
+                                            <label>Contact Number</label>
+                                            <input type="number" required name="cnum" id="cnum2" class="form-control" value="{{ old('cnum') }}">
+                                                                                
+                                            @if ($errors->has('cnum'))
                                                 <span class="help-block">
-                                                    <strong>{{ $errors->addUser->first('username') }}</strong>
+                                                    <strong>{{$errors->first('cnum')}}</strong>
                                                 </span>
                                             @endif
                                         </div>
                                     </div>
                                 </div>
-                                
-                                <div class="row form-group">
-                                    <div class="{{ $errors->addUser->has('password') ? ' has-error' : '' }}">
-                                        <div class="col-md-12">    
-                                            <label>Password</label>
-                                            <input type="password" class="form-control" name="password" id="password" required value="{{ old('password') }}">
-                                            @if ($errors->addUser->has('password'))
-                                                <span class="help-block">
-                                                    <strong>{{ $errors->addUser->first('password') }}</strong>
-                                                </span>
-                                            @endif
+
+                                <!-- IN-SYSTEM USER DETAILS -->
+                                <div class="in-sys-details">
+                                    <div class="row form-group">
+                                        <div class="{{ $errors->has('username') ? ' has-error' : '' }}">
+                                            <div class="col-md-12">    
+                                                <label>Username</label>
+                                                <input type="text" required name="username" class="form-control" id="username" value="{{ old('username') }}">     
+                                                @if ($errors->has('username'))
+                                                    <span class="help-block">
+                                                        <strong>{{ $errors->first('username') }}</strong>
+                                                    </span>
+                                                @endif
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-
-                                <div class="row form-group">
-                                    <div class="{{ $errors->addUser->has('user_type') ? ' has-error' : '' }}">
-                                    <div class="col-md-5">
-
-                                        <label>User Type</label>
-                                        <select class="form-control" id="user_type" required name="user_type" value="{{ old('user_type') }}">
-                                            
-                                            <option data-hidden="true" value="" @if (old('user_type') == "") selected="selected" @endif></option>
-
-                                            <option value="0"   @if (old('user_type') == 0) selected="selected" @endif>Administrator</option>
-
-                                            <option  value="1"  @if (old('user_type') == 1) selected="selected" @endif>Owner</option>
-
-                                            <option  value="2"  @if (old('user_type') == 2) selected="selected" @endif>Collector</option>
-
-                                            <option value="3"  @if (old('user_type') == 3) selected="selected" @endif>Peddler</option>
-
-                                            <option  value="4" @if (old('user_type') == 4) selected="selected" @endif>Staff</option>
-
-                                        </select>
-                                        @if ($errors->addUser->has('user_type'))
-                                            <span class="help-block">
-                                            </span>
-                                         @endif
                                     </div>
                                     
-                                    <input type="hidden" value="1" name="user_status" id="user_status">                                      
-                                </div>
+                                    <div class="row form-group">
+                                        <div class="{{ $errors->has('password') ? ' has-error' : '' }}">
+                                            <div class="col-md-12">    
+                                                <label>Password</label>
+                                                <input type="password" class="form-control" name="password" id="password" required value="{{ old('password') }}">
+                                                @if ($errors->has('password'))
+                                                    <span class="help-block">
+                                                        <strong>{{ $errors->first('password') }}</strong>
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                <div class="col-md-7">
+                                    <div class="row form-group">
+                                        <div class="{{ $errors->has('user_type') ? ' has-error' : '' }}">
+                                            <div class="col-md-5">
 
-                                    <!-- SUBMIT BUTTON -->
-                                    <button type="submit" class="btn btn-info btn-fill pull-right" id="form-button-add" style="margin-top: 12%">
-                                        Create
-                                    </button>
-                                    <div class="clearfix"></div>
-                                </div>
-                                </div>
-                            </div>      
-                            </form>                
+                                                <label>User Type</label>
+                                                <select class="form-control" id="user_type" required name="user_type" value="{{ old('user_type') }}">
+                                                    
+                                                    <option data-hidden="true" value="" @if (old('user_type') == "") selected="selected" @endif></option>
+
+                                                    <option value="0"   @if (old('user_type') == 0) selected="selected" @endif>Administrator</option>
+
+                                                    <option  value="1"  @if (old('user_type') == 1) selected="selected" @endif>Owner</option>
+
+                                                    <option  value="2"  @if (old('user_type') == 2) selected="selected" @endif>Collector</option>
+
+                                                    <option value="3"  @if (old('user_type') == 3) selected="selected" @endif>Worker</option>
+
+                                                </select>
+                                                @if ($errors->has('user_type'))
+                                                    <span class="help-block">
+                                                    </span>
+                                                 @endif
+                                            </div>
+                                        
+                                            <input type="hidden" value="1" name="user_status" id="user_status">                                      
+                                        </div>
+                                    </div>         
+
+                                </div>                      
+                            </div>
                         </div>
                     </div>
-                </div>
+
+                    <div class="modal-footer">
+                        <!-- SUBMIT BUTTON -->
+                        <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-add">
+                            Add
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -589,10 +585,7 @@
 
                                                     <option  value="2"  @if (old('profile_profile_user_type') == 2) selected="selected" @endif>Collector</option>
 
-                                                    <option value="3"  @if (old('profile_profile_profile_user_type') == 3) selected="selected" @endif>Peddler</option>
-
-                                                    <option  value="4" @if (old('profile_user_type') == 4) selected="selected" @endif>Staff</option>
-
+                                                    <option value="3"  @if (old('profile_profile_profile_user_type') == 3) selected="selected" @endif>Worker</option>
                                                 </select>
                                                 @if ($errors->editUser->has('profile_user_type'))
                                                     <span class="help-block">
@@ -603,7 +596,7 @@
 
                                         <div class="col-md-7">
                                             <!-- SUBMIT BUTTON -->
-                                            <button type="submit" class="btn btn-info btn-fill pull-right" id="form-button-edit" style="margin-top: 12%">
+                                            <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-edit" style="margin-top: 12%">
                                                 Edit
                                             </button>
                                             <div class="clearfix"></div>
@@ -630,7 +623,7 @@
                         <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic">
                             No
                         </button>
-                        <button type="submit" id="form-button-delete" class="btn btn-info btn-fill pull-right">    Yes 
+                        <button type="submit" id="form-button-delete" class="btn btn-success btn-fill pull-right">    Yes 
                         </button>
                     </form>
                 </div>
@@ -647,44 +640,40 @@
                     <h4 class="modal-title">Change Password</h4>
                 </div>
                 
-                 @if (!empty($error))
+                @if (session('pass_error'))
                     <div class="alert alert-danger">
-                        {{ $error }}
-                    </div>
-                @endif
-                @if (!empty($success))
-                    <div class="alert alert-success">
-                        {{ $success }}
+                        {{ session('pass_error') }}
                     </div>
                 @endif
 
                 <div class="modal-body">
                      <form class="form-horizontal" id="change-pass" method="POST">
                         {{ csrf_field() }}
+                       <!--  {{ method_field('PUT') }} -->
                         
-                        <div class="form-group{{ $errors->has('current_password') ? ' has-error' : '' }}">
+                        <div class="form-group{{ $errors->editPass->has('current_password') ? ' has-error' : '' }}">
                             <label for="current_password" class="col-md-4 control-label">Current Password</label>
  
                             <div class="col-md-6">
                                 <input id="current_password" type="password" class="form-control" name="current_password" required>
  
-                                @if ($errors->has('current_password'))
+                                @if ($errors->editPass->has('current_password'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('current_password') }}</strong>
+                                        <strong>{{ $errors->editPass->first('current_password') }}</strong>
                                     </span>
                                 @endif
                             </div>
                         </div>
  
-                        <div class="form-group{{ $errors->has('new_password') ? ' has-error' : '' }}">
+                        <div class="form-group{{ $errors->editPass->has('new_password') ? ' has-error' : '' }}">
                             <label for="new_password" class="col-md-4 control-label">New Password</label>
  
                             <div class="col-md-6">
                                 <input id="new_password" type="password" class="form-control" name="new_password" required>
  
-                                @if ($errors->has('new_password'))
+                                @if ($errors->editPass->has('new_password'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('new_password') }}</strong>
+                                        <strong>{{ $errors->editPass->first('new_password') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -698,12 +687,13 @@
                             </div>
                         </div>
  
-
+                    <div class="modal-footer">
                         <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic">
                             Cancel
                         </button>
-                        <button type="submit" class="btn btn-info btn-fill pull-right">    Change
+                        <button type="submit" class="btn btn-success btn-fill pull-right">    Change
                         </button>
+                    </div>
                     </form>
                 </div>
             </div>
@@ -732,13 +722,17 @@
     
     <!--KEEP CREATE/EDIT MODAL OPEN IF THERE ARE VALIDATION ERRORS-->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            if ({!!count($errors->addUser)!!} > 0)
+        document.addEventListener("DOMContentLoaded", function(event) {
+            if ({!!count($errors)!!} > 0)
                 $("#addModal").modal();    
-            }, false);
-            // if({!!count($errors->editUser)!!} > 0)
-                
-            // }, false);
+            
+            
+            if({!!count($errors->editUser)!!} > 0)
+                $("#view-edit-{{ session()-> get( 'error_id' ) }}").click();
+
+            if ({!!count($errors->editPass)!!} > 0)
+                $("#passwordModal").modal();   
+        });
 
     </script>
 
@@ -776,33 +770,31 @@
                 data: { 'id' : id },
                 success: function(response){
                     // DEBUGGING
-                    console.log(response.id);
+                    console.log(response[0]);
 
                     $('#change-pass-btn').data('id', id);
 
                     // SET FORM INPUTS
-                    $('#profile_fname').val(response.fname);
-                    $('#profile_mname').val(response.mname); 
-                    $('#profile_lname').val(response.lname);
+                    $('#profile_fname').val(response[0].fname);
+                    $('#profile_mname').val(response[0].mname); 
+                    $('#profile_lname').val(response[0].lname);
 
-                    if (response.gender == "Male")
+                    if (response[0].gender == "Male")
                         $('#profile_gender').val('0');
                     else $('#profile_gender').val('1'); //Female
 
-                    $('#profile_cnum').val(response.cnum);
-                    $('#profile_bday').val(response.bday);
-                    $('#profile_username').val(response.username);
-                    $('#profile_password').val(response.password);
+                    $('#profile_cnum').val(response[0].cnum);
+                    $('#profile_bday').val(response[0].bday);
+                    $('#profile_username').val(response[0].username);
+                    $('#profile_password').val(response[0].password);
 
-                    if (response.user_type == "Administrator")
+                    if (response[0].user_type == "Administrator")
                         $('#profile_user_type').val('0'); 
-                    else if (response.user_type == "Owner")
+                    else if (response[0].user_type == "Owner")
                         $('#profile_user_type').val('1'); 
-                    else if (response.user_type == "Collector")
+                    else if (response[0].user_type == "Collector")
                         $('#profile_user_type').val('2'); 
-                    else if (response.user_type == "Peddler")
-                        $('#profile_user_type').val('3'); 
-                    else $('#profile_user_type').val('4'); //Staff
+                    else $('#profile_user_type').val('3'); //Worker
 
                     // MODAL
                     $("#profileModal").modal('show'); 

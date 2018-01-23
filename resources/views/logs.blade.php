@@ -31,9 +31,6 @@
     <link href="/css/pe-icon-7-stroke.css" rel="stylesheet" />
     
     <style>
-        .bgd{
-            background-image: url(../images/bg-6-full.jpg);
-        }
         .box{
             border: 0px solid #888888;
             box-shadow: 5px 5px 8px 5px #888888;

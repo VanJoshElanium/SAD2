@@ -1,4 +1,3 @@
-<!doctype html>
 @extends('layouts.app')
 
 @section('content')
@@ -32,19 +31,9 @@
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
     <link href="/css/pe-icon-7-stroke.css" rel="stylesheet" />
     <style>
-        .bgd{
-            background-image: url(../images/bg-6-full.jpg);
-        }
         .box{
             border: 0px solid #888888;
             box-shadow: 5px 5px 8px 5px #888888;
-        }
-        .modal-title{
-            text-align:center;
-            color: white;
-        }
-        .modal-header{
-            background-color:darkgray;
         }
         tbody.qtty{
             text-align: center;
@@ -66,47 +55,45 @@
     <div class="wrapper">
 
         <!-- SIDEBAR -->
-                <div class="sidebar" data-color="none" data-image="/images/lol.png">
+        <div class="sidebar" data-color="none" data-image="/images/lol.png">
             <div class="sidebar-wrapper">
                 <div class="logo">
                     <a href="{{ route('dashboard') }}" class="simple-text">
-                        Prince &#38; Princess
+                        Prince & Princess
                     </a>
                 </div>
 
                 <ul class="nav">
                     <li>
                         <a href="{{ route('dashboard') }}">
-                            <i class="pe-7s-graph"></i>
+                            <i class="pe-7s-note"></i>
                             <p>Dashboard</p>
                         </a>
                     </li>
                     <li>
-                        <a href="/public/html/user.html">
+                        <a href="/html/user.html">
                             <i class="pe-7s-user"></i>
                             <p>User Profile</p>
                         </a>
                     </li>
-
                     <li class="active">
-                        <a href="{{ route('terms')}}">
-                            <i class="pe-7s-rocket"></i>
-                            <p>Terms</p>
+                        <a href="{{route('terms') }}">
+                            <i class="pe-7s-graph"></i>
+                            <p>Term Management</p>
                         </a>
                     </li>
-                    <li>
-                        <a href="{{ route('inventory') }}">
-                            <i class="pe-7s-box2"></i>
+                    <li >
+                        <a href="{{route('inventory') }}">
+                            <i class="pe-7s-drawer"></i>
                             <p>Inventory</p>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('suppliers') }}">
+                        <a href="{{route('suppliers') }}">
                             <i class="pe-7s-box1"></i>
-                            <p>Suppliers</p>
+                            <p>Supplier Management</p>
                         </a>
                     </li>
-
                     <li>
                         <a href="{{ route('usrmgmt') }}">
                             <i class="pe-7s-users"></i>
@@ -114,7 +101,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('logs')}}">
+                        <a href="{{ route('logs') }}">
                             <i class="pe-7s-note2"></i>
                             <p>Logs</p>
                         </a>
@@ -175,6 +162,7 @@
                             <div class="tab-content">
                                 <!-- Workers and location Tab -->
                                 <div role="tabpanel" class="tab-pane fade in active" id="mbrNloc">
+                                
                                       <div class="row">
                                         <div class="col-md-12">
                                         <div class="col-md-8">
@@ -192,25 +180,43 @@
                                                     <thead>
                                                         <th>Name</th>
                                                         <th>Position</th>
-                                                        <th>Edit</th>
-                                                        <th>Remove</th>
+<!--                                                         <th>Edit</th>
+                                                        <th>Remove</th> -->
                                                     </thead>
                                                     <tbody>
+                                                    @forelse($workers as $worker)
                                                         <tr>
-                                                            <td>Marko G. Garduvilia</td> 
-                                                            <td>Team Leader</td>
+                                                            <td>
+                                                                {{$worker->fname}}
+                                                                {{$worker->mname}}.
+                                                                {{$worker->lname}}
+                                                            </td> 
+                                                           
+                                                            @if ($worker->worker_type == 0)
+                                                                    
+                                                                @elseif ($worker->worker_type == 1)
+                                                                    <td> Leader </td>
+                                                                @elseif ($worker->worker_type == 2)
+                                                                    <td> Permament Staff </td>
+                                                                @else
+                                                                    <td> Temporary Staff </td>
+                                                            @endif
+                                                            
                                                             <td>
                                                             <span data-toggle="tooltip" data-placement="bottom" title="Edit the position of the peddler."> 
-                                                            <button type="button" data-target="#editPeddler" data-toggle="modal" class="btn btn-sm btn-warning btn-fill" id="add-btn"> 
+                                                            <button type="button" data-target="#editPeddler" data-toggle="modal" class="btn  btn-primary btn-fill" id="add-btn"> 
                                                             Edit
                                                             </button></span>
                                                             </td>
                                                             <td>
-                                                            <button type="button" data-target="#removePeddler" data-toggle="modal" class="btn btn-sm btn-danger btn-fill" id="add-btn"> 
+                                                            <button type="button" data-target="#removePeddler" data-toggle="modal" class="btn  btn-danger btn-fill" id="add-btn"> 
                                                             Remove Peddler
                                                             </button>   
                                                             </td>
                                                         </tr>
+                                                        @empty
+                                                            <h3 style="text-align: center"> No terms stored. </h3>
+                                                        @endforelse
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -220,11 +226,11 @@
                                             <div class="card">
                                                 <div class="header">
                                                     <center>
-                                                    <h4 class="title">Collector</h4>
-                                                    <p class="category">James A. Huston</p>
+                                                    <h4 class="title">{{$term[0]->fname}} {{$term[0]->mname}}. {{$term[0]->lname}}</h4>
+                                                    <p class="category">Collector</p>
                                                     <br><hr>
-                                                    <h4 class="title">Term Location</h4>
-                                                    <p class="category">Mati, Davao Oriental, Philippines</p>
+                                                    <h4 class="title">{{$term[0]->location}}</h4>
+                                                    <p class="category">Term Location</p>
                                                     <hr>    
                                                     </center>
                                                 </div>
@@ -329,7 +335,7 @@
                                                             <td>Gasoline expense</td> 
                                                             <td>&#8369; 1,000.00</td>
                                                             <td>
-                                                            <button type="button" data-target="#editExpense" data-toggle="modal" class="btn btn-sm btn-warning btn-fill" id="add-btn"> 
+                                                            <button type="button" data-target="#editExpense" data-toggle="modal" class="btn  btn-warning btn-fill" id="add-btn"> 
                                                                 Edit Expense
                                                             </button>
                                                             </td>
@@ -380,13 +386,13 @@
                                                             <td>01/01/18</td> 
                                                             <td>&#8369; 250.00</td>
                                                             <td>
-                                                            <button type="button" data-target="#editCollection" data-toggle="modal" class="btn btn-sm btn-warning btn-fill" id="add-btn"> 
+                                                            <button type="button" data-target="#editCollection" data-toggle="modal" class="btn  btn-warning btn-fill" id="add-btn"> 
                                                                 Edit Collection
                                                             </button>
                                                             </td>
                                                             <td>
                                                             <span data-toggle="tooltip" data-placement="bottom" title="View if there are any comments or payment changes.">
-                                                                <button type="button" data-target="#viewNote" data-toggle="modal" class="btn btn-sm btn-info btn-fill" id="add-btn">View Note</button></span>
+                                                                <button type="button" data-target="#viewNote" data-toggle="modal" class="btn  btn-info btn-fill" id="add-btn">View Note</button></span>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -431,72 +437,84 @@
 <!--MODALS-->
 <!--Add Peddler-->
 <div class="modal fade" role="dialog" id="addPeddler">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <center>
                     <h4 class="modal-title">Add Peddler</h4>
-                </div>
-                                    
+                </center>
+            </div>
+            
+            <form method="POST" class="form-horizontal" action="/workers">
+                {{ csrf_field() }}
                 <div class="modal-body">
                     <div id="view-edit-content" class="row">
                         <!-- Term edit form-->
-                        <div class="col-md-12"> 
-                            <form method="POST" class="form-horizontal" id="view-edit-profile">      
-                                <!-- Collector initialization-->                                    
-                                <div class="row form-group">                       
-                                    <div class=""> 
-                                        <div class="col-md-8">   
-                                            <!--Acquires the list of workers within users table-->
-                                            <label class="sel1">Peddler Name:</label>
-                                              <form>
-                                                  <!-- Generate list of collectors-->
-                                                  <select class="form-control" id="sel1">
-                                                    <option>David Mark</option>
-                                                  </select>
-                                              </form>
-                                            
+                        <div class="col-md-12">             
+                            <!-- Collector initialization-->       
+                            <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">                         
+                            <div class="row form-group">                       
+                                <div class="{{ $errors->has('peddler') ? ' has-error' : '' }}"> 
+                                    <div class="col-md-8">   
+                                        <!--Acquires the list of workers within users table-->
+                                        <label class="sel1">Peddler Name:</label>
+                                          <select class="form-control" name="peddler" required id="peddler">
+                                                <option value="" data-hidden="true" selected="selected">
+                                                </option>
+                                                @foreach($a_peddlers as $a_peddler)
+                                                    <option value="{{$a_peddler->user_id}}">
+                                                        {{$a_peddler->fname}}&nbsp
+                                                        {{$a_peddler->mname}}.
+                                                        {{$a_peddler->lname}}
+                                                    </option>
+                                                @endforeach
+                                            </select>           
+                                            @if ($errors->has('peddler'))
+                                                <span class="help-block">
+                                                    <strong>{{ $errors->first('peddler') }}</strong>
+                                                </span>
+                                            @endif                   
+                                    </div>
+                                </div>
+                            </div>                                                                    
+                            <div class="row form-group"> 
+                            <!--Identifies the position of the peddler-->                      
+                                <div class="{{ $errors->has('position') ? ' has-error' : '' }}"> 
+                                    <div class="col-md-8">    
+                                        <label class="sel1">Position:</label>
+                                            <select name="position" required class="form-control" id="position">
+                                                <option value="0">Team Leader</option>
+                                                <option value="1">Permanent Staff</option>
+                                                <option value="2">Temporary Staff</option>  
+                                            </select>
+                                            @if ($errors->has('position'))
                                                 <span class="help-block">
                                                     <strong>
-                                                        
+                                                        {{ $errors->first('position') }}
                                                     </strong>
                                                 </span>
-                                            
-                                        </div>
+                                            @endif 
                                     </div>
-                                </div>                                                                    
-                                <div class="row form-group"> <!--Identifies the position of the peddler-->                      
-                                    <div class=""> 
-                                        <div class="col-md-8">    
-                                            <label class="sel1">Position:</label>
-                                              <form>
-                                                
-                                                  <select class="form-control" id="sel1">
-                                                    <option>Team leader</option>
-                                                    <option>Subordinate</option>  
-                                                  </select>
-                                              </form>
-                                                <span class="help-block">
-                                                    <strong>
-                                                        
-                                                    </strong>
-                                                </span>
-                                        </div>
-                                    </div>
-                                </div> 
-                            </form>
-                            </div>
+                                </div>
+                            </div>     
                         </div>
                     </div>
-                    <div class="modal-footer">
-                      <center>
-                          <!--ADD New Term button-->
-                          <button type="button" class="btn btn-bg btn-success btn-fill">Add</button>
-                          <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
-                    </div>
                 </div>
-            </div>
-        </div><!--End  div of modal-->
+                <div class="modal-footer">
+                    <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic">
+                        Cancel
+                    </button>
+
+                    <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-add">
+                      Add
+                    </button>      
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--End  div of modal-->
 <!--Remove peddler-->
 <div class="modal fade" role="dialog" id="removePeddler">
         <div class="modal-dialog">
@@ -1096,10 +1114,7 @@
 
     <!--   Core JS Files   -->
     <script src="/js/jquery.3.2.1.min.js" type="text/javascript"></script>
-    <!--<script src="/js/bootstrap.min.js" type="text/javascript"></script>-->
-
-    <!--  Charts Plugin -->
-    <script src="/js/chartist.min.js"></script>
+    <script src="/js/bootstrap.min.js" type="text/javascript"></script>
 
     <!--  Notifications Plugin    -->
     <script src="/js/bootstrap-notify.js"></script>
@@ -1111,31 +1126,9 @@
     <script src="/js/demo.js"></script>
 
     <script type="text/javascript">
-        $(document).ready(function(){
-
-            demo.initChartist();
-
-            $.notify({
-                icon: 'pe-7s-gift',
-                message: "Welcome to <b>Light Bootstrap Dashboard</b> - a beautiful freebie for every web developer."
-
-            },{
-                type: 'info',
-                timer: 4000
-            });
-
-        });
-    </script>
-    <script type="text/javascript">
-        $(function () {
-          $('[data-toggle="tooltip"]').tooltip()
-        })
-    </script>
-    <script type="text/javascript">
         $('#myTabs a').click(function (e) {
           e.preventDefault()
           $(this).tab('show')
         })
     </script>
 @endsection
-</html>

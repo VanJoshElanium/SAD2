@@ -28,9 +28,6 @@
     <link href="/css/pe-icon-7-stroke.css" rel="stylesheet" />
 
     <style type="text/css">
-        .bgd{
-            background-image: url(../images/bg-6-full.jpg);
-        }
         .box{
             border: 0px solid #888888;
             box-shadow: 5px 5px 8px 5px #888888;
@@ -45,7 +42,9 @@
         a:hover{
             color:#777;
         }
-
+        .modal-title{
+            text-align:center;
+        }
         #exTab3 .tab-content {
           background-color: #ffffff;
           padding : 5px 15px;
@@ -77,15 +76,15 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#">
-                            <i class="{{route('terms') }}"></i>
+                        <a href="{{route('terms') }}">
+                            <i class="pe-7s-graph"></i>
                             <p>Term Management</p>
                         </a>
                     </li>
                     <li class="active">
                         <a href="{{route('inventory') }}">
                             <i class="pe-7s-drawer"></i>
-                            <p>Inventory Management</p>
+                            <p>Inventory</p>
                         </a>
                     </li>
                     <li>
@@ -187,7 +186,7 @@
 
                                             <div class="col-md-2" style="margin-top:8px;">
                                                 <button type="button" data-target="#addModal-un" data-toggle="modal" class="btn btn-success btn-fill" id="add-btn"> 
-                                                    Add Item
+                                                    Update
                                                 </button>
                                             </div> 
                                         </div>
@@ -199,10 +198,10 @@
                                                         @if(count($items)>0)
                                                         <th>@sortablelink('inventory_id', 'ID')</th>
                                                         <th>@sortablelink('supply_name', 'Item Name')</th>
-                                                        <th>@sortablelink('inventory_quantity', 'Quantity')</th>
-                                                        <th>@sortablelink('inventory_price', 'Price')</th>
                                                         <th>@sortablelink('supplier_name', 'Supplier Name')</th>
-                                                        <th>@sortablelink('received_at', 'Received At')</th>
+                                                        <th>@sortablelink('inventory_price', 'Price')</th>
+                                                        <th>@sortablelink('inventory_quantity', 'Quantity')</th>
+                                                        <!-- <th>@sortablelink('received_at', 'Received At')</th> -->
                                                         @endif
                                                     </tr>
                                                 </thead>
@@ -211,11 +210,13 @@
                                                     @forelse($items as $item)
                                                         <tr data-target="profileModal" data-toggle="modal" class="view-edit-modal" data-id='{{$item->id}}'>    
                                                             <td>{{$item->inventory_id}}</td>
-                                                            <td>{{$item->supply_name}}</td>
-                                                            <td>{{$item->inventory_quantity}}</td>
-                                                            <td>{{$item->inventory_price}}</td>
+                                                            <td>{{$item->inventory_name}}</td>
                                                             <td>{{$item->supplier_name}}</td>
-                                                            <td>{{$item->received_at}}</td>
+                                                            <td>{{$item->inventory_price}}</td>
+                                                            <td>{{$item->inventory_qty}}</td>
+                                                            
+                                                            
+                                                            <!-- <td>{{$item->received_at}}</td> -->
                                                             <td> 
                                                                 <button data-target="#editModal-un" data-toggle="modal" data-id='{{$item->inventory_id}}' class="edit-btn-un btn btn-primary btn-fill">
                                                                     View
@@ -259,7 +260,7 @@
 
                                             <div class="col-md-2" style="margin-top:8px;">
                                                 <button type="button" data-target="#addModal" data-toggle="modal" class="btn btn-success btn-fill" id="add-btn"> 
-                                                    Add Item
+                                                    Add Damaged Item
                                                 </button>
                                             </div> 
                                         </div>
@@ -322,16 +323,16 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">New Undamaged Item</h4>
+                    <h4 class="modal-title">Update Quantities</h4>
                 </div>
                                     
                 <div class="modal-body">
                     <div class="row">
                         <!-- USER ADD FORM -->
                         <div class="col-lg-12"> 
-                            <form class="form-horizontal" method="POST" action="/inventory">
-                                {{ csrf_field() }}
-
+                            <form class="form-horizontal" method="POST" action="/inventory/-999">
+                                {{ csrf_field() }}`
+                                {{ method_field('PUT') }}
                                 <div class="row form-group">   
                                     <div class="col-md-4">    
                                         <label for="sel1">Supplier Name</label>
@@ -347,13 +348,13 @@
                                     </div>
                                
                                     <div class="col-md-4">    
-                                        <label for="sel1">Person In Charge</label>
+                                        <label for="sel1">Handler</label>
                                         <select class="form-control" name="inventory_user_id" required id="pic">
                                             <option value="" data-hidden="true" selected="selected">
                                             </option>
                                             @foreach($workers as $worker)
                                                 <option value="{{$worker->id}}">
-                                                    {{$worker->fname}} {{$worker->mname}} {{$worker->lname}}
+                                                    {{$worker->fname}} {{$worker->mname}}. {{$worker->lname}}
                                                 </option>
                                             @endforeach
                                         </select>         
@@ -362,7 +363,7 @@
                                     <div class="{{$errors->has('received_at') ? ' has-error' : ''}}">
                                         <div class="col-md-4">    
                                             <label>Date Received</label>
-                                            <input type="datetime-local" id="received_at" class="form-control"  name="received_at" required value="{{old('received_at')}}"> 
+                                            <input type="datetime-local" id="received_at" class="form-control"  name="received_at" required value="{{App\Inventory::currdate()}}"> 
                                             @if ($errors->has('received_at'))
                                                 <span class="help-block">
                                                     <strong>
@@ -381,14 +382,15 @@
                                             <select class="form-control item_name" name="supply_name[]" required>
                                             </select> 
                                         </div>
-
+                                        <!-- 
                                         <div class="col-md-2">              
                                             <label>Item Price</label>
                                              <input type="number" class="form-control" required name="inventory_price[]"> 
-                                        </div>
+                                        </div> 
+                                        -->
                                         
                                         <div class="col-md-2">              
-                                            <label>Item Qty</label>
+                                            <label>Item Quantity</label>
                                              <input type="number" class="form-control" required name="inventory_quantity[]"> 
                                         </div>
                                     </div>                           
@@ -396,16 +398,13 @@
 
 
                                 <div class="modal-footer">
-                                    <div class="row form-group">
-                                        <input type="hidden" value="1" name="supplier_status" id="supplier_status">
-                                    </div>
 
                                     <!-- SUBMIT BUTTON -->
                                     <button type="button" class="btn btn-info btn-fill pull-left" id="add-form">
                                         Add Item Form
                                     </button>
 
-                                    <button type="submit" class="btn btn-info btn-fill pull-right" id="form-button-add">
+                                    <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-add">
                                         Add Item/s
                                     </button>
 
@@ -423,134 +422,133 @@
     </div>
 
     <!-- ADD MODAL DAMAGED-->
+    <div class="modal fade" id="addModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">New Damaged Item</h4>
+            </div>
+                                
+            <div class="modal-body">
+                <div class="row">
+                    <!-- USER ADD FORM -->
+                    <div class="col-lg-12"> 
+                        <form class="form-horizontal" method="POST" action="/inventory">
+                            {{ csrf_field() }}
 
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">New Damaged Item</h4>
-                </div>
-                                    
-                <div class="modal-body">
-                    <div class="row">
-                        <!-- USER ADD FORM -->
-                        <div class="col-lg-12"> 
-                            <form class="form-horizontal" method="POST" action="/inventory">
-                                {{ csrf_field() }}
-
-                                <!-- SUPPLIER NAME & ADDR DETAILS-->                                    
-                                <div class="row form-group">   
-                                    <div class="{{$errors->has('supplier_name') ? ' has-error' : ''}}"> 
-                                        <div class="col-md-4">    
-                                            <label for="sel1">Supplier Name</label>
-                                            <select class="form-control" name="gender" required id="gender">
-                                                
-                                            </select>         
-                                            @if ($errors->addUser->has('gender'))
-                                                <span class="help-block">
-                                                    <strong>{{ $errors->addUser->first('gender') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
+                            <!-- SUPPLIER NAME & ADDR DETAILS-->                                    
+                            <div class="row form-group">   
+                                <div class="{{$errors->has('supplier_name') ? ' has-error' : ''}}"> 
+                                    <div class="col-md-4">    
+                                        <label for="sel1">Supplier Name</label>
+                                        <select class="form-control" name="gender" required id="gender">
+                                            
+                                        </select>         
+                                        @if ($errors->addUser->has('gender'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->addUser->first('gender') }}</strong>
+                                            </span>
+                                        @endif
                                     </div>
-
-                                    <div class="{{$errors->has('supplier_name') ? ' has-error' : ''}}"> 
-                                        <div class="col-md-4">    
-                                            <label for="sel1">Person In Charge</label>
-                                            <select class="form-control" name="gender" required id="gender">
-                                                
-                                            </select>         
-                                            @if ($errors->addUser->has('gender'))
-                                                <span class="help-block">
-                                                    <strong>{{ $errors->addUser->first('gender') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                    <div class="{{$errors->has('supplier_name') ? ' has-error' : ''}}"> 
-                                        <div class="col-md-4">    
-                                            <label>Date Received</label>
-                                            <input type="datetime-local" id="supplier_name" class="form-control"  name="supplier_name" required value="{{old('supplier_name')}}"> 
-                                            @if ($errors->has('supplier_name'))
-                                                <span class="help-block">
-                                                    <strong>
-                                                        {{ $errors->first('supplier_name') }}
-                                                    </strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>    
-
-                                <div class="row form-group">
-                                    <div class="{{$errors->addUser->has('lname') ? ' has-error' : ''}}">
-                                        <div class="col-md-4">              
-                                            <label>Item Name</label>
-                                             <input type="text" id="lname" class="form-control" required name="lname" value="{{ old('lname') }}"> 
-                                             @if ($errors->addUser->has('lname'))
-                                                 <span class="help-block">
-                                                    <strong>
-                                                        {{ $errors->addUser->first('lname') }}</strong>
-                                                 </span>
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                    <div class="{{$errors->addUser->has('lname') ? ' has-error' : ''}}">
-                                        <div class="col-md-2">              
-                                            <label>Item Price</label>
-                                             <input type="text" id="lname" class="form-control" required name="lname" value="{{ old('lname') }}"> 
-                                             @if ($errors->addUser->has('lname'))
-                                                 <span class="help-block">
-                                                    <strong>
-                                                        {{ $errors->addUser->first('lname') }}</strong>
-                                                 </span>
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                    <div class="{{$errors->addUser->has('lname') ? ' has-error' : ''}}">
-                                        <div class="col-md-2">              
-                                            <label>Item Qty</label>
-                                             <input type="text" id="lname" class="form-control" required name="lname" value="{{ old('lname') }}"> 
-                                             @if ($errors->addUser->has('lname'))
-                                                 <span class="help-block">
-                                                    <strong>
-                                                        {{ $errors->addUser->first('lname') }}</strong>
-                                                 </span>
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-2"> 
-                                        <button class="del-btn btn btn-danger btn-fill"> Remove </button>
-                                    </div>
-                                </div>                           
-
-                                <!-- IN-SYSTEM USER DETAILS -->
-
-                                <div class="row form-group">
-                                    <input type="hidden" value="1" name="supplier_status" id="supplier_status">
                                 </div>
 
-                                <!-- SUBMIT BUTTON -->
-                                <button type="submit" class="btn btn-info btn-fill pull-right" id="form-button-add">
-                                    Add Item/s
-                                </button>
+                                <div class="{{$errors->has('supplier_name') ? ' has-error' : ''}}"> 
+                                    <div class="col-md-4">    
+                                        <label for="sel1">Person In Charge</label>
+                                        <select class="form-control" name="gender" required id="gender">
+                                            
+                                        </select>         
+                                        @if ($errors->addUser->has('gender'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->addUser->first('gender') }}</strong>
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
 
-                                <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic pull-right" style="margin-right: 2%">
-                                    Cancel
-                                </button>             
-                                <div class="clearfix"></div>
-                                    
-                            </form>                
-                        </div>
+                                <div class="{{$errors->has('supplier_name') ? ' has-error' : ''}}"> 
+                                    <div class="col-md-4">    
+                                        <label>Date Received</label>
+                                        <input type="datetime-local" class="form-control"  name="supplier_name" required value="{{old('supplier_name')}}"> 
+                                        @if ($errors->has('supplier_name'))
+                                            <span class="help-block">
+                                                <strong>
+                                                    {{ $errors->first('supplier_name') }}
+                                                </strong>
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>    
+
+                            <div class="row form-group">
+                                <div class="{{$errors->addUser->has('lname') ? ' has-error' : ''}}">
+                                    <div class="col-md-4">              
+                                        <label>Item Name</label>
+                                         <input type="text" id="lname" class="form-control" required name="lname" value="{{ old('lname') }}"> 
+                                         @if ($errors->addUser->has('lname'))
+                                             <span class="help-block">
+                                                <strong>
+                                                    {{ $errors->addUser->first('lname') }}</strong>
+                                             </span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="{{$errors->addUser->has('lname') ? ' has-error' : ''}}">
+                                    <div class="col-md-2">              
+                                        <label>Item Price</label>
+                                         <input type="text" id="lname" class="form-control" required name="lname" value="{{ old('lname') }}"> 
+                                         @if ($errors->addUser->has('lname'))
+                                             <span class="help-block">
+                                                <strong>
+                                                    {{ $errors->addUser->first('lname') }}</strong>
+                                             </span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="{{$errors->addUser->has('lname') ? ' has-error' : ''}}">
+                                    <div class="col-md-2">              
+                                        <label>Item Quantity</label>
+                                         <input type="text" id="lname" class="form-control" required name="lname" value="{{ old('lname') }}"> 
+                                         @if ($errors->addUser->has('lname'))
+                                             <span class="help-block">
+                                                <strong>
+                                                    {{ $errors->addUser->first('lname') }}</strong>
+                                             </span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2"> 
+                                    <button class="del-btn btn btn-danger btn-fill"> Remove </button>
+                                </div>
+                            </div>                           
+
+                            <!-- IN-SYSTEM USER DETAILS -->
+
+                            <div class="row form-group">
+                                <input type="hidden" value="1" name="supplier_status" id="supplier_status">
+                            </div>
+
+                            <!-- SUBMIT BUTTON -->
+                            <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-add">
+                                Add Item/s
+                            </button>
+
+                            <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic pull-right" style="margin-right: 2%">
+                                Cancel
+                            </button>             
+                            <div class="clearfix"></div>
+                                
+                        </form>                
                     </div>
                 </div>
             </div>
         </div>
     </div>
+<
 
     <!-- VIEW/EDIT/DELETE MODAL UNDAMAGED -->
     <div class="modal fade" role="dialog" id="editModal-un">
@@ -569,12 +567,15 @@
                                 
                                 {{ method_field('PUT') }}
                                 {{ csrf_field() }}
-                                
+
+                                <input type="hidden" class="form-control" name="si_id" id="si_id">
+
                                 <div class="row form-group">   
                                     <div class="col-md-4">    
                                         <label for="sel1">Supplier Name</label>
-                                        <input type="text" class="form-control" name="view_supplier_name" required id="view_supplier_name">        
+                                        <input type="text" class="form-control" name="view_supplier_name" required id="view_supplier_name">   
                                     </div>
+                                    <input type="hidden" class="form-control" name="supplier_id" id="supplier_id">  
                                
                                     <div class="col-md-4">    
                                         <label for="sel1">Person In Charge</label>
@@ -609,19 +610,21 @@
                                             <input type="text" class="form-control item_name" name="view_item_name" id="view_item_name"required> 
                                         </div>
 
-                                        <div class="col-md-2">              
+                                            <input type="hidden" class="form-control" name="item_id" id="item_id">
+
+                                        <!-- <div class="col-md-2">              
                                             <label>Item Price</label>
                                              <input type="number" id="view_item_price" class="form-control" required name="view_inventory_price"> 
-                                        </div>
+                                        </div> -->
                                         
                                         <div class="col-md-2">              
-                                            <label>Item Qty</label>
+                                            <label>Item Quantity</label>
                                              <input type="number" id="view_item_quantity" class="form-control" required name="view_inventory_quantity"> 
                                         </div>
                                     </div>                           
                                 </div> 
 
-                                <button type="submit" class="btn btn-info btn-fill pull-right" id="form-button-edit">
+                                <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-edit">
                                         Edit
                                     </button>
 
@@ -645,7 +648,7 @@
                         <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic">
                             No
                         </button>
-                        <button type="submit" id="form-button-delete" class="btn btn-info btn-fill pull-right">    Yes 
+                        <button type="submit" id="form-button-delete" class="btn btn-success btn-fill pull-right">    Yes 
                         </button>
                     </form>
                 </div>
@@ -677,23 +680,25 @@
     <!-- Light Bootstrap Table DEMO methods, don't include it in your project! -->
     <script src="/js/demo.js"></script>
 
+    
     <script>
+        // LOAD LIST OF SUPPLIED ITEMS ONCE A SUPPLIER IS CHOSEN//
         $(document).ready(function(){ 
             var i=1;
-
+            var options = "";
             $('#supplier_name').click(function() {
                 var id = document.getElementById("supplier_name");
+                
                 $('.item_name').empty();
                 if (id && id.value) {
                     var value = $('#supplier_name').val();
                     $.ajax({
-                        url: "getSupply/" +value,
+                        url: "/getSupply/" +value,
                         type: "GET",
                         data: {'id' : value},
-                        success: function(response){
-                            var options = "";
-                            for (i = 0; i < response.length; ++i) {
-                                options += "<option value='" + response[i].supply_id + "'>" + response[i].supply_name + "</option>";
+                        success: function(response){                      
+                            for (i = 0; i < response.length; i++) {
+                                options += "<option value='" + response[i].inventory_id + "'>" + response[i].inventory_name + "</option>";
                             }
                             $('.item_name').append(options);
                         },
@@ -704,10 +709,10 @@
                 }
             });
 
+            // CREATE ADDITIONAL ITEM FORM
             $('#add-form').click(function() {
                 i++;
-
-                var $options = $(".item_name > option").clone();
+ 
                 $('#un-form').append(
                     "<div class='row form-group' id='row-" +i +"'>"+
                         "<div class='col-md-4'>"+           
@@ -717,13 +722,13 @@
                             "</select>"+ 
                         "</div>"+
 
-                        "<div class='col-md-2'>"+             
-                            "<label>Item Price</label>"+
-                             "<input type='number' class='form-control' required name='inventory_price[]'>"+
-                        "</div>"+
+                        // "<div class='col-md-2'>"+             
+                        //     "<label>Item Price</label>"+
+                        //      "<input type='number' class='form-control' required name='inventory_price[]'>"+
+                        // "</div>"+
                         
                         "<div class='col-md-2'>"+             
-                            "<label>Item Qty</label>"+
+                            "<label>Item Quantity</label>"+
                              "<input type='number' class='form-control' required name='inventory_quantity[]'>"+ 
                         "</div>"+
 
@@ -733,20 +738,23 @@
                     "</div>"
                 );
 
-                $('#item-row-'+i).append($options);
+                $('#item-row-'+i).append(options);
             });
 
+
+            // REMOVE ITEM FORM
             $(document).on('click', '.btn_remove', function(){  
                var button_id = $(this).attr("id");   
                $('#row-'+button_id+'').remove();  
             });
         });
 
+        //EDIT ITEM
         $(document).on("click", ".edit-btn-un", function () {
             var id = $(this).data('id');
 
             $.ajax({
-                url: "getItem/" + id,
+                url: "/getItem/" + id,
                 type: 'GET',             
                 data: {'id' : id },
                 success: function(response){
@@ -754,14 +762,17 @@
                     console.log(response);
 
                     // SET FORM INPUTS
+                    $('#si_id').val(response[0].si_id);
+                    $('#supplier_id').val(response[0].supplier_id);
+                    $('#item_id').val(response[0].inventory_id);
+
                     $('#view_supplier_name').val(response[0].supplier_name);
-                    $('#view_item_name').text(response[0].supply_name); 
-                    $('#view_item_name').val(response[0].supply_name); 
-                    $('#view_item_price').val(response[0].inventory_price);
-                    $('#view_item_quantity').val(response[0].inventory_quantity);
-                    var to_format = response[0].received_at.replace(' ', 'T');
+                    $('#view_item_name').val(response[0].inventory_name); 
+                    $('#view_item_quantity').val(response[0].inventory_qty);
+                    // $('#view_received_at').val(response[0].si_date);
+                    var to_format = response[0].si_date.replace(' ', 'T');
                     $('#view_received_at').val(to_format);
-                    $("#view_pic option[value='"+response[0].inventory_user_id+"']").attr('selected', true)
+                    $("#view_pic option[value='"+response[0].user_id+"']").attr('selected', true)
 
                     // MODAL
                     $("#view-edit-content").show();
@@ -782,7 +793,7 @@
             $('#form-button-edit').show(); 
         });
 
-        //DELETE USER
+        // DELETE ITEM
         $(document).on("click", ".del-btn-un", function () {
             var id = $(this).data('id');
 
