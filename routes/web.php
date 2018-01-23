@@ -15,8 +15,6 @@ Auth::routes();
 
 Route::get('/', function () {return view('auth.login');});
 
-Route::post('/changePassword/{id}','UserController@changePassword');
-
 Route::get('/home', 'DashboardController@index')->name('dashboard');
 Route::get('/profile', 'ProfileController@index')->name('profile');
 
@@ -29,7 +27,7 @@ Route::get('/searchSuppliers', ['as'=>'searchSuppliers','uses'=>'SupplierControl
 //SUPPLY MANAGEMENT
 Route::resource('supplies', 'SupplyController');
 Route::get('supplies/{id}', 'SupplyController@show');
-Route::get('getSupply/{id}', 'SupplyController@getSupply');
+Route::get('getSuppliedItem/{id}', 'SupplyController@getSuppliedItem');
 Route::get('/searchSupplies', ['as'=>'searchSupplies','uses'=>'SupplyController@index']);
 
 //USER MANAGEMENT
@@ -37,24 +35,28 @@ Route::resource('create_users', 'UserController');
 Route::get('/usrmgmt', 'UserController@index')->name('usrmgmt');
 Route::get('getUser/{id}', 'UserController@getUser');
 Route::get('/searchUsers', ['as'=>'searchUsers','uses'=>'UserController@index']);
+Route::post('changePassword/{id}','UserController@changePassword');
 
 
 //INVENTORY
 Route::resource('inventory', 'InventoryController');
 Route::get('getItem/{id}', 'InventoryController@getItem');
-Route::get('/searchItems', ['as'=>'searchItems','uses'=>'InventoryController@index']);
 Route::get('getSupply/{id}', 'InventoryController@getSupply');
+Route::get('/searchItems', ['as'=>'searchItems','uses'=>'InventoryController@index']);
 Route::get('/inventory', 'InventoryController@index')->name('inventory');
 
-//Terms
+//TERM MANAGEMENT
 Route::resource('terms', 'TermsController');
 Route::get('/terms', 'TermsController@index')->name('terms');
 
-//Terms Profile
+//T-PROFILE
 Route::resource('termsprofile', 'TermsProfileController');
 Route::get('/termsprofile', 'TermsProfileController@index')->name('termsprofile');
 
-//Logs
+//T-WORKERS
+Route::resource('workers', 'WorkerController');
+
+//LOGS 
 Route::resource('logs', 'LogsController');
 Route::get('/logs', 'LogsController@index')->name('logs');
 
