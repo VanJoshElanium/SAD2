@@ -83,6 +83,7 @@ class SupplyController extends Controller
         }else{
             $supplies = Inventory::where([
                     ['inventory_supplier_id' , '=', $id], 
+                    ['inventory_status', '=', 1]
                 ])
                 -> sortable() 
                 -> paginate(5);
@@ -147,7 +148,7 @@ class SupplyController extends Controller
         $supply -> inventory_status = 0;
         $supply -> save();
         //dd($supply); //for debugging purposes
-        return redirect('/supplies/' .$supply-> supply_supplier_id);
+        return redirect('/supplies/' .$supply-> inventory_supplier_id);
         //Session::flash('message', 'User has been successfully removed!');*/
     }
 
