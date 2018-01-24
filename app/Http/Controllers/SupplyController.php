@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
 use App\Supply;
 use App\Inventory;
 use App\Supplier;
@@ -28,9 +29,9 @@ class SupplyController extends Controller
             $users = Inventory::search($request->input('titlesearch')) 
                 -> paginate(5);
         }else{
-            // $users = Supply::where('supply_status' , '=', 1)
-            //     -> sortable() 
-            //     -> paginate(5);
+            $users = Inventory::where('inventory_status' , '=', 1)
+                -> sortable() 
+                -> paginate(5);
         } 
         return view('usrmgmt', compact('users', 'curr_usr'));
     }
