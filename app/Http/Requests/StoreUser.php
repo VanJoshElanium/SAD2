@@ -6,7 +6,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreUser extends FormRequest
 {
-    protected $errorBag = 'addUser';
     /**
      * Determine if the user is authorized to make this request.
      *

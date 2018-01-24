@@ -1,8 +1,6 @@
-<!doctype html>
-@extends('layouts.app')
+    @extends('layouts.app')
 
 @section('content')
-<html lang="en">
 <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/png" href="/public/images/Prince and Princes logo/6.png">
@@ -32,19 +30,12 @@
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
     <link href="/css/pe-icon-7-stroke.css" rel="stylesheet" />
     <style>
-        .bgd{
-            background-image: url(../images/bg-6-full.jpg);
-        }
         .box{
             border: 0px solid #888888;
             box-shadow: 5px 5px 8px 5px #888888;
         }
         .modal-title{
             text-align:center;
-            color: white;
-        }
-        .modal-header{
-            background-color:darkgray;
         }
         tbody.qtty{
             text-align: center;
@@ -64,7 +55,7 @@
 
 <body>
   <div class="wrapper">
-<div class="sidebar" data-color="none" data-image="/images/lol.png">
+        <div class="sidebar" data-color="none" data-image="/images/lol.png">
             <div class="sidebar-wrapper">
                 <div class="logo">
                     <a href="{{ route('dashboard') }}" class="simple-text">
@@ -94,7 +85,7 @@
                     <li >
                         <a href="{{route('inventory') }}">
                             <i class="pe-7s-drawer"></i>
-                            <p>Inventory Management</p>
+                            <p>Inventory</p>
                         </a>
                     </li>
                     <li>
@@ -132,12 +123,11 @@
                             <span class="icon-bar"></span>
                         </button>
                         <a class="navbar-brand" href="#">Terms</a>
-                   </div>
+                    </div>
                     <div class="collapse navbar-collapse">
                         <ul class="nav navbar-nav navbar-right">
                             <li>
                                 <a href="/html/user.html">
-<!--                                          -->
                                         <!-- Full Name of currently logged in user -->
                                 </a>
                             </li>
@@ -149,7 +139,6 @@
                                 </a>
 
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-<!--                                 -->
                                 </form>
                             </li>
                             <li class="separator hidden-lg"></li>
@@ -167,19 +156,19 @@
                             <div class="header">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <h4 class="title">List of ongoing Terms</h4>
-                                        <p class="category">Here the terms that are still ongoing and are not fully paid yet.</p>
+                                        <h4 class="title">Ongoing Terms</h4>
+                                        <p class="category">Terms not yet fully paid by the collector</p>
                                     </div>
                                     <div class="col-md-4">
-                                                                               
-                                        <center><label>Select Date:</label></center>
+                                                                            
                                         <span data-toggle="tooltip" data-placement="bottom" title="Select a month or date to view only those list of terms."> 
-                                        <input name="initialTerm_Date"  id="initT_Date" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'"></span> 
+                                        <input name="initialTerm_Date"  id="initT_Date" class="form-control" type="text" onfocus="(this.type='date')" 
+                                        placeholder="Search by Date. . ." required onblur="if(!this.value)this.type='text'"></span> 
                                         
                                     </div>    
                                     <div class="col-md-2">
-                                        <button data-target="#AddTerm" id="" data-toggle="modal" data-id='' class="edit-btn btn btn-success btn-fill pull-right">
-                                            Add New Term
+                                        <button data-target="#addModal" id="" data-toggle="modal" data-id='' class="edit-btn btn btn-success btn-fill pull-right">
+                                            Add Term
                                         </button>
                                     </div>
                                 </div>
@@ -190,28 +179,37 @@
                                     <thead>
                                         <th>ID</th>
                                     	<th>Date Started</th>
-                                        <th>Peddling Date Ended</th>
+                                        <th>Date Ended</th>
                                     	<th>Collector</th>
-                                        <th>Set Peddling Sale End</th>
-                                        <th>View Details</th>
+                                        <th>Peddling End</th>
+                                        <!-- <th>View Details</th> -->
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                        	<td>1</td>
-                                        	<td>02/12/17</td>
-                                        	<td></td><!--Add an if if it still not ended indicates as "Has not ended or set yet"-->
-                                        	<td>Jules Barbarona</td>
-                                            <td>
-                                            <span data-toggle="tooltip" data-placement="bottom" title="This button will set when the peddlers ended their peddling or selling period.">    
-                                            <button data-target="#peddlingEnd" id="" data-toggle="modal" data-id='' class="edit-btn btn btn-sm btn-success btn-fill">Add Peddling End</button></span>
-                                            </td>
-                                        	<td>
-                                                
-                                            <button data-id='' class="btn btn-sm btn-info btn-fill">
-                                                View
-                                            </button>
-                                            </td>
-                                        </tr>
+                                        @forelse($terms as $term)
+                                            <tr data-target="" data-toggle="modal" class="" data-id='{{$term->term_id}}'>    
+                                                <td>{{$term->term_id}}</td>
+                                                <td>{{$term->start_date}}</td>
+                                                <td>{{$term->finish_date}}</td>
+                                                <td>{{$term->fname}} {{$term->mname}}. {{$term->lname}}</td>
+                                                <td>
+                                                    <button data-target="#peddlingEnd" id="" data-toggle="modal" data-id='' class="edit-btn btn  btn-success btn-fill">
+                                                        Add Peddling End
+                                                    </button>
+                                                </td>
+                                                <td> 
+                                                    <button data-href="{{ route('termsprofile.show', ['term' => $term->term_id]) }}" class="toProfile btn btn-primary btn-fill">
+                                                        View
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <button data-target="#removeModal" data-toggle="modal" data-id='{{$term->term_id}}' class="del-btn  btn btn-danger btn-fill">
+                                                        Remove
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <h3 style="text-align: center"> No terms stored. </h3>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>
@@ -224,13 +222,14 @@
                             <div class="header">
                             <div class="row">
                                 <div class="col-md-6">
-                                <h4 class="title">List of finished Terms</h4>
-                                <p class="category">Here are the list of terms that were fully paid by the collectors.</p>
+                                <h4 class="title">Completed Terms</h4>
+                                <p class="category">Terms fully paid by the collector</p>
                                 </div>    
                                 <div class="col-md-4">
-                                    <center><label>Select Date:</label></center>
-                                <span data-toggle="tooltip" data-placement="bottom" title="Select a month or date to view only those list of terms.">     
-                                <input name="initialTerm_Date"  id="initT_Date" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'"></span>
+                                    
+                               <span data-toggle="tooltip" data-placement="bottom" title="Select a month or date to view only those list of terms."> 
+                                        <input name="initialTerm_Date"  id="initT_Date" class="form-control" type="text" onfocus="(this.type='date')" 
+                                        placeholder="Search by Date. . ." required onblur="if(!this.value)this.type='text'"></span>
                                 </div>
                             </div>    
                             </div>    
@@ -254,7 +253,7 @@
                                         	<td>Jules Barbarona</td>
                                         	<td>
                                                 <!--This will open the termsprofile-->
-                                            <button data-id='' class="btn btn-sm btn-info btn-fill">
+                                            <button data-id='' class="btn  btn-info btn-fill">
                                                 View
                                             </button>
                                             </td>
@@ -271,88 +270,96 @@
         </div>   
     </div>   
 </div>
-<!--Modal for Adding Term-->
-    
-    <!-- VIEW/EDIT/DELETE PROFILE MODAL -->
-    <div class="modal fade" role="dialog" id="AddTerm">
+
+    <!-- VIEW/EDIT TERM MODAL -->
+    <div class="modal fade" role="dialog" id="addModal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Add New Term</h4>
                 </div>
-                                    
-                <div class="modal-body">
-                    <div id="view-edit-content" class="row">
+                
+                <form method="POST" class="form-horizontal" action="/terms">
+                    {{ csrf_field() }}
+                    <div class="modal-body">
+                        <div id="view-edit-content" class="row">
                         <!-- Term edit form-->
-                        <div class="col-md-12"> 
-                            <form method="POST" class="form-horizontal" id="view-edit-profile">      
-                                
-                                
-
+                            <div class="col-md-12"> 
                                 <!-- Collector initialization-->                                    
                                 <div class="row form-group">                       
-                                    <div class=""> 
+                                    <div class="{{ $errors->has('collector') ? ' has-error' : '' }}"> 
                                         <div class="col-md-8">    
                                             <label class="sel1">Collector Name</label>
-                                              <form>
-                                                  <!-- Generate list of collectors-->
-                                                  <select class="form-control" id="sel1">
-                                                    <option>David Mark</option>
+                                                  <select class="form-control" required id="collector" name="collector">
+                                                    <option value="" data-hidden="true" selected="selected">
+                                                    </option>
+                                                    @foreach($collectors as $collector)
+                                                        <option value="{{$collector->user_id}}">
+                                                            {{$collector->fname}}&nbsp
+                                                            {{$collector->mname}}.
+                                                            {{$collector->lname}}
+                                                        </option>
+                                                    @endforeach
                                                   </select>
-                                              </form>
                                             
-                                                <span class="help-block">
-                                                    <strong>
-                                                        
-                                                    </strong>
-                                                </span>
+                                                @if ($errors->has('collector'))
+                                                    <span class="help-block">
+                                                        <strong>{{ $errors->first('collector') }}</strong>
+                                                    </span>
+                                                @endif
                                             
                                         </div>
                                     </div>
                                 </div>
                                 <!--Term Date initialization.-->                                            
                                 <div class="row form-group">
-                                    <div class="">
-                                            <div class="col-md-6">
-                                                <label>Date Started</label>
-                                                <input name="initialTerm_Date"  id="initT_Date" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'">
-                                                                                    
-                                                    <span class="help-block">
-                                                        <strong>  </strong>
-                                                    </span>
-                                            
-                                            </div>
+                                    <div class="{{ $errors->has('date_started') ? ' has-error' : '' }}">
+                                        <div class="col-md-6">
+                                            <label>Date Started</label>
+                                            <input name="date_started"  id="date_started" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'" value="{{ old('date_started') }}">
+                                                                                
+                                            @if ($errors->has('date_started'))
+                                                <span class="help-block">
+                                                    <strong>{{ $errors->first('date_started') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
                                     </div> 
                                 </div>
                                                                     
                                 <!-- Term Address -->
                                 <div class="row form-group">
-                                    <div class="">
+                                    <div class="{{ $errors->has('location') ? ' has-error' : '' }}">
                                         <div class="col-md-12">  
-                                            <label>Address</label>
-                                            <input type="text" required name="Term_address" id="T_address" class="form-control">
-                                                                                
-                                                <span class="help-block">
-                                                    
-                                                </span>
-                                
+                                            <label>Location</label>
+                                            <textarea rows='2' id="location" class="form-control"  name="location" required value="{{ old('location') }}"></textarea>
+
+                                                @if ($errors->has('location'))
+                                                    <span class="help-block">
+                                                        <strong>{{ $errors->first('location') }}</strong>
+                                                    </span>
+                                                @endif
                                         </div>
                                     </div>
                                 </div>
-                            </form>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                      <center>
-                          <!--ADD New Term button-->
-                          <button type="button" class="btn btn-bg btn-success btn-fill">Add</button>
-                          <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
+                        <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic">
+                            Cancel
+                        </button>
+
+                        <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-add">
+                          Create
+                        </button>      
                     </div>
-                </div>
+                </form>
             </div>
         </div>
+    </div>
+
     <div class="modal fade" role="dialog" id="peddlingEnd">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -365,21 +372,18 @@
                     <div id="view-edit-content" class="row">
                         <!-- Term edit form-->
                         <div class="col-md-12"> 
-                            <form method="POST" class="form-horizontal" id="view-edit-profile">      
+                            <form method="POST" class="form-horizontal">      
                                   
                                 <!--Term Date initialization.-->                                            
                                 <div class="row form-group">
-                                    <div class="">
-                                            <div class="col-md-6 col-md-offset-3">
-                                                <center><label>Date ended</label></center>
-                                                <input name="initialTerm_Date"  id="initT_Date" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'">
-                                                                                    
-                                                    <span class="help-block">
-                                                        <strong>  </strong>
-                                                    </span>
-                                            
-                                            </div>
-                                    </div> 
+                                    <div class="col-md-6 col-md-offset-3">
+                                        <label>Date Ended</label>
+                                        <input name="initialTerm_Date"  id="initT_Date" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'">
+                                                                            
+                                        <span class="help-block">
+                                            <strong>  </strong>
+                                        </span>
+                                    </div>
                                 </div>
                                                                     
                     
@@ -388,22 +392,50 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                      <center>
-                          <!--ADD New Term button-->
-                          <button type="button" class="btn btn-bg btn-success btn-fill">Add</button>
-                          <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
+                        <!--ADD New Term button-->
+                        <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic">
+                            Cancel
+                        </button>
+                        <button type="button" class="btn btn-bg btn-success btn-fill">Add</button>
+                          
                     </div>
                 </div>
             </div>
         </div>
+
+     <div class="modal fade" role="dialog" id="removeModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Remove Term</h4>
+                </div>
+                                    
+                <div class="modal-body">
+                    <!-- DELETE TERM MODAL -->
+                    <p> You are about to remove a term. Do you want to proceed?</p>          
+                </div>
+
+                <div class="modal-footer" id="delete-modal-footer">
+                    <form method="POST" class="form-horizontal" id="delete-term">
+                        {{csrf_field()}}
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic">
+                            No
+                        </button>
+                        <button type="submit" id="form-button-delete" class="btn btn-success btn-fill pull-right">    
+                            Yes 
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
     <!--   Core JS Files   -->
     <script src="/js/jquery.3.2.1.min.js" type="text/javascript"></script>
-    <!--<script src="/js/bootstrap.min.js" type="text/javascript"></script>-->
-
-    <!--  Charts Plugin -->
-    <script src="/js/chartist.min.js"></script>
+    <script src="/js/bootstrap.min.js" type="text/javascript"></script>
 
     <!--  Notifications Plugin    -->
     <script src="/js/bootstrap-notify.js"></script>
@@ -415,31 +447,45 @@
     <script src="/js/demo.js"></script>
 
     <script type="text/javascript">
-        $(document).ready(function(){
-
-            demo.initChartist();
-
-            $.notify({
-                icon: 'pe-7s-gift',
-                message: "Welcome to <b>Light Bootstrap Dashboard</b> - a beautiful freebie for every web developer."
-
-            },{
-                type: 'info',
-                timer: 4000
-            });
-
-        });
-    </script>
-    <script type="text/javascript">
         $(function () {
           $('[data-toggle="tooltip"]').tooltip()
         })
     </script>
+
     <script type="text/javascript">
         $('#myTabs a').click(function (e) {
           e.preventDefault()
           $(this).tab('show')
         })
     </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            if ({!!count($errors)!!} > 0)
+                $("#addModal").modal();    
+            
+            
+            // if({!!count($errors->editUser)!!} > 0)
+            //     $("#view-edit-{{ session()-> get( 'error_id' ) }}").click();
+
+            // if ({!!count($errors->editPass)!!} > 0)
+            //     $("#passwordModal").modal();   
+        });
+    </script>
+
+    <script>     
+        $(document).on("click", ".del-btn", function () {
+            var id = $(this).data('id');
+
+            //FORM
+            $("#delete-term").attr("action", "/terms/" +id);
+
+        });
+    </script>
+
+    <script>
+        $(document).on("click", ".toProfile", function () {
+                window.location = $(this).data("href");
+        });
+    </script>
 @endsection
-</html>

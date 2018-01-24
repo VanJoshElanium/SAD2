@@ -27,12 +27,12 @@
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
     <link href="/css/pe-icon-7-stroke.css" rel="stylesheet" />
     <style>
-        .bgd{
-            background-image: url(../images/bg-6-full.jpg);
-        }
         .box{
             border: 0px solid #888888;
             box-shadow: 5px 5px 8px 5px #888888;
+        }
+        .modal-title{
+            text-align:center;
         }
     </style>
 </head>
@@ -187,8 +187,8 @@
                                                   <td class="clickable-row" data-href="{{ route('supplies.show', ['supply' => $supplier->supplier_id]) }}">{{$supplier->supplier_email}}</td>
                                                   <td class="clickable-row" data-href="{{ route('supplies.show', ['supply' => $supplier->supplier_id]) }}">{{$supplier->supplier_cnum}}</td>
                                                   <td> 
-                                                    <button data-target="#editModal" data-toggle="modal" data-id='{{$supplier->supplier_id}}' class="edit-btn btn btn-primary btn-fill">
-                                                        Edit
+                                                    <button data-target="#editModal" data-toggle="modal" id="view-edit-{{$supplier->supplier_id}}" data-id='{{$supplier->supplier_id}}' class="edit-btn btn btn-primary btn-fill">
+                                                        View
                                                     </button>
                                                    </td>
                                                   <td>
@@ -296,12 +296,12 @@
 
                                 <!-- IN-SYSTEM USER DETAILS -->
 
-                                <div class="row form-group">
+                               
                                     <input type="hidden" value="1" name="supplier_status" id="supplier_status">
-                                </div>
+                                
 
                                 <!-- SUBMIT BUTTON -->
-                                <button type="submit" class="btn btn-info btn-fill pull-right" id="form-button-add">
+                                <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-add">
                                     Create
                                 </button>
 
@@ -336,14 +336,14 @@
                                 {{method_field('PUT')}}
                                 <!-- SUPPLIER NAME & ADDR DETAILS-->                                    
                                 <div class="row form-group">   
-                                    <div class="{{$errors->has('supplier_name') ? ' has-error' : ''}}"> 
+                                    <div class="{{$errors->editSupplier->has('edit_supplier_name') ? ' has-error' : ''}}"> 
                                         <div class="col-md-12">    
                                             <label>Supplier Name</label>
                                             <input type="text" id="edit_supplier_name" class="form-control"  name="edit_supplier_name" required> 
-                                            @if ($errors->has('supplier_name'))
+                                            @if ($errors->editSupplier->has('edit_supplier_name'))
                                                 <span class="help-block">
                                                     <strong>
-                                                        {{ $errors->first('supplier_name') }}
+                                                        {{ $errors->editSupplier->first('edit_supplier_name') }}
                                                     </strong>
                                                 </span>
                                             @endif
@@ -352,14 +352,14 @@
                                 </div>    
 
                                 <div class="row form-group">
-                                    <div class="{{$errors->has('supplier_addr') ? ' has-error' : ''}}"> 
+                                    <div class="{{$errors->editSupplier->has('edit_supplier_addr') ? ' has-error' : ''}}"> 
                                         <div class="col-md-12"> 
                                             <label>Supplier Address</label>
                                             <textarea id="edit_supplier_addr" class="form-control" required name="edit_supplier_addr" rows="2"> </textarea>
-                                            @if ($errors->has('supplier_addr'))
+                                            @if ($errors->editSupplier->has('edit_supplier_addr'))
                                                 <span class="help-block">
                                                     <strong>
-                                                        {{ $errors->first('supplier_addr') }}
+                                                        {{ $errors->editSupplier->first('edit_supplier_addr') }}
                                                     </strong>
                                                 </span>
                                             @endif                   
@@ -369,14 +369,14 @@
 
                                 <!-- USER CONTACT DETAILS -->
                                 <div class="row form-group">
-                                    <div class="{{ $errors->has('supplier_email') ? ' has-error' : '' }}">
+                                    <div class="{{ $errors->editSupplier->has('edit_supplier_email') ? ' has-error' : '' }}">
                                         <div class="col-md-12">  
                                             <label>Email</label>
                                             <input type="text" required name="edit_supplier_email" id="edit_supplier_email" class="form-control" >
                                                                                 
-                                            @if ($errors->has('supplier_email'))
+                                            @if ($errors->editSupplier->has('edit_supplier_email'))
                                                 <span class="help-block">
-                                                    <strong>{{$errors->first('supplier_email')}}</strong>
+                                                    <strong>{{$errors->editSupplier->first('edit_supplier_email')}}</strong>
                                                 </span>
                                             @endif
                                         </div>
@@ -384,14 +384,14 @@
                                 </div>
 
                                 <div class="row form-group">
-                                    <div class="{{ $errors->has('supplier_cnum') ? ' has-error' : '' }}">
+                                    <div class="{{ $errors->editSupplier->has('edit_supplier_cnum') ? ' has-error' : '' }}">
                                         <div class="col-md-12">  
                                             <label>Contact Number</label>
                                             <input type="number" required name="edit_supplier_cnum" id="edit_supplier_cnum" class="form-control">
                                                                                 
-                                            @if ($errors->has('supplier_cnum'))
+                                            @if ($errors->editSupplier->has('edit_supplier_cnum'))
                                                 <span class="help-block">
-                                                    <strong>{{$errors->first('supplier_cnum')}}</strong>
+                                                    <strong>{{$errors->editSupplier->first('edit_supplier_cnum')}}</strong>
                                                 </span>
                                             @endif
                                         </div>
@@ -400,7 +400,7 @@
 
                             
                                 <!-- SUBMIT BUTTON -->
-                                <button type="submit" class="btn btn-info btn-fill pull-right" id="form-button-edit">
+                                <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-edit">
                                     Edit
                                 </button>
 
@@ -427,7 +427,7 @@
                         <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic">
                             No
                         </button>
-                        <button type="submit" id="form-button-delete" class="btn btn-info btn-fill pull-right">    Yes 
+                        <button type="submit" id="form-button-delete" class="btn btn-success btn-fill pull-right">    Yes 
                         </button>
                     </form>
                 </div>
@@ -457,10 +457,14 @@
 
     <!--KEEP CREATE/EDIT MODAL OPEN IF THERE ARE VALIDATION ERRORS-->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener("DOMContentLoaded", function(event) {
             if ({!!count($errors)!!} > 0)
                 $("#addModal").modal();    
-        }, false);
+            
+            
+            if({!!count($errors->editSupplier)!!} > 0)
+                $("#view-edit-{{ session()-> get( 'error_id' ) }}").click();
+        });
     </script>
 
     <script>

@@ -2,7 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Term;
+use App\User;
+use Validator;
+use App\Worker;
+use App\Supplier;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreTerm;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+
 
 class TermsController extends Controller
 {
@@ -12,8 +22,48 @@ class TermsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        return view('terms');
+    {   
+        $curr_usr = Auth::user();
+        // Available Collectors
+        $collectors = DB::table('profiles as T1')
+                    -> join('users as T2', 'T2.user_id', '=', 'T1.profile_user_id')
+                    -> whereNotIn('user_id', function($query){
+                        $query -> select('worker_user_id')
+                               -> from('workers')
+                               -> join('terms', 'term_id', '=', 'worker_term_id')
+                               -> where([
+                                    ['term_status' , '=', 1],
+                                    ['worker_type' , '=', 0],
+                                    ['end_date', '>', Carbon::now() -> toDateString()],
+                               ])
+                               -> orWhere('end_date', '=', null);
+                        })
+                    -> select('user_id', 'fname', 'mname', 'lname')
+                    -> where([
+                            ['user_type' , '=', 2],
+                            ['user_status' , '=', 1]
+                        ])
+                    -> get();
+                    // -> toSql();
+                    // dd($collectors);
+
+        //ON-GOING TERMS
+        $terms = Term::join('workers', 'terms.term_id', '=', 'worker_term_id')
+                -> join('users', 'workers.worker_user_id', '=', 'users.user_id')
+                -> join('profiles', 'users.user_id', '=', 'profiles.profile_user_id')
+                -> select('terms.*', 'profiles.fname', 'profiles.mname', 'profiles.lname')
+                -> where([
+                        ['terms.term_status' , '=', 1],
+                        ['users.user_type',  '=', 2] //Collector
+                    ])
+                ->where(function($q) {
+                      $q->where('terms.finish_date', '=', null)
+                        ->orWhere([
+                            ['terms.finish_date', '<', Carbon::now() -> toDateString()]
+                        ]);
+                  })
+                -> paginate(5);
+        return view('terms', compact('curr_user', 'collectors', 'terms'));
     }
 
     /**
@@ -32,9 +82,22 @@ class TermsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreTerm $request)
     {
-        //
+        // dd($request);
+        $term = Term::create([
+                    'start_date' => $request-> date_started,
+                    'location' => $request-> location,
+                    'term_status' => 1
+                ]);
+
+        $worker = new Worker;
+        $worker -> worker_term_id = $term -> term_id;
+        $worker -> worker_user_id = $request -> collector;
+        $worker -> worker_type = 0; //collector
+        $worker -> save();
+        //session()->flash('message', 'Successfully created a new supplier!');
+        return redirect('/terms');
     }
 
     /**
@@ -79,6 +142,11 @@ class TermsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $term = Term::find($id);
+        $term -> term_status = 0;
+        $term -> save();
+        //dd($supplier); //for debugging purposes
+        return redirect('/terms');
+        //Session::flash('message', 'User has been successfully removed!');*/
     }
 }

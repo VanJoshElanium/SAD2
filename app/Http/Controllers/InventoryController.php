@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Supply;
+use App\Stockin;
 use App\Supplier;
 use App\Inventory;
 use Carbon\Carbon;
@@ -26,22 +27,29 @@ class InventoryController extends Controller
     {
         $curr_usr = Auth::user();
 
-        $suppliers = Supplier::where('supplier_status' , '=', 1)->get();
-        $workers = User::where('user_type', '=', 3)
-                ->orWhere(function ($query) {
-                            $query->where('user_type', '=', 4);
-                         })
-                ->get();
+        //ACTIVE SUPPLIERS
+        $suppliers = Supplier::where('supplier_status' , '=', 1)
+                    ->get();
+
+        //ACTIVE WORKERS
+        $workers = User::where([
+                        ['user_type', '=', 3], //WORKER USER TYPE
+                        ['user_status', '=', 1]
+                    ])
+                    -> join('profiles', 'profiles.profile_user_id', '=', 'users.user_id')
+                    -> select('users.user_id', 'profiles.fname', 'profiles.mname', 'profiles.lname')
+                    -> get();
         
         if($request->has('titlesearch')){
             $items = Inventory::search($request->input('titlesearch')) 
                 -> paginate(5);
         }else{
-            $items = Inventory::join('supplies', 'supplies.supply_id', '=', 'inventories.inventory_supply_id')
-                -> join('suppliers', 'suppliers.supplier_id', '=', 'supplies.supply_supplier_id')
-                -> select('inventories.*', 'supplies.supply_name', 'suppliers.supplier_name')
+
+            //ACTIVE INVENTORY ITEMS
+            $items = Inventory::join('suppliers', 'suppliers.supplier_id', '=', 'inventories.inventory_supplier_id')
+                // -> join('suppliers', 'suppliers.supplier_id', '=', 'supplies.supply_supplier_id')
+                -> select('inventories.*',  'suppliers.supplier_name')
                 -> where([
-                        ['inventory_damaged', '=', 0],
                         ['inventory_status' , '=', 1]
                     ])
                 -> sortable() 
@@ -52,27 +60,26 @@ class InventoryController extends Controller
 
     public function getItem($id)
     {
-        $itemdata = Inventory::find($id)
-                -> join('users', 'users.id', '=', 'inventories.inventory_user_id')
-                -> join('supplies', 'supplies.supply_id', '=', 'inventories.inventory_supply_id')
-                -> join('suppliers', 'suppliers.supplier_id', '=', 'supplies.supply_supplier_id')
-                -> select('inventories.*', 'supplies.supply_name', 'suppliers.supplier_name', 'users.fname', 'users.mname', 'users.lname', 'users.id', 'supplies.supply_id')
-                -> where([
-                        ['inventory_damaged', '=', 0],
-                        ['inventory_status' , '=', 1]
-                    ])
-                -> get();  
+        //GET INVENTORY ITEM DATA
+        $itemdata = Inventory::join('stockins', 'si_inventory_id', '=', 'inventories.inventory_id')
+                -> join('users', 'users.user_id', '=', 'stockins.si_user_id')
+                -> join('profiles', 'profiles.profile_user_id', '=', 'users.user_id')
+                -> join('suppliers', 'suppliers.supplier_id', '=', 'inventories.inventory_supplier_id')
+                -> select('inventories.*', 'stockins.si_id', 'stockins.si_date', 'suppliers.supplier_id', 'suppliers.supplier_name', 'profiles.fname', 'profiles.mname', 'profiles.lname', 'users.user_id')
+                -> where('inventories.inventory_id', '=', $id)
+                -> get();
         return $itemdata;
     }
 
 
     public function getSupply($id)
     {
-        $supplies = Supply::where('supply_supplier_id', '=', $id)
-                -> whereNotIn('supply_id', function($q){
-                        $q->select('inventory_supply_id')->from('inventories');
-                    })
-                ->get();
+        // $id = suppliers.supplier_id
+        //GET SUPPLIERS SUPPLIED ITEMS
+
+        $supplies = Inventory::where('inventory_supplier_id', '=', $id)
+                    -> select('inventories.inventory_id', 'inventories.inventory_name', 'inventories.inventory_qty')
+                    -> get();
         //Session::flash('message', 'User has been successfully created!');
         return $supplies;
     }
@@ -94,20 +101,6 @@ class InventoryController extends Controller
      */
     public function store(Request $request)
     {
-        $input = Input::all();
-        //dd( $input['supply_name'][0]);
-        for ($i=0; $i < count($input['inventory_quantity']); ++$i) {
-            $item = new Inventory;
-            $item -> inventory_user_id = $request->get('inventory_user_id');
-            $item -> received_at = $request->get('received_at');
-            $item -> inventory_supply_id = $input['supply_name'][$i];
-            $item -> inventory_price = $input['inventory_price'][$i];
-            $item -> inventory_quantity = $input['inventory_quantity'][$i];
-            $item -> inventory_status = 1;
-            $item -> inventory_damaged = 0;
-            $item -> save();
-        } 
-        return redirect('/inventory');
     }
 
     /**
@@ -140,17 +133,43 @@ class InventoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        $input = Input::all();
-        $item = Inventory::find($id);
-        $item -> inventory_user_id = $input['view_pic'];
-        $item -> received_at = $input['view_received_at'];
-        $item -> inventory_supply_id = Supply::where('supply_name', '=', $input['view_item_name'])->value('supply_id');
-        $item -> inventory_price = $input['view_inventory_price'];
-        $item -> inventory_quantity = $input['view_inventory_quantity'];
-        $item -> inventory_status = 1;
-        $item -> inventory_damaged = 0;
-        $item -> save();   
+    {   
+        if ($id == -999){
+
+            $input = Input::all();
+            //dd( $input['supply_name'][0]);
+            // dd($request);
+            for ($i=0; $i < count($input['inventory_quantity']); ++$i) {
+                $item = Inventory::find($input['supply_name'][$i]);
+                // $item -> inventory_user_id = $request->get('inventory_user_id');
+                // $item -> received_at = $request->get('received_at');
+                $item -> inventory_supplier_id = $input['supplier_name'];
+                // $item -> inventory_price = $input['inventory_price'][$i];
+                $item -> inventory_qty += $input['inventory_quantity'][$i];
+                $item -> inventory_status = 1;
+                $item -> save();
+
+                $stockin = new Stockin;
+                $stockin -> si_date = $request->get('received_at');
+                $stockin -> si_inventory_id = $item -> inventory_id;
+                $stockin -> si_user_id = $request->get('inventory_user_id');
+                $stockin -> save();
+            } 
+        }
+        else{
+            $input = Input::all();
+
+            $item = Inventory::find($id);     
+            $item -> inventory_supplier_id = $input['supplier_id'];
+            $item -> inventory_qty += $input['view_inventory_quantity'];
+            $item -> save();
+
+            $stockin = StockIn::find($input['si_id']);
+            $stockin -> si_user_id = $input['view_pic'];
+            $stockin -> si_inventory_id = $input['item_id'];
+            $stockin-> si_date = $input['view_received_at'];
+            $stockin -> save();   
+        }
         return redirect('/inventory');
     }
 

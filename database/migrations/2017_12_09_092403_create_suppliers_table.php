@@ -16,25 +16,11 @@ class CreateSuppliersTable extends Migration
         Schema::create('suppliers', function (Blueprint $table) {
             $table->increments('supplier_id');
             $table->string('supplier_name', '50')->unique();
-            $table->string('supplier_addr', '70');
+            $table->string('supplier_addr', '100');
             $table->string('supplier_email', '50');
             $table->string('supplier_cnum', '11');        
             $table->integer('supplier_status')->default(1);
-            $table->rememberToken();
-            $table->timestamps();
-        });
-        Schema::create('supplies', function (Blueprint $table) {
-            $table->increments('supply_id');
-            $table->integer('supply_supplier_id');
-            $table->string('supply_name', '50');
-            $table->integer('supply_price');
-            $table->integer('supply_status')->default(1);
-            $table->foreign('supply_supplier_id')
-                    ->references('supplier_id')
-                    ->on('suppliers')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
-            $table->rememberToken();
+
             $table->timestamps();
         });
     }
@@ -47,6 +33,5 @@ class CreateSuppliersTable extends Migration
     public function down()
     {
         Schema::dropIfExists('suppliers');
-        Schema::dropIfExists('supplies');
     }
 }

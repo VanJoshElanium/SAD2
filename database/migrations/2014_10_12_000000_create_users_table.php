@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use Carbon\Carbon;
 
 class CreateUsersTable extends Migration
 {
@@ -15,43 +14,32 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('fname', '50');
-            $table->string('mname', '50');
-            $table->string('lname', '50');
+            $table->increments('user_id');
             $table->string('username', '50')->unique();
             $table->string('password', '255');
-            $table->integer('gender');
-            $table->date('bday', '6');
-            $table->string('cnum', '11');
             $table->integer('user_type');
             $table->integer('user_status')->default(1);
             $table->rememberToken();
             $table->timestamps();
         });
 
-        $password = bcrypt('admin123');
-        $current_time = Carbon::now()->toDateTimeString();
-
-        DB::table('users')->insert(
-        array(
-            'fname' => 'Admin',
-            'mname' => 'A',
-            'lname' => 'Admin', 
-            'username' => 'admin123',
-            'password' => $password,
-            'gender' => 1,
-            'bday' => '2017-01-12',
-            'cnum' => '12345678900',
-            'user_type' => 0,
-            'user_status' => 1,
-            'created_at' => $current_time,
-            'updated_at' => $current_time
-        )
- 
-    );
+        Schema::create('profiles', function (Blueprint $table) {
+            $table->increments('profile_id');
+            $table->integer('profile_user_id');
+            $table->string('fname', '50');
+            $table->string('mname', '50');
+            $table->string('lname', '50');
+            $table->integer('gender');
+            $table->date('bday', '6');
+            $table->string('cnum', '11');
+            $table->foreign('profile_user_id')
+                    ->references('user_id')
+                    ->on('users')
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
+            $table->timestamps();
+        });
     }
-
     /**
      * Reverse the migrations.
      *

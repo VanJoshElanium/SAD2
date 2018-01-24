@@ -13,29 +13,20 @@ class CreateInventoryTable extends Migration
      */
     public function up()
     {
-        Schema::create('inventory', function (Blueprint $table) {
+        Schema::create('inventories', function (Blueprint $table) {
             $table->increments('inventory_id');
-            $table->integer('inventory_supply_id');
-            $table->integer('inventory_user_id');
+            $table->integer('inventory_supplier_id');
+            $table->string('inventory_name', '50');
+            $table->string('inventory_desc', '100');
+            $table->integer('inventory_qty') ->nullable() ->default(0);
             $table->integer('inventory_price');
-            $table->integer('inventory_quantity');
-            $table->integer('inventory_status')->default(1);
-            $table->integer('inventory_damaged');
-            $table->dateTime('received_at');
 
-            $table->foreign('inventory_supply_id')
-                    ->references('supply_id')
-                    ->on('supplies')
+            $table->foreign('inventory_supplier_id')
+                    ->references('supplier_id')
+                    ->on('suppliers')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
 
-            $table->foreign('inventory_user_id')
-                    ->references('id')
-                    ->on('users')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
-
-            $table->rememberToken();
             $table->timestamps();
         });
     }

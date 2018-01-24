@@ -27,12 +27,12 @@
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
     <link href="/css/pe-icon-7-stroke.css" rel="stylesheet" />
     <style>
-        .bgd{
-            background-image: url(../images/bg-6-full.jpg);
-        }
         .box{
             border: 0px solid #888888;
             box-shadow: 5px 5px 8px 5px #888888;
+        }
+        .modal-title{
+            text-align:center;
         }
     </style>
 </head>
@@ -61,15 +61,15 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#">
-                            <i class="{{route('terms') }}"></i>
+                        <a href="{{route('terms') }}">
+                            <i class="pe-7s-graph"></i>
                             <p>Term Management</p>
                         </a>
                     </li>
                     <li>
                         <a href="{{route('inventory') }}">
                             <i class="pe-7s-drawer"></i>
-                            <p>Inventory Management</p>
+                            <p>Inventory</p>
                         </a>
                     </li>
                     <li class="active">
@@ -176,16 +176,16 @@
                                             <tbody>
                                                 @forelse($supplies as $supply)
                                                     <tr>    
-                                                        <td>{{$supply->supply_id}}</td>
-                                                        <td>{{$supply->supply_name}}</td>
-                                                        <td>&#8369; {{$supply->supply_price}}</td>
+                                                        <td>{{$supply->inventory_id}}</td>
+                                                        <td>{{$supply->inventory_name}}</td>
+                                                        <td>&#8369; {{$supply->inventory_price}}</td>
                                                         <td> 
-                                                        <button data-target="#editModal" data-toggle="modal" data-id='{{$supply->supply_id}}' class="edit-btn btn btn-primary btn-fill">
-                                                            Edit
+                                                        <button data-target="#editModal" data-toggle="modal" id="view-edit-{{$supply->inventory_id}}" data-id='{{$supply->inventory_id}}' class="edit-btn btn btn-primary btn-fill">
+                                                            View
                                                         </button>
                                                        </td>
                                                       <td>
-                                                        <button data-target="#editModal" data-toggle="modal" data-id='{{$supply->supply_id}}' class="del-btn btn btn-danger btn-fill">
+                                                        <button data-target="#editModal" data-toggle="modal" data-id='{{$supply->inventory_id}}' class="del-btn btn btn-danger btn-fill">
                                                             Remove
                                                         </button>
                                                       </td>
@@ -247,7 +247,8 @@
                             <form class="form-horizontal" method="POST" action="/supplies">
                                 {{ csrf_field() }}
 
-                                <!-- SUPPLIER NAME & ADDR DETAILS-->                                    
+                                <!-- SUPPLIER NAME & ADDR DETAILS-->       
+
                                 <div class="row form-group">   
                                     <div class="{{$errors->has('supply_name') ? ' has-error' : ''}}"> 
                                         <div class="col-md-8">    
@@ -276,10 +277,25 @@
                                             @endif
                                         </div>
                                     </div>
-                                </div>    
+                                </div>   
+
+                                <div class="row form-group">   
+                                    <div class="{{$errors->has('supply_desc') ? ' has-error' : ''}}"> 
+                                        <div class="col-md-12">    
+                                            <label>Item Description</label>
+                                            <textarea rows='2' id="supply_desc" class="form-control"  name="supply_desc" required></textarea>
+                                            @if ($errors->has('supply_desc'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{ $errors->first('supply_desc') }}
+                                                    </strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>  
 
                                 <!-- IN-SYSTEM USER DETAILS -->
-                                <input type="hidden" value="1" name="supply_status" id="supplier_status">
                                 <input type="hidden" value="{{$supplier->supplier_id}}" name="supply_supplier_id" id="supply_supplier_id">
 
                                 <!-- SUBMIT BUTTON -->
@@ -318,28 +334,28 @@
                                 {{method_field('PUT')}}
                                 <!-- SUPPLIER NAME & ADDR DETAILS-->                                    
                                 <div class="row form-group">   
-                                    <div class="{{$errors->has('supply_name') ? ' has-error' : ''}}"> 
+                                    <div class="{{$errors->editSupply->has('supply_name') ? ' has-error' : ''}}"> 
                                         <div class="col-md-8">    
                                             <label>Item Name</label>
                                             <input type="text" id="edit_supply_name" class="form-control"  name="edit_supply_name" required> 
-                                            @if ($errors->has('supply_name'))
+                                            @if ($errors->editSupply->has('supply_name'))
                                                 <span class="help-block">
                                                     <strong>
-                                                        {{ $errors->first('supply_name') }}
+                                                        {{ $errors->editSupply->first('supply_name') }}
                                                     </strong>
                                                 </span>
                                             @endif
                                         </div>
                                     </div>
 
-                                    <div class="{{$errors->has('supply_price') ? ' has-error' : ''}}"> 
+                                    <div class="{{$errors->editSupply->has('supply_price') ? ' has-error' : ''}}"> 
                                         <div class="col-md-4">    
                                             <label>Item Price</label>
                                             <input type="number" id="edit_supply_price" class="form-control"  name="edit_supply_price" required> 
-                                            @if ($errors->has('supply_price'))
+                                            @if ($errors->editSupply->has('supply_price'))
                                                 <span class="help-block">
                                                     <strong>
-                                                        {{ $errors->first('supply_price') }}
+                                                        {{ $errors->editSupply->first('supply_price') }}
                                                     </strong>
                                                 </span>
                                             @endif
@@ -347,9 +363,23 @@
                                     </div>
                                 </div>    
 
+                                <div class="row form-group">   
+                                    <div class="{{$errors->editSupply->has('edit_supply_desc') ? ' has-error' : ''}}"> 
+                                        <div class="col-md-12">    
+                                            <label>Item Description</label>
+                                            <textarea rows='2' id="edit_supply_desc" class="form-control"  name="edit_supply_desc" required></textarea>
+                                            @if ($errors->editSupply->has('edit_supply_desc'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{ $errors->editSupply->first('edit_supply_desc') }}
+                                                    </strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div> 
 
                                 <!-- IN-SYSTEM USER DETAILS -->
-                                <input type="hidden" value="1" name="supply_status" id="supply_status">
                                 <input type="hidden" value="{{$supplier->supplier_id}}" name="supply_supplier_id" id="supply_supplier_id">
                             
                                 <!-- SUBMIT BUTTON -->
@@ -410,9 +440,13 @@
     <!--KEEP CREATE/EDIT MODAL OPEN IF THERE ARE VALIDATION ERRORS-->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            if ({{(count($errors))}} > 0)
-                $('#addModal').modal();
-           });
+            if ({!!count($errors)!!} > 0)
+                $("#addModal").modal();    
+            
+            
+            if({!!count($errors->editSuppy)!!} > 0)
+                $("#view-edit-{{ session()-> get( 'error_id' ) }}").click();
+        });
     </script>
 
     <!--PASS ID OF SUPPLIER TO MODAL, MANIPULATE INPUT FIELDS, & DISPLAY USER INFO-->
@@ -423,16 +457,17 @@
             //alert(id);
             //VIEW USER
             $.ajax({
-                url: "/getSupply/" +id,
+                url: "/getSuppliedItem/" +id,
                 type: 'GET',             
                 data: { 'id' : id },
                 success: function(response){
                     // DEBUGGING
-                    console.log(response.supply_name);
+                    console.log(response);
 
                     // SET FORM INPUTS
-                    $('#edit_supply_name').val(response.supply_name);
-                    $('#edit_supply_price').val(response.supply_price); 
+                    $('#edit_supply_name').val(response.inventory_name);
+                    $('#edit_supply_price').val(response.inventory_price); 
+                    $('#edit_supply_desc').val(response.inventory_desc); 
 
                     // MODAL
                     $("#editModal").modal('show'); 
