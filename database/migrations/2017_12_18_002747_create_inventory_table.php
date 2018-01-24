@@ -18,6 +18,7 @@ class CreateInventoryTable extends Migration
             $table->integer('inventory_supplier_id');
             $table->string('inventory_name', '50');
             $table->string('inventory_desc', '100');
+            $table->integer('inventory_status') ->default(1);
             $table->integer('inventory_qty') ->nullable() ->default(0);
             $table->integer('inventory_price');
 
