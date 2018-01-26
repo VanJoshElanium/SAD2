@@ -15,8 +15,8 @@ class CreateWorkersTable extends Migration
     {
         Schema::create('workers', function (Blueprint $table) {
             $table ->increments('worker_id');
-            $table ->integer('worker_user_id');
-            $table ->integer('worker_term_id');
+            $table ->integer('worker_user_id') -> unsigned();
+            $table ->integer('worker_term_id') -> unsigned();
             $table ->integer('worker_type');
 
             $table ->foreign('worker_user_id')
