@@ -15,8 +15,8 @@ class CreateStockinsTable extends Migration
     {
         Schema::create('stockins', function (Blueprint $table) {
             $table ->increments('si_id');
-            $table ->integer('si_inventory_id');
-            $table ->integer('si_user_id');
+            $table ->integer('si_inventory_id') -> unsigned();
+            $table ->integer('si_user_id') -> unsigned();
             $table ->dateTime('si_date');
 
             $table ->foreign('si_inventory_id')
