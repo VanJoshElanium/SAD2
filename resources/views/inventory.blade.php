@@ -32,23 +32,13 @@
             border: 0px solid #888888;
             box-shadow: 5px 5px 8px 5px #888888;
         }
-        #exTab3 .nav-pills > li > a {
-          border-radius: 4px 4px 0 0 ;
-          border-width: 2px;
-          border-style: solid;
-          border-color:  #ffffff;
-        }
-
-        a:hover{
-            color:#777;
-        }
         .modal-title{
             text-align:center;
+            color: white;
         }
-        #exTab3 .tab-content {
-          background-color: #ffffff;
-          padding : 5px 15px;
-        }    
+        .modal-header{
+            background-color:darkgray;
+        } 
     </style>
 </head>
 <body>
@@ -153,10 +143,10 @@
             <div class="content">
                 <div class="container-fluid">
                     <div class="row">
-                        <!-- TABLE OF UNDAMAGED ITEMS -->
                         <div class="col-md-12">      
-                            <div id="exTab3" class="container"> 
-                                <ul  class="nav nav-pills">
+                            <div class="card box">
+                                <!--Nav tabs-->
+                                <ul  class="nav nav-tabs">
                                     <li class="active">
                                         <a  href="#1b" data-toggle="tab">Undamaged Items</a>
                                     </li>
@@ -165,7 +155,7 @@
                                         </li>
                                 </ul>
                                 <div class="tab-content clearfix">
-                                    <!-- TAB #1 -->
+                                    <!-- Undamaged items Tab - TAB #1-->
                                     <div class="tab-pane active" id="1b">
                                         <div class="row">
                                             <div class="col-md-4">
@@ -184,7 +174,7 @@
                                                 </div>
                                             </form>
 
-                                            <div class="col-md-2" style="margin-top:8px;">
+                                            <div class="col-md-2" style="margin-top:1.2%;">
                                                 <button type="button" data-target="#addModal-un" data-toggle="modal" class="btn btn-success btn-fill" id="add-btn"> 
                                                     Update
                                                 </button>
@@ -238,8 +228,7 @@
                                             {{$items->links()}} 
                                         </div>
                                     </div>
-
-                                    <!-- TAB #2 -->
+                                    <!-- Damaged items Tab - TAB #2 -->
                                     <div class="tab-pane" id="2b">
                                         <div class="row">
                                             <div class="col-md-4">
@@ -253,12 +242,12 @@
                                                     <input type="text" name="titlesearch" class="form-control" placeholder="Search . . ." value="{{ old('titlesearch') }}">
                                                 </div>
                                             
-                                                <div class="col-md-2" style="margin-top:10px">
+                                                <div class="col-md-1" style="margin-top:10px">
                                                     <button style="height: 40px;"; class="btn btn-success pe-7s-search"></button>
                                                 </div>
                                             </form>
 
-                                            <div class="col-md-2" style="margin-top:8px;">
+                                            <div class="col-md-2" style="margin-top:1.2%;">
                                                 <button type="button" data-target="#addModal" data-toggle="modal" class="btn btn-success btn-fill" id="add-btn"> 
                                                     Add Damaged Item
                                                 </button>
@@ -309,7 +298,8 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>  
+                             
+                            </div>    
                         </div>
                     </div>
                 </div>
@@ -382,12 +372,15 @@
                                             <select class="form-control item_name" name="supply_name[]" required>
                                             </select> 
                                         </div>
-                                        <!-- 
+                                        <!--Must be removed. Price not included. Pirce is only initiated once in the adding of new items 
+                                            within the supplier's list of items. 
+                                        -->
+                                        <!--/* 
                                         <div class="col-md-2">              
                                             <label>Item Price</label>
                                              <input type="number" class="form-control" required name="inventory_price[]"> 
                                         </div> 
-                                        -->
+                                        */-->
                                         
                                         <div class="col-md-2">              
                                             <label>Item Quantity</label>
@@ -404,11 +397,11 @@
                                         Add Item Form
                                     </button>
 
-                                    <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-add">
+                                    <button type="submit" class="btn btn-success btn-fill" id="form-button-add">
                                         Add Item/s
                                     </button>
 
-                                    <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic pull-right" style="margin-right: 2%">
+                                    <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic" style="margin-right: 2%">
                                         Cancel
                                     </button>             
                                     <div class="clearfix"></div>  
@@ -420,15 +413,14 @@
             </div>
         </div>
     </div>
-
     <!-- ADD MODAL DAMAGED-->
-    <div class="modal fade" id="addModal">
-        <div class="modal-content">
-            <div class="modal-header">
+    <div class="modal fade" role="dialog" id="addModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">New Damaged Item</h4>
-            </div>
-                                
+            </div>                 
             <div class="modal-body">
                 <div class="row">
                     <!-- USER ADD FORM -->
@@ -494,20 +486,6 @@
                                         @endif
                                     </div>
                                 </div>
-
-                                <div class="{{$errors->addUser->has('lname') ? ' has-error' : ''}}">
-                                    <div class="col-md-2">              
-                                        <label>Item Price</label>
-                                         <input type="text" id="lname" class="form-control" required name="lname" value="{{ old('lname') }}"> 
-                                         @if ($errors->addUser->has('lname'))
-                                             <span class="help-block">
-                                                <strong>
-                                                    {{ $errors->addUser->first('lname') }}</strong>
-                                             </span>
-                                        @endif
-                                    </div>
-                                </div>
-
                                 <div class="{{$errors->addUser->has('lname') ? ' has-error' : ''}}">
                                     <div class="col-md-2">              
                                         <label>Item Quantity</label>
@@ -520,8 +498,22 @@
                                         @endif
                                     </div>
                                 </div>
-
-                                <div class="col-md-2"> 
+                                <!--This indicates if the item can still be repairable or not like broken glass or plates-->
+                                    <div class="col-md-2">              
+                                        <label>Item State</label>
+                                        <!--State can be repairable or not. in DB it can be intitalized as number 1 or 0-->
+                                         <select class="form-control" name="gender" required id="gender">
+                                            
+                                        </select>
+                                         @if ($errors->addUser->has('lname'))
+                                             <span class="help-block">
+                                                <strong>
+                                                    {{ $errors->addUser->first('lname') }}</strong>
+                                             </span>
+                                        @endif
+                                    </div>
+                                <!--Need to be adjusted due to adding multiple damaged items.-->
+                                <div class="col-md-2" style> 
                                     <button class="del-btn btn btn-danger btn-fill"> Remove </button>
                                 </div>
                             </div>                           
@@ -533,22 +525,30 @@
                             </div>
 
                             <!-- SUBMIT BUTTON -->
-                            <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-add">
-                                Add Item/s
-                            </button>
+                                <div class="modal-footer">
+                                
+                                        <button type="button" class="btn btn-info btn-fill pull-left" id="add-form">
+                                            Add Item Form
+                                        </button>
+                                        <button type="submit" class="btn btn-success btn-fill" id="form-button-add">
+                                            Add Item/s
+                                        </button>
 
-                            <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic pull-right" style="margin-right: 2%">
-                                Cancel
-                            </button>             
+                                        <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic" style="margin-right: 2%">
+                                            Cancel
+                                        </button>  
+                                   
+                                </div>
                             <div class="clearfix"></div>
                                 
                         </form>                
                     </div>
                 </div>
             </div>
+            </div>
         </div>
     </div>
-<
+
 
     <!-- VIEW/EDIT/DELETE MODAL UNDAMAGED -->
     <div class="modal fade" role="dialog" id="editModal-un">
