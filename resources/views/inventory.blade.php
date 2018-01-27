@@ -208,8 +208,9 @@
                                                             
                                                             <!-- <td>{{$item->received_at}}</td> -->
                                                             <td> 
+                                                                <!--The viewing of item is changed to edit. Incase of wrong input. The Loged will save the details same as how items are added-->
                                                                 <button data-target="#editModal-un" data-toggle="modal" data-id='{{$item->inventory_id}}' class="edit-btn-un btn btn-primary btn-fill">
-                                                                    View
+                                                                    Edit
                                                                 </button>
                                                             </td>
                                                             <td>
@@ -263,7 +264,6 @@
                                                         <th>@sortablelink('inventory_quantity', 'Quantity')</th>
                                                         <th>@sortablelink('inventory_price', 'Price')</th>
                                                         <th>Supplier Name</th>
-                                                        <th>@sortablelink('received_at', 'Received At')</th>
                                                         @endif
                                                     </tr>
                                                 </thead>
@@ -274,14 +274,17 @@
                                                             <td>{{$item->inventory_id}}</td>
                                                             <td>{{$item->inventory_quantity}}</td>
                                                             <td>{{$item->inventory_price}}</td>
-                                                            <td>Supplier Name</td>
-                                                            <td>{{$item->received_at}}</td>
+                                                            <td>Supplier Name</td>                                                            
                                                             <td> 
-                                                                <button data-target="#profileModal" data-toggle="modal" data-id='{{$item->inventory_id}}' class="edit-btn btn btn-primary btn-fill">
+                                                                <button data-target="#editModal" data-toggle="modal" data-id='{{$item->inventory_id}}' class="edit-btn btn btn-primary btn-fill">
                                                                     Edit
                                                                 </button>
                                                             </td>
                                                             <td>
+                                                                <!-- The Remove button is not needed. Once qtty is 0 it will just hide automatically. 
+                                                                due to unimportance of information of 0 damages it is not needed to be seen. 
+                                                                only undamaged inventory is required to be seen even if it is 0 qtty for restocking. this can or must be removed
+-->
                                                                 <button data-target="#profileModal" data-toggle="modal" data-id='{{$item->inventory_id}}' class="del-btn btn btn-danger btn-fill">
                                                                     Remove
                                                                 </button>
@@ -549,10 +552,9 @@
         </div>
     </div>
 
-
     <!-- VIEW/EDIT/DELETE MODAL UNDAMAGED -->
     <div class="modal fade" role="dialog" id="editModal-un">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -637,20 +639,22 @@
 
                     <!-- DELETE PROFILE MODAL -->
                     <div id="delete-content">
-                        <p> You are about to remove an item. Do you want to proceed?</p>
+                        <center><p> You are about to remove an item. Do you want to proceed?</p></center>
                     </div>
                 </div>
 
                 <div class="modal-footer" id="delete-modal-footer">
+                    <center>
                     <form method="POST" class="form-horizontal" id="delete-item">
                         {{csrf_field()}}
                         <input type="hidden" name="_method" value="DELETE">
                         <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic">
                             No
                         </button>
-                        <button type="submit" id="form-button-delete" class="btn btn-success btn-fill pull-right">    Yes 
+                        <button type="submit" id="form-button-delete" class="btn btn-success btn-fill">    Yes 
                         </button>
-                    </form>
+                    </form>                    
+                    </center>
                 </div>
             </div>
         </div>
@@ -658,6 +662,37 @@
 
     <!-- VIEW/EDIT/DELETE MODAL DAMAGED -->
     <div class="modal fade" role="dialog" id="editModal">
+                <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Edit Quantity for repairs</h4>
+                </div>
+                                    
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!--Put the item name information within the <span> tag-->
+                            <label> Item name: <span>Chair </span></label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Number of fixed quantity</label>
+                            <input type="number" id="view_item_quantity" class="form-control" required name="view_inventory_quantity"> 
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <center>
+                        <button type="button" class="btn btn-bg btn-info btn-fill" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-bg btn-fill" data-dismiss="modal">Back</button>
+                    </center>
+                </div>
+            </div>
+        </div>
+    
     </div>
 </body>
 
