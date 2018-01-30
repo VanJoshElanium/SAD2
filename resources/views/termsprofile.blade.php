@@ -146,40 +146,44 @@
                 <div class="container-fluid">
                     <div class="col-md-12">
                         <div class="card box">      
-                            <!-- Nav tabs -->
+                            
+                            <!-- NAVIGATION TABS -->
                             <ul class="nav nav-tabs" role="tablist">
                                 <li role="presentation" class="active">
-                                    <a href="#mbrNloc" aria-controls="home" role="tab" data-toggle="tab">
+                                    <a href="#tl_members" aria-controls="home" role="tab" data-toggle="tab">
                                         <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the details of the people that are managing the term.">
                                             Members &amp; Location
                                         </span>
                                     </a>
                                 </li>
 
-                                <li role="presentation"><a href="#itm_list" aria-controls="profile" role="tab" data-toggle="tab">
-                                    <!-- <a> -->
-                                        <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the item details.">Items List
+                                <li role="presentation">
+                                    <a href="#tl_items" aria-controls="profile" role="tab" data-toggle="tab">
+                                        <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the item details.">
+                                            Items
                                         </span>
                                     </a>
                                 </li>
                                 
-                                <li role="presentation"><a href="#expense" aria-controls="profile" role="tab" data-toggle="tab">
+                                <li role="presentation"><a href="#tl_expenses" aria-controls="profile" role="tab" data-toggle="tab">
                                     <!-- <a> -->
-                                        <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the expneses used for the term.">Expenses
+                                        <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the expneses used for the term.">      Expenses
                                         </span>
                                     </a>
                                 </li>  
                                 
-                                <li role="presentation"><a href="#sales" aria-controls="profile" role="tab" data-toggle="tab">
-                                    <!-- <a> -->
-                                        <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the sales and share calculated in the term.">Sales
+                                <li role="presentation">
+                                    <a href="#tl_sales" aria-controls="profile" role="tab" data-toggle="tab">
+                                        <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the sales and share calculated in the term.">
+                                            Sales
                                         </span>
                                     </a>
                                 </li>
                                 
-                                <li role="presentation"><a href="#Clist" aria-controls="profile" role="tab" data-toggle="tab">
-                                    <!-- <a> -->
-                                        <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the sales and share calculated in the term.">Customer List
+                                <li role="presentation">
+                                    <a href="#tl_customers" aria-controls="profile" role="tab" data-toggle="tab">
+                                        <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the sales and share calculated in the term.">
+                                            Customers
                                         </span>
                                     </a>
                                 </li>
@@ -187,17 +191,17 @@
 
                             <br>
 
+                            <!-- NAVTABS CONTENT -->
                             <div class="tab-content">
-
                                 <!-- TERM WORKERS & LOCATION -->
-                                <div role="tabpanel" class="tab-pane fade in active" id="mbrNloc">
+                                <div role="tabpanel" class="tab-pane fade in active" id="tl_members">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="col-md-8">
                                                 <div class="card">
                                                     <div class="header">
                                                         <div class="col-md-4">
-                                                            <h4 class="title">List of Peddlers</h4>
+                                                            <h4 class="title">Peddlers</h4>
                                                         </div>
                                                         <div class="col-md-8">
                                                             <span class="pull-right">      
@@ -282,7 +286,7 @@
                                 </div>
 
                                 <!-- TERM ITEMS -->
-                                <div role="tabpanel" class="tab-pane fade" id="itm_list">
+                                <div role="tabpanel" class="tab-pane fade" id="tl_items">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="col-md-10">
@@ -372,14 +376,14 @@
                                 </div>
 
                                 <!-- TERM EXPENSES -->
-                                <div role="tabpanel" class="tab-pane fade" id="expense">
+                                <div role="tabpanel" class="tab-pane fade" id="tl_expenses">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="col-md-8">
                                                 <div class="card">
                                                     <div class="header">
                                                         <div class="col-md-4">
-                                                            <h4 class="title"> Expense List </h4>
+                                                            <h4 class="title"> Expenses </h4>
                                                         </div>
 
                                                         <div class="col-md-8">
@@ -392,13 +396,16 @@
                                                     <div class="content table-responsive table-full-width">
                                                         <table class="table table-hover table-striped">
                                                             <thead>
+                                                                <th> ID </th>
                                                                 <th>Expense</th>
                                                                 <th>Amount</th>
-                                                                <th>Date Incurred</th>
                                                             </thead>
                                                             <tbody>
                                                                 @forelse ($expenses as $expense)
                                                                 <tr>
+                                                                    <td>
+                                                                        {{$expense -> expense_id}} 
+                                                                    </td> 
                                                                     <td>
                                                                         {{$expense -> expense_name}} 
                                                                     </td> 
@@ -409,12 +416,12 @@
                                                                         {{$expense -> expense_date}} 
                                                                     </td>
                                                                     <td>
-                                                                        <button type="button" data-target="#editExpense" data-toggle="modal" data-id="{{$expense->expense_id}}" class="btn  btn-warning btn-fill" id="ee_btn"> 
+                                                                        <button type="button" id="expense-view-edit-{{$expense->expense_id}}" data-target="#editExpense" data-toggle="modal" data-id="{{$expense->expense_id}}" class="btn btn-fill btn-primary ee_btn"> 
                                                                             View
                                                                         </button>
                                                                     </td>
                                                                     <td>
-                                                                        <button type="button" data-target="#removeExpense" data-toggle="modal" data-id="{{$expense->expense_id}}" class="btn  btn-warning btn-fill" id="re_btn"> 
+                                                                        <button type="button" data-target="#removeExpense" data-toggle="modal" data-id="{{$expense->expense_id}}" class="btn  btn-danger btn-fill re_btn"> 
                                                                             Remove
                                                                         </button>
                                                                     </td>
@@ -432,8 +439,9 @@
                                                 <div class="card">
                                                     <div class="header"><br><br>
                                                         <center>
-                                                            <h3 class="title">Total expenses</h3>    
-                                                            <p class="category">&#8369; 1,000.00</p>
+                                                                
+                                                            <h3 class="title">&#8369; {{$total_expense}}</h3>
+                                                            <p class="category">Total Expense</p>
                                                             <br>
                                                             <br>
                                                             <hr>    
@@ -446,7 +454,7 @@
                                 </div>
 
                                 <!-- TERM SALES -->
-                                <div role="tabpanel" class="tab-pane fade" id="sales">
+                                <div role="tabpanel" class="tab-pane fade" id="tl_sales">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="col-md-8">
@@ -524,7 +532,7 @@
                                 </div>
 
                                 <!-- TERM CUSTOMERS -->
-                                <div role="tabpanel" class="tab-pane fade" id="Clist">
+                                <div role="tabpanel" class="tab-pane fade" id="tl_customers">
                                     <div class="row">
                                         <div class="col-md-12">
                                             
@@ -648,53 +656,49 @@
             <form method="POST" class="form-horizontal" action="/workers">
                 {{ csrf_field() }}
                 <div class="modal-body">
-                    <div id="view-edit-content" class="row">
-                        <!-- Term edit form-->
-                        <div class="col-md-12">             
-                            <!-- Collector initialization-->       
+                    <div class="row">
+                        <div class="col-md-12">                   
                             <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">                         
                             <div class="row form-group">                       
-                                <div class="{{ $errors->has('peddler') ? ' has-error' : '' }}"> 
+                                <div class="{{ $errors->addPeddler->has('peddler') ? ' has-error' : '' }}"> 
                                     <div class="col-md-8">   
                                         <!--Acquires the list of workers within users table-->
                                         <label class="sel1">Peddler Name:</label>
-                                          <select class="form-control" name="peddler" required id="peddler">
-                                                <option value="" data-hidden="true" selected="selected">
+                                        <select class="form-control" name="peddler" required id="peddler">
+                                            <option value="" data-hidden="true" selected="selected">
+                                            </option>
+                                            @foreach($a_peddlers as $a_peddler)
+                                                <option value="{{$a_peddler->user_id}}">
+                                                    {{$a_peddler->fname}}&nbsp
+                                                    {{$a_peddler->mname}}.
+                                                    {{$a_peddler->lname}}
                                                 </option>
-                                                @foreach($a_peddlers as $a_peddler)
-                                                    <option value="{{$a_peddler->user_id}}">
-                                                        {{$a_peddler->fname}}&nbsp
-                                                        {{$a_peddler->mname}}.
-                                                        {{$a_peddler->lname}}
-                                                    </option>
-                                                @endforeach
-                                            </select>           
-                                            @if ($errors->has('peddler'))
-                                                <span class="help-block">
-                                                    <strong>{{ $errors->first('peddler') }}</strong>
-                                                </span>
-                                            @endif                   
+                                            @endforeach
+                                        </select>           
+                                        @if ($errors->addPeddler->has('peddler'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->addPeddler->first('peddler') }}</strong>
+                                            </span>
+                                        @endif                   
                                     </div>
                                 </div>
-                            </div>                                                                    
-                            <div class="row form-group"> 
-                            <!--Identifies the position of the peddler-->                      
-                                <div class="{{ $errors->has('position') ? ' has-error' : '' }}"> 
-                                    <div class="col-md-8">    
+                                                    
+                                <div class="{{ $errors->addPeddler->has('position') ? ' has-error' : '' }}"> 
+                                    <div class="col-md-4">    
                                         <label class="sel1">Position:</label>
-                                            <select name="position" required class="form-control" id="position">
-                                                <option value="" selected="selected"></option>
-                                                <option value="1">Team Leader</option>
-                                                <option value="2">Permanent Staff</option>
-                                                <option value="3">Temporary Staff</option>  
-                                            </select>
-                                            @if ($errors->has('position'))
-                                                <span class="help-block">
-                                                    <strong>
-                                                        {{ $errors->first('position') }}
-                                                    </strong>
-                                                </span>
-                                            @endif 
+                                        <select name="position" required class="form-control" id="position">
+                                            <option value="" selected="selected"></option>
+                                            <option value="1">Team Leader</option>
+                                            <option value="2">Permanent Staff</option>
+                                            <option value="3">Temporary Staff</option>  
+                                        </select>
+                                        @if ($errors->addPeddler->has('position'))
+                                            <span class="help-block">
+                                                <strong>
+                                                    {{ $errors->addPeddler->first('position') }}
+                                                </strong>
+                                            </span>
+                                        @endif 
                                     </div>
                                 </div>
                             </div>     
@@ -705,7 +709,6 @@
                     <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic">
                         Cancel
                     </button>
-
                     <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-add">
                       Add
                     </button>      
@@ -743,7 +746,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                            <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">No</button>
+                            <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancel</button>
                           <!--ADD New Term button-->
                           <button type="submit" class="btn btn-bg btn-success btn-fill">Remove</button>   
                     </div>
@@ -754,66 +757,77 @@
 
 <!--Edit peddler-->
 <div class="modal fade" role="dialog" id="editPeddler">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Edit Peddler</h4>
-                </div>
-                                    
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Edit Peddler</h4>
+            </div>
+            
+            <form method="POST" class="form-horizontal" id="editPeddler_form">  
+                {{csrf_field()}}
+                {{method_field('PUT')}} 
+
                 <div class="modal-body">
-                    <div id="view-edit-content" class="row">
-                        <!-- Term edit form-->
-                        <div class="col-md-12"> 
-                            <form method="POST" class="form-horizontal" id="view-edit-profile">      
-                                <!-- Collector initialization-->                                    
-                                <div class="row form-group">                       
-                                    <div class=""> 
-                                        <div class="col-md-8">   
-                                        
-                                            <label class="sel1">Peddler Name:</label>
-                                            <input class="form-control" id="disabledInput" type="text" placeholder="Marko G. Garduvilia" disabled>
-                                                <span class="help-block">
-                                                    <strong>
-                                                        
-                                                    </strong>
-                                                </span>
-                                            
-                                        </div>
+                    <div class="row">
+                        <div class="col-md-12">                   
+                            <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">                         
+                            <div class="row form-group">                       
+                                <div class="{{ $errors->editPeddler->has('edit_peddler') ? ' has-error' : '' }}"> 
+                                    <div class="col-md-8">   
+                                        <!--Acquires the list of workers within users table-->
+                                        <label class="sel1">Peddler Name:</label>
+                                        <select class="form-control" name="edit_peddler" required id="edit_peddler" disabled="disabled" required>
+                                            @foreach($a_peddlers as $a_peddler)
+                                                <option value="{{$a_peddler->user_id}}">
+                                                    {{$a_peddler->fname}}&nbsp
+                                                    {{$a_peddler->mname}}.
+                                                    {{$a_peddler->lname}}
+                                                </option>
+                                            @endforeach
+                                        </select>           
+                                        @if ($errors->editPeddler->has('edit_peddler'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->editPeddler->first('edit_peddler') }}</strong>
+                                            </span>
+                                        @endif                   
                                     </div>
-                                </div>                                                                    
-                                <div class="row form-group"> <!--Identifies the position of the peddler-->                      
-                                    <div class=""> 
-                                        <div class="col-md-8">    
-                                            <label class="sel1">Position:</label>
-                                              <form>
-                                                
-                                                  <select class="form-control" id="sel1">
-                                                    <option>Team leader</option>
-                                                    <option>Subordinate</option>  
-                                                  </select>
-                                              </form>
-                                                <span class="help-block">
-                                                    <strong>
-                                                        
-                                                    </strong>
-                                                </span>
-                                        </div>
+                                </div>
+                                                    
+                                <div class="{{ $errors->editPeddler->has('edit_position') ? ' has-error' : '' }}"> 
+                                    <div class="col-md-4">    
+                                        <label class="sel1">Position:</label>
+                                        <select name="edit_position" required class="form-control" id="edit_position" required>
+                                            <option value="1">Team Leader</option>
+                                            <option value="2">Permanent Staff</option>
+                                            <option value="3">Temporary Staff</option>  
+                                        </select>
+                                        @if ($errors->editPeddler->has('edit_position'))
+                                            <span class="help-block">
+                                                <strong>
+                                                    {{ $errors->editPeddler->first('edit_position') }}
+                                                </strong>
+                                            </span>
+                                        @endif 
                                     </div>
-                                </div> 
-                            </form>
-                            </div>
+                                </div>
+                            </div>     
                         </div>
                     </div>
-                    <div class="modal-footer">
-                      <center>
-                          <!--ADD New Term button-->
-                          <button type="button" class="btn btn-bg btn-success btn-fill">save</button>
-                          <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
-                    </div>
                 </div>
-            </div>
-        </div><!--End  div of modal-->
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-bg btn-success btn-fill" >
+                        Edit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <!--Remove Item-->
 <div class="modal fade" role="dialog" id="removeItem">
@@ -1021,63 +1035,58 @@
 
 <!--Add Expense-->   
 <div class="modal fade" role="dialog" id="addExpense">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Add Expense</h4>
-                </div>
-                                    
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add Expense</h4>
+            </div>
+                             
+            <form method="POST" class="form-horizontal" id="addExpense_form" action="/expenses">   
+                {{csrf_field()}} 
+
+                <!-- TERM_ID -->
+                <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">
+
                 <div class="modal-body">
-                    <div id="view-edit-content" class="row">
-                        <!-- Term edit form-->
-                        <div class="col-md-12"> 
-                            <form method="POST" class="form-horizontal" id="view-edit-profile">      
-                                <!-- Collector initialization-->                                    
-                                             
-                                    <div class=""> 
-                                    <div class="row">
-                                            <div class="">
-                                                <div class="col-md-12">  
-                                                    <!--Note: Must not exceed with the existing quantity.-->
-                                                    <label>Expense used:</label>
-                                                    <input class="form-control" type="text" id="expenseNote" placeholder="Write expense used here">
-
-                                                        <span class="help-block">
-
-                                                        </span>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                        <div class="">
-                                            <div class="col-md-6">  
-                                                <label>Expense amount:</label>
-                                                <input type="text" required name="Term_address" id="T_address" class="form-control">
-
-                                                    <span class="help-block">
-
-                                                    </span>
-
-                                            </div>
-                                        </div> 
-                                        </div>
-                                    </div>
-                                
-                            </form>
+                    <div id="view-add-content" class="row">                                 
+                        <div class="row form-group col-md-12">
+                            <div class="{{$errors->addExpense->has('add_exp_name') ? ' has-error' : ''}}"> 
+                                <div class="col-md-8">  
+                                    <label>Expense Name</label>
+                                    <input class="form-control" type="text" id="add_exp_name" name="add_exp_name" required> 
+                                    @if ($errors->addExpense->has('add_exp_name'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->addExpense->first('add_exp_name') }}</strong>
+                                        </span>
+                                    @endif   
+                                </div>
                             </div>
+
+                            <div class="{{$errors->addExpense->has('add_exp_amt') ? ' has-error' : ''}}"> 
+                                <div class="col-md-4">  
+                                    <label>Expense Amount</label>
+                                    <input type="number" required name="add_exp_amt" id="add_exp_amt" class="form-control" required>
+                                    @if ($errors->addExpense->has('add_exp_amt'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->addExpense->first('exit_exp_amt') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
+                            </div> 
                         </div>
                     </div>
-                    <div class="modal-footer">
-                      <center>
-                          <!--ADD New Term button-->
-                          <button type="button" class="btn btn-bg btn-success btn-fill">Add</button>
-                          <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
-                    </div>
                 </div>
-            </div>
-        </div><!--End  div of modal-->
+
+                <div class="modal-footer">
+                      <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">    Cancel
+                      </button>
+                      <button type="submit" class="btn btn-bg btn-success btn-fill">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <!--Edit Expense--> 
 <div class="modal fade" role="dialog" id="editExpense">
@@ -1088,53 +1097,48 @@
                 <h4 class="modal-title">Edit Expense</h4>
             </div>
                              
-            <form method="POST" class="form-horizontal" id="ee_form">      
+            <form method="POST" class="form-horizontal" id="editExpense_form">   
+
                 {{csrf_field()}}
-                <input type="hidden" name="_method" value="PUT">  
+                {{method_field('PUT')}}  
+
+                <!-- TERM_ID -->
+                <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">
 
                 <div class="modal-body">
-                    <div id="view-edit-content" class="row">
-                        <div class="col-md-12">                                 
-                            <div class=""> 
-                                <div class="row">
-                                    <div class="">
-                                        <div class="col-md-12">  
-                                            
-                                            <label>Expense Name</label>
-                                            <input class="form-control" type="text" id="expenseNote" placeholder="">
-
-                                                <span class="help-block">
-
-                                                </span>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="">
-                                        <div class="col-md-6">  
-                                            <label>Expense Amount</label>
-                                            <input type="text" required name="Term_address" id="T_address" class="form-control">
-
-                                                <span class="help-block">
-
-                                                </span>
-
-                                        </div>
-                                    </div> 
-                                    </div>
+                    <div id="view-edit-content" class="row">                                 
+                        <div class="row form-group col-md-12">
+                            <div class="{{$errors->editExpense->has('edit_exp_name') ? ' has-error' : ''}}"> 
+                                <div class="col-md-8">  
+                                    <label>Expense Name</label>
+                                    <input class="form-control" type="text" id="edit_exp_name" name="edit_exp_name" required> 
+                                    @if ($errors->editExpense->has('edit_exp_name'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->editExpense->first('edit_exp_name') }}</strong>
+                                        </span>
+                                    @endif   
                                 </div>
                             </div>
+                        
+                            <div class="{{$errors->editExpense->has('edit_exp_amt') ? ' has-error' : ''}}"> 
+                                <div class="col-md-4">  
+                                    <label>Expense Amount</label>
+                                    <input type="number" required name="edit_exp_amt" id="edit_exp_amt" class="form-control" required>
+                                    @if ($errors->editExpense->has('edit_exp_amt'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->editExpense->first('exit_exp_amt') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
+                            </div> 
                         </div>
                     </div>
                 </div>
 
                 <div class="modal-footer">
-                    <center>
-                      <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">    Cancel
+                      <button type="button" class="btn btn-bg btn-default" data-dismiss="modal"> Cancel
                       </button>
-                      <button type="sumit" class="btn btn-bg btn-success btn-fill">Edit</button>
-                    </center>
+                      <button type="submit" class="btn btn-bg btn-success btn-fill">Edit</button>
                 </div>
             </form>
         </div>
@@ -1150,9 +1154,10 @@
                 <h4 class="modal-title">Remove Expense</h4>
             </div>
                           
-            <form method="POST" class="form-horizontal" id="re_form">   
+            <form method="POST" class="form-horizontal" id="removeExpense_form">
+
                 {{csrf_field()}}
-                <input type="hidden" name="_method" value="DELETE">
+                {{method_field('DELETE')}}
 
                 <div class="modal-body">
                     <div id="view-edit-content" class="row">
@@ -1168,13 +1173,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <center>
                         <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">No
                         </button>
 
                         <button type="submit" class="btn btn-bg btn-success btn-fill">Yes
                         </button>         
-                    </center>
                 </div>
             </form>
         </div>
@@ -1346,9 +1349,8 @@
             </div>
         </div><!--End  div of modal-->
 
-
 <!--Customer view Modal-->
-    <div class="modal fade" role="dialog" id="viewC" >
+<div class="modal fade" role="dialog" id="viewC" >
             <div class="modal-dialog">
               <!-- Modal content-->
               <div class="modal-content">
@@ -1409,9 +1411,10 @@
                 </div>
               </div>
             </div>
-</div><!--End div of modal-->
-    <!--Customer Add Modal-->        
-    <div class="modal fade" role="dialog" id="addC">
+</div>
+
+<!--Customer Add Modal-->        
+<div class="modal fade" role="dialog" id="addC">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -1496,9 +1499,10 @@
                         </div>
                     </div>
                 </div>
-</div><!--End  div of modal-->
-    <!--Customer Edit Modal-->
-    <div class="modal fade" role="dialog" id="editC">
+</div>
+
+<!--Customer Edit Modal-->
+<div class="modal fade" role="dialog" id="editC">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -1579,9 +1583,10 @@
                         </div>
                     </div>
                 </div>
-</div><!--End  div of modal-->
-    <!--Printing Modal-->    
-    <div class="modal fade" role="dialog" id="print">
+</div>
+
+<!--Printing Modal-->    
+<div class="modal fade" role="dialog" id="print">
         <div class="modal-dialog">
           <!-- Modal content-->
           <div class="modal-content">
@@ -1631,7 +1636,7 @@
             </div>
           </div>
         </div>
-</div><!--End div of modal-->
+</div>
 
 </body>
 
@@ -1655,6 +1660,20 @@
         })
     </script>
 
+    <!-- VALIDATION ERRORS -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            if ({!!count($errors->addExpense)!!} > 0)
+                $("#addExpense").modal();    
+            
+            
+            if({!!count($errors->editExpense)!!} > 0)
+                $("#expense-view-edit-{{ session()-> get( 'error_id' ) }}").click();
+        });
+    </script>
+
+
+    <!-- TERM PEDDLERS -->
     <script>
         //DELETE PEDDLER FROM TERM
         $(document).on("click", ".rp_btn", function () {
@@ -1669,9 +1688,63 @@
         $(document).on("click", ".ep_btn", function () {
             var id = $(this).data('id');
 
+             $.ajax({
+                url: "/getWorker/" + id,
+                type: 'GET',             
+                data: { 'id' : id },
+                success: function(response){
+                    // DEBUGGING
+                    console.log(response);
+
+                    // SET FORM INPUTS
+                    $("#edit_peddler option[value='"+response.worker_user_id+"']").attr('selected', true);
+                    $("#edit_position option[value='"+response.worker_type+"']").attr('selected', true);
+                },
+                error: function(data){
+                    console.log(data);
+                }
+            }); 
+
             //FORM
             $("#editPeddler_form").attr("action", "/workers/" +id);
+       }); 
+    </script>
+
+    <!-- TERM EXPENSES-->
+    <script>
+        //DELETE EXPENSE FROM TERM
+        $(document).on("click", ".re_btn", function () {
+            var id = $(this).data('id');
+
+            //FORM
+            $("#removeExpense_form").attr("action", "/expenses/" +id);
+
         }); 
 
+        //EDIT EXPENSE FROM TERM
+        $(document).on("click", ".ee_btn", function () {
+            var id = $(this).data('id');
+
+             $.ajax({
+                url: "/getExpense/" + id,
+                type: 'GET',             
+                data: { 'id' : id },
+                success: function(response){
+                    // DEBUGGING
+                    console.log(response);
+
+                    // SET FORM INPUTS
+                    $('#edit_exp_name').val(response.expense_name);
+                    $('#edit_exp_amt').val(response.expense_amt); 
+                },
+                error: function(data){
+                    console.log(data);
+                }
+            }); 
+
+            //FORM
+            $("#editExpense_form").attr("action", "/expenses/" +id);
+        }); 
     </script>
 @endsection
+

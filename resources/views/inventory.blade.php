@@ -765,7 +765,7 @@
                                         <div class="col-md-4">    
                                             <label>Date Received</label>
                                             <input type="datetime-local" id="view_received_at" class="form-control"  name="received_at" required value="{{App\Inventory::currdate()}}"> 
-                                            @if ($errors->has('view_received_at'))
+                                            @if ($errors->edit->Repair->has('view_received_at'))
                                                 <span class="help-block">
                                                     <strong>
                                                         {{ $errors->editRepair->first('view_received_at') }}
@@ -784,7 +784,7 @@
                                                 <label>Item Name</label>
                                                 <select class="form-control dm_item_name" name="view_dm_item_name" required>
                                                 </select>  
-                                                @if ($errors->has('view_dm_item_name'))
+                                                @if ($errors->editRepair->has('view_dm_item_name'))
                                                     <span class="help-block">
                                                         <strong>
                                                             {{ $errors->editRepair->first('view_dm_item_name') }}
@@ -802,7 +802,7 @@
                                                         <option value='1'> Repairable </option>
                                                         <option value='0'> Unrepairable </option>
                                                     </select>
-                                                @if ($errors->has('view_dm_state'))
+                                                @if ($errors->editRepair->has('view_dm_state'))
                                                     <span class="help-block">
                                                         <strong>{{ $errors->editRepair->first('view_dm_state') }}</strong>
                                                     </span>
@@ -814,7 +814,7 @@
                                             <div class="col-md-2">    
                                                 <label for="sel1">Quantity</label>
                                                 <input type="number" class="form-control" required name="view_dm_qty">      
-                                                @if ($errors->has('view_dm_qty'))
+                                                @if ($errors->editRepair->has('view_dm_qty'))
                                                     <span class="help-block">
                                                         <strong>{{ $errors->editRepair->first('view_dm_qty') }}</strong>
                                                     </span>
