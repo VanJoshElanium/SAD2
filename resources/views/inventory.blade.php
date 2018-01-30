@@ -765,7 +765,7 @@
                                         <div class="col-md-4">    
                                             <label>Date Received</label>
                                             <input type="datetime-local" id="view_received_at" class="form-control"  name="received_at" required value="{{App\Inventory::currdate()}}"> 
-                                            @if ($errors->edit->Repair->has('view_received_at'))
+                                            @if ($errors->editRepair->has('view_received_at'))
                                                 <span class="help-block">
                                                     <strong>
                                                         {{ $errors->editRepair->first('view_received_at') }}
