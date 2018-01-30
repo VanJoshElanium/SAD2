@@ -81,7 +81,7 @@ class TermsProfileController extends Controller
                                -> join('terms', 'term_id', '=', 'worker_term_id')
                                -> where([
                                     ['term_status' , '=', 1],
-                                    ['finish_date', '>=', Carbon::now() -> toDateString()],
+                                    ['finish_date', '<=', Carbon::now() -> toDateString()],
                                 ]);
                         })
                     -> select('user_id', 'fname', 'mname', 'lname')
@@ -106,12 +106,16 @@ class TermsProfileController extends Controller
     
         //TERM EXPENSES
         $expenses = Term::join('expenses', 'terms.term_id', '=', 'expense_term_id')
-                    -> select ('terms.term_id', 'terms.term_status', 'expenses.*')
-                    -> where ([
+                    -> select('terms.term_id', 'terms.term_status', 'expenses.*')
+                    -> where([
                         ['terms.term_status', '=', '1'],
                         ['terms.term_id', '=', $id]
                     ])
                     -> paginate(5);
+
+        $total_expense = DB::table('expenses')
+                        -> where ('expenses.expense_term_id', '=', $id)
+                        -> sum('expense_amt');
 
         //TERM ITEMS
         $term_items = Term::join('term_items', 'terms.term_id', '=', 'ti_term_id')
@@ -132,7 +136,7 @@ class TermsProfileController extends Controller
                     -> paginate(5);
 
 
-        return view('termsprofile', compact('curr_user', 'workers', 'term', 'a_peddlers', 'expenses', 'term_items', 'sales'));
+        return view('termsprofile', compact('curr_user', 'workers', 'term', 'a_peddlers', 'expenses', 'term_items', 'sales', 'total_expense'));
     }
 
     /**

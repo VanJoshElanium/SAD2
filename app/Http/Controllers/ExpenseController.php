@@ -2,17 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Term;
-use App\User;
 use Validator;
-use App\Worker;
-use App\Term_Item;
 use App\Expense;
-use App\Sale;
-use App\Supplier;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreTerm;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -46,7 +40,32 @@ class ExpenseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $expenses = DB::Table('expenses')
+                    -> select ('expenses.expense_name')
+                    -> where ('expenses.expense_term_id', '=', $request -> term_id)
+                    -> get();
+        $length = count($expenses);
+
+        $validator = Validator::make($request->all(), [
+            'add_exp_name' => array(
+                            'required',
+                            'unique:expenses,expense_name,NULL,expense_id,expense_term_id,' .$request-> term_id
+                        ),
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('/termsprofile/' .$request-> term_id)
+                ->withErrors($validator, 'addExpense')
+                ->withInput($request->all());
+        }
+        else{
+            $expense = new Expense;
+            $expense -> expense_name = $request -> add_exp_name;
+            $expense -> expense_amt = $request-> add_exp_amt;
+            $expense -> expense_term_id = $request-> term_id;
+            $expense -> save();
+        }
+        return redirect('/termsprofile/' .$request-> term_id);
     }
 
     /**
@@ -68,7 +87,7 @@ class ExpenseController extends Controller
      */
     public function edit($id)
     {
-        //
+
     }
 
     /**
@@ -80,7 +99,12 @@ class ExpenseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $expense = Expense::find($id);
+        $expense -> expense_name = $request -> edit_exp_name;
+        $expense -> expense_amt = $request-> edit_exp_amt;
+        $expense -> save();
+
+        return redirect('/termsprofile/' .$request-> term_id);
     }
 
     /**
@@ -91,6 +115,15 @@ class ExpenseController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $expense = Expense::find($id);
+        $term = $expense -> expense_term_id;
+
+        $expense = Expense::destroy($id);
+        return redirect('/termsprofile/' .$term);
+    }
+
+    public function getExpense($id){
+        $expensedata = Expense::find($id);
+        return $expensedata;
     }
 }

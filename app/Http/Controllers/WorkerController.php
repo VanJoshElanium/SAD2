@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
 use App\Worker;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
@@ -41,11 +42,24 @@ class WorkerController extends Controller
      */
     public function store(Request $request)
     {
-        $worker = Worker::create([
+        $validator = Validator::make($request->all(), [
+            'add_position' => array(
+                            'unique:workers,worker_position,NULL,worker_id,worker_term_id,' .$request-> term_id
+                        ),
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('/termsprofile/' .$request-> term_id)
+                ->withErrors($validator, 'addPeddler')
+                ->withInput($request->all());
+        }
+        else{
+            $worker = Worker::create([
                 'worker_user_id' => $request-> peddler,
                 'worker_term_id' => $request-> term_id,
                 'worker_type' => $request-> position
             ]);
+        } 
         return redirect('/termsprofile/' .$request-> term_id);
         
     }
@@ -80,8 +94,25 @@ class WorkerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        //
+    {   
+        $validator = Validator::make($request->all(), [
+            'edit_position' => array(
+                            'unique:workers,worker_position,NULL,worker_id,worker_term_id,' .$request-> term_id
+                        ),
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('/termsprofile/' .$request-> term_id)
+                ->withErrors($validator, 'editPeddler')
+                ->withInput($request->all())
+                ->with('error_id', $id);
+        }
+        else{
+            $worker = Worker::find($id);
+            $worker -> worker_type = $request -> edit_position;
+            $worker -> save();
+            return redirect('termsprofile/' .$request -> term_id);
+        }
     }
 
     /**
@@ -95,6 +126,11 @@ class WorkerController extends Controller
         $worker = Worker::find($id);
         $term_id = $worker -> worker_term_id;
         $worker = Worker::destroy($id);
-        return redirect('/termsprofile/' .$term_id);
+        return redirect('termsprofile/' .$term_id);
+    }
+
+    public function getWorker($id){
+        $workerdata = Worker::find($id);
+        return $workerdata;
     }
 }
