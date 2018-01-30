@@ -176,33 +176,49 @@
                             </div>
                             <div class="content table-responsive table-full-width">
                                 <table class="table table-hover table-striped">
+                                
                                     <thead>
                                         <th>ID</th>
                                     	<th>Date Started</th>
-                                        <th>Date Ended</th>
-                                    	<th>Collector</th>
-                                        <th>Peddling End</th>
+                                        <th>Date Peddling Ended</th>
+                                        <th>Date Collecting Ended</th>
+                                    	<th>Collector</th>         
                                         <!-- <th>View Details</th> -->
                                     </thead>
                                     <tbody>
-                                        @forelse($terms as $term)
-                                            <tr data-target="" data-toggle="modal" class="" data-id='{{$term->term_id}}'>    
-                                                <td>{{$term->term_id}}</td>
-                                                <td>{{$term->start_date}}</td>
-                                                <td>{{$term->finish_date}}</td>
-                                                <td>{{$term->fname}} {{$term->mname}}. {{$term->lname}}</td>
+                                        @forelse($og_terms as $og_term)
+                                            <tr data-target="" data-toggle="modal" class="" data-id='{{$og_term->term_id}}'>    
+                                                <td>{{$og_term->term_id}}</td>
+                                                <td>{{$og_term->start_date}}</td>
                                                 <td>
-                                                    <button data-target="#peddlingEnd" id="" data-toggle="modal" data-id='' class="edit-btn btn  btn-success btn-fill">
-                                                        Add Peddling End
-                                                    </button>
+                                                    @if(empty($og_term->end_date))
+                                                        <button data-target="#peddlingEnd" id="add_ed" data-toggle="modal" data-id='{{$og_term->term_id}}' class="ed-btn btn  btn-success btn-fill">
+                                                            Add Peddling End
+                                                        </button>
+                                                    @else
+                                                        {{$og_term->end_date}}
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if(empty($og_term->finish_date) && !empty($og_term->end_date))
+                                                        <button data-target="#collectingEnd" id="add_fd" data-toggle="modal" data-id='{{$og_term->term_id}}' class="fd-btn btn  btn-success btn-fill">
+                                                            Add Collecting End
+                                                        </button>
+                                                    @else
+                                                        {{$og_term->finish_date}}
+                                                    @endif
+                                                    
+                                                </td>
+                                                <td>
+                                                    {{$og_term->fname}} {{$og_term->mname}}. {{$og_term->lname}}
                                                 </td>
                                                 <td> 
-                                                    <button data-href="{{ route('termsprofile.show', ['term' => $term->term_id]) }}" class="toProfile btn btn-primary btn-fill">
+                                                    <button data-href="{{ route('termsprofile.show', ['term' => $og_term->term_id]) }}" class="toProfile btn btn-primary btn-fill">
                                                         View
                                                     </button>
                                                 </td>
                                                 <td>
-                                                    <button data-target="#removeModal" data-toggle="modal" data-id='{{$term->term_id}}' class="del-btn  btn btn-danger btn-fill">
+                                                    <button data-target="#removeModal" data-toggle="modal" data-id='{{$og_term->term_id}}' class="del-btn  btn btn-danger btn-fill">
                                                         Remove
                                                     </button>
                                                 </td>
@@ -236,28 +252,39 @@
                             
                             <div class="content table-responsive table-full-width">
                                 <table class="table table-hover table-striped">
+                                 
                                     <thead>
                                         <th>ID</th>
-                                    	<th>Date Started</th>
-                                        <th>Peddling Date Ended</th>
-                                    	<th>Collection Date Ended</th>
-                                    	<th>Collector</th>
-                                        <th>View Details</th>
+                                        <th>Date Started</th>
+                                        <th>Date Peddling Ended</th>
+                                        <th>Date Collecting Ended</th>
+                                        <th>Collector</th>         
+                                        <!-- <th>View Details</th> -->
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                        	<td>1</td>
-                                        	<td>02/12/17</td>
-                                        	<td>03/12/17</td>
-                                        	<td>02/12/18</td>
-                                        	<td>Jules Barbarona</td>
-                                        	<td>
-                                                <!--This will open the termsprofile-->
-                                            <button data-id='' class="btn  btn-info btn-fill">
-                                                View
-                                            </button>
-                                            </td>
-                                        </tr>
+                                        @forelse($cd_terms as $cd_term)
+                                            <tr data-target="" data-toggle="modal" class="" data-id='{{$cd_term->term_id}}'>    
+                                                <td>{{$cd_term->term_id}}</td>
+                                                <td>{{$cd_term->start_date}}</td>
+                                                <td>{{$cd_term->end_date}}</td>
+                                                <td>{{$cd_term->finish_date}}</td>
+                                                <td>
+                                                    {{$cd_term->fname}} {{$cd_term->mname}}. {{$cd_term->lname}}
+                                                </td>
+                                                <td> 
+                                                    <button data-href="{{ route('termsprofile.show', ['term' => $cd_term->term_id]) }}" class="toProfile btn btn-primary btn-fill">
+                                                        View
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <button data-target="#removeModal" data-toggle="modal" data-id='{{$cd_term->term_id}}' class="del-btn  btn btn-danger btn-fill">
+                                                        Remove
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <h3 style="text-align: center"> No terms stored. </h3>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>
@@ -271,7 +298,9 @@
     </div>   
 </div>
 
-    <!-- VIEW/EDIT TERM MODAL -->
+    <!-- MODALS -->
+
+    <!-- ADD NEW TERM MODAL -->
     <div class="modal fade" role="dialog" id="addModal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -360,50 +389,104 @@
         </div>
     </div>
 
+    <!-- ADD PEDDLING END TO TERM MODAL -->
     <div class="modal fade" role="dialog" id="peddlingEnd">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">End of Peddling Date</h4>
+                    <h4 class="modal-title">End of Peddling</h4>
                 </div>
-                                    
-                <div class="modal-body">
-                    <div id="view-edit-content" class="row">
-                        <!-- Term edit form-->
-                        <div class="col-md-12"> 
-                            <form method="POST" class="form-horizontal">      
-                                  
-                                <!--Term Date initialization.-->                                            
+                         
+                <form method="POST" class="form-horizontal"  id="ed_form">  
+                    {{ method_field('PUT') }}
+                    {{ csrf_field() }}           
+                    
+                    <div class="modal-body">
+                        <div id="view-edit-content" class="row">
+                            <div class="col-md-12">                                           
                                 <div class="row form-group">
-                                    <div class="col-md-6 col-md-offset-3">
-                                        <label>Date Ended</label>
-                                        <input name="initialTerm_Date"  id="initT_Date" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'">
-                                                                            
-                                        <span class="help-block">
-                                            <strong>  </strong>
-                                        </span>
+                                    <div class="{{$errors->addEd->has('ed') ? ' has-error' : ''}}"> 
+                                        <div class="col-md-6 col-md-offset-3">
+                                            <label>Date Ended</label>
+                                            <input name="ed"  id="ed" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'">
+                                            @if($errors->addEd->has('ed'))                            
+                                                <span class="help-block">
+                                                    <strong>  
+                                                         {{ $errors->addEd->first('ed') }}
+                                                    </strong>
+                                                </span>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
-                                                                    
+                                <input type="hidden" id="update_type" name="update_type" value="ed">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-bg btn-success btn-fill">
+                            Add
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD COLLECTING END TO TERM MODAL -->
+    <div class="modal fade" role="dialog" id="collectingEnd">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">End of Collecting</h4>
+                </div>
                     
-                            </form>
+                <form method="POST" class="form-horizontal" id="fd_form">      
+                    {{ method_field('PUT') }}
+                    {{ csrf_field() }}                
+                    <div class="modal-body">
+                        <div id="view-edit-content" class="row">
+                            <div class="col-md-12">                                    
+                                <div class="row form-group">
+                                    <div class="{{$errors->addFd->has('fd') ? ' has-error' : ''}}"> 
+                                        <div class="col-md-6 col-md-offset-3">
+                                            <label>Date Ended</label>
+                                            <input name="fd"  id="fd" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'">
+                                            @if($errors->addFd->has('fd'))                            
+                                                <span class="help-block">
+                                                    <strong>  
+                                                         {{ $errors->addFd->first('fd') }}
+                                                    </strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="update_type" name="update_type" value="fd">
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <!--ADD New Term button-->
                         <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic">
                             Cancel
                         </button>
-                        <button type="button" class="btn btn-bg btn-success btn-fill">Add</button>
-                          
+                        <button type="submit" class="btn btn-bg btn-success btn-fill">
+                            Add
+                        </button>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
+    </div>
 
-     <div class="modal fade" role="dialog" id="removeModal">
+    <!-- REMOVE TERM MODAL -->
+    <div class="modal fade" role="dialog" id="removeModal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -431,6 +514,8 @@
             </div>
         </div>
     </div>
+
+
 </body>
 
     <!--   Core JS Files   -->
@@ -459,20 +544,21 @@
         })
     </script>
 
+    <!-- ERROR HANDLING -->
     <script>
         document.addEventListener("DOMContentLoaded", function(event) {
             if ({!!count($errors)!!} > 0)
                 $("#addModal").modal();    
-            
-            
-            // if({!!count($errors->editUser)!!} > 0)
-            //     $("#view-edit-{{ session()-> get( 'error_id' ) }}").click();
+               
+            if({!!count($errors->addEd)!!} > 0)
+                $("#peddlingEnd").modal(); 
 
-            // if ({!!count($errors->editPass)!!} > 0)
-            //     $("#passwordModal").modal();   
+            if ({!!count($errors->addFd)!!} > 0)
+                $("#collectingEnd").modal();   
         });
     </script>
 
+    <!-- REMOVE TERM -->
     <script>     
         $(document).on("click", ".del-btn", function () {
             var id = $(this).data('id');
@@ -483,6 +569,24 @@
         });
     </script>
 
+    <!-- PEDDLING/COLLETCING END -->
+    <script>
+        // ADD PEDDLING END
+        $(document).on("click", "#add_ed", function () {
+                var id = $(this).data('id');
+
+                $("#ed_form").attr("action", "/terms/" +id);
+            }); 
+
+        // ADD COLLECTING END
+        $(document).on("click", "#add_fd", function () {
+                var id = $(this).data('id');
+                
+                $("#fd_form").attr("action", "/terms/" +id);
+            }); 
+    </script>
+
+    <!--  TERM PROFILE -->
     <script>
         $(document).on("click", ".toProfile", function () {
                 window.location = $(this).data("href");

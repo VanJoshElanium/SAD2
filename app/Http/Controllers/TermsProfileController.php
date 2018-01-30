@@ -6,6 +6,9 @@ use App\Term;
 use App\User;
 use Validator;
 use App\Worker;
+use App\Term_Item;
+use App\Expense;
+use App\Sale;
 use App\Supplier;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -56,6 +59,7 @@ class TermsProfileController extends Controller
     {
         $curr_usr = Auth::user();
 
+        //BASIC TERM DETAILS: LOC, COLLECTOR, DATES
         $term = Term::join('workers', 'terms.term_id', '=', 'worker_term_id')
                 -> join('users', 'workers.worker_user_id', '=', 'users.user_id')
                 -> join('profiles', 'users.user_id', '=', 'profiles.profile_user_id')
@@ -68,6 +72,7 @@ class TermsProfileController extends Controller
                     ])
                 -> get();
        
+        //AVAILABLE PEDDLERS (FOR ADDING PEDDLERS FORM)
         $a_peddlers = DB::table('profiles as T1')
                     -> join('users as T2', 'T2.user_id', '=', 'T1.profile_user_id')
                     -> whereNotIn('user_id', function($query){
@@ -76,12 +81,8 @@ class TermsProfileController extends Controller
                                -> join('terms', 'term_id', '=', 'worker_term_id')
                                -> where([
                                     ['term_status' , '=', 1],
-                                    ['finish_date', '>', Carbon::now() -> toDateString()],
-                                ])
-                               -> orWhere([
-                                    ['finish_date', '=', null]
+                                    ['finish_date', '>=', Carbon::now() -> toDateString()],
                                 ]);
-
                         })
                     -> select('user_id', 'fname', 'mname', 'lname')
                     -> where([
@@ -90,6 +91,7 @@ class TermsProfileController extends Controller
                         ])
                     -> get();
 
+        //TERM PEDDLERS
         $workers = Term::join('workers', 'terms.term_id', '=', 'worker_term_id')
                 -> join('users', 'workers.worker_user_id', '=', 'users.user_id')
                 -> join('profiles', 'users.user_id', '=', 'profiles.profile_user_id')
@@ -100,8 +102,37 @@ class TermsProfileController extends Controller
                         ['terms.term_status', '=', 1],
                         ['workers.worker_type', '!=', 0]
                     ])
-                -> get();
-        return view('termsprofile', compact('curr_user', 'workers', 'term', 'a_peddlers'));
+                -> paginate(5);
+    
+        //TERM EXPENSES
+        $expenses = Term::join('expenses', 'terms.term_id', '=', 'expense_term_id')
+                    -> select ('terms.term_id', 'terms.term_status', 'expenses.*')
+                    -> where ([
+                        ['terms.term_status', '=', '1'],
+                        ['terms.term_id', '=', $id]
+                    ])
+                    -> paginate(5);
+
+        //TERM ITEMS
+        $term_items = Term::join('term_items', 'terms.term_id', '=', 'ti_term_id')
+                    -> select ('terms.term_id', 'terms.term_status', 'term_items.*')
+                    -> where ([
+                        ['terms.term_status', '=', '1'],
+                        ['terms.term_id', '=', $id]
+                    ])
+                    -> paginate(5);
+
+        //TERM SALES
+        $sales = Term::join('sales', 'terms.term_id', '=', 'sale_term_id')
+                    -> select ('terms.term_id', 'terms.term_status', 'sales.*')
+                    -> where ([
+                        ['terms.term_status', '=', '1'],
+                        ['terms.term_id', '=', $id]
+                    ])
+                    -> paginate(5);
+
+
+        return view('termsprofile', compact('curr_user', 'workers', 'term', 'a_peddlers', 'expenses', 'term_items', 'sales'));
     }
 
     /**

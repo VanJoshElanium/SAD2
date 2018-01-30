@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Term;
+use App\User;
+use Validator;
 use App\Worker;
-use Illuminate\Http\Response;
+use App\Term_Item;
+use App\Expense;
+use App\Sale;
+use App\Supplier;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
+use App\Http\Requests\StoreTerm;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\StoreWorker;
-use App\Http\Controllers\Controller;  
 use Illuminate\Support\Facades\Auth;
 
-class WorkerController extends Controller
+class Term_ItemController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,13 +46,7 @@ class WorkerController extends Controller
      */
     public function store(Request $request)
     {
-        $worker = Worker::create([
-                'worker_user_id' => $request-> peddler,
-                'worker_term_id' => $request-> term_id,
-                'worker_type' => $request-> position
-            ]);
-        return redirect('/termsprofile/' .$request-> term_id);
-        
+        //
     }
 
     /**
@@ -92,9 +91,6 @@ class WorkerController extends Controller
      */
     public function destroy($id)
     {
-        $worker = Worker::find($id);
-        $term_id = $worker -> worker_term_id;
-        $worker = Worker::destroy($id);
-        return redirect('/termsprofile/' .$term_id);
+        //
     }
 }

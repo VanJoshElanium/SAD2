@@ -30,6 +30,8 @@ class Inventory extends Model
     public static function currdate()
     {
         $now = Carbon::now() -> toDateTimeString();
+        $erase = substr($now, -3);
+        $now = str_replace($erase, '', $now);
         $now = str_replace(' ', 'T', $now);
         return $now;
     }
@@ -46,9 +48,19 @@ class Inventory extends Model
         return $this->belongsTo('App\Supplier', 'inventory_supplier_id', 'supplier_id');
     }
 
-    public function stockin()
+    public function stockins()
     {
         return $this->hasMany('App\Stockin', 'si_inventory_id');
+    }
+
+    public function terms()
+    {
+        return $this->belongsToMany('App/Terms', 'term_items', 'inventory_id', 'term_id');
+    }
+
+    public function repair()
+    {
+        return $this->hasOne('App\Repair', 'repair_inventory_id');
     }
 
     

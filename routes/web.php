@@ -26,7 +26,6 @@ Route::get('/searchSuppliers', ['as'=>'searchSuppliers','uses'=>'SupplierControl
 
 //SUPPLY MANAGEMENT
 Route::resource('supplies', 'SupplyController');
-Route::get('supplies/{id}', 'SupplyController@show');
 Route::get('getSuppliedItem/{id}', 'SupplyController@getSuppliedItem');
 Route::get('/searchSupplies', ['as'=>'searchSupplies','uses'=>'SupplyController@index']);
 
@@ -45,6 +44,10 @@ Route::get('getSupply/{id}', 'InventoryController@getSupply');
 Route::get('/searchItems', ['as'=>'searchItems','uses'=>'InventoryController@index']);
 Route::get('/inventory', 'InventoryController@index')->name('inventory');
 
+//REPAIRS
+Route::resource('repair', 'RepairController');
+Route::get('getRepair/{id}', 'RepairController@getRepair');
+
 //TERM MANAGEMENT
 Route::resource('terms', 'TermsController');
 Route::get('/terms', 'TermsController@index')->name('terms');
@@ -55,6 +58,15 @@ Route::get('/termsprofile', 'TermsProfileController@index')->name('termsprofile'
 
 //T-WORKERS
 Route::resource('workers', 'WorkerController');
+
+//T-EXPENSES
+Route::resource('expense', 'ExpenseController');
+
+//T-SALES
+Route::resource('sales', 'SaleController');
+
+//T-Items
+Route::resource('term_items', 'Term_ItemController');
 
 //LOGS 
 Route::resource('logs', 'LogsController');
