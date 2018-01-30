@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<html lang="en">
 <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/png" href="/public/images/Prince and Princes logo/6.png">
@@ -149,673 +148,912 @@
                         <div class="card box">      
                             <!-- Nav tabs -->
                             <ul class="nav nav-tabs" role="tablist">
-                                <li role="presentation" class="active"><a href="#mbrNloc" aria-controls="home" role="tab" data-toggle="tab">
-                                <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the details of the people that are managing the term.">Members &amp; Location</span></a></li>
+                                <li role="presentation" class="active">
+                                    <a href="#mbrNloc" aria-controls="home" role="tab" data-toggle="tab">
+                                        <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the details of the people that are managing the term.">
+                                            Members &amp; Location
+                                        </span>
+                                    </a>
+                                </li>
+
                                 <li role="presentation"><a href="#itm_list" aria-controls="profile" role="tab" data-toggle="tab">
-                                <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the item details.">Items List</span></a></li>
-                                <li role="presentation"><a href="#expense" aria-controls="profile" role="tab" data-toggle="tab">
-                                <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the expneses used for the term.">Expenses</span></a></li>  
-                                <li role="presentation"><a href="#sales" aria-controls="profile" role="tab" data-toggle="tab">
-                                <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the sales and share calculated in the term.">Sales</span></a></li>
-                                <li role="presentation"><a href="#Clist" aria-controls="profile" role="tab" data-toggle="tab">
-                                <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the customer's details from payments and location.">Customer Details</span></a></li>
-                            </ul><br>
-                            <!-- Contents of every Tab-->
-                            <div class="tab-content">
-                                <!-- Workers and location Tab -->
-                                <div role="tabpanel" class="tab-pane fade in active" id="mbrNloc">
+                                    <!-- <a> -->
+                                        <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the item details.">Items List
+                                        </span>
+                                    </a>
+                                </li>
                                 
-                                      <div class="row">
-                                        <div class="col-md-12">
-                                        <div class="col-md-8">
-                                            <div class="card">
-                                            <div class="header">
-                                                <div class="col-md-4"><h4 class="title">List of Peddlers</h4></div>
-                                                <div class="col-md-8">
-                                                    <span class="pull-right">      
-                                                    <button type="button" data-target="#addPeddler" data-toggle="modal" class="btn btn-success btn-fill" id="add-btn">Add Peddler</button>  
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="content table-responsive table-full-width">
-                                                <table class="table table-hover table-striped">
-                                                    <thead>
-                                                        <th>Name</th>
-                                                        <th>Position</th>
-<!--                                                         <th>Edit</th>
-                                                        <th>Remove</th> -->
-                                                    </thead>
-                                                    <tbody>
-                                                    @forelse($workers as $worker)
-                                                        <tr>
-                                                            <td>
-                                                                {{$worker->fname}}
-                                                                {{$worker->mname}}.
-                                                                {{$worker->lname}}
-                                                            </td> 
-                                                           
-                                                            @if ($worker->worker_type == 0)
-                                                                    
-                                                                @elseif ($worker->worker_type == 1)
-                                                                    <td> Leader </td>
-                                                                @elseif ($worker->worker_type == 2)
-                                                                    <td> Permament Staff </td>
-                                                                @else
-                                                                    <td> Temporary Staff </td>
-                                                            @endif
-                                                            
-                                                            <td>
-                                                            <span data-toggle="tooltip" data-placement="bottom" title="Edit the position of the peddler."> 
-                                                            <button type="button" data-target="#editPeddler" data-toggle="modal" class="btn  btn-primary btn-fill" id="add-btn"> 
-                                                            Edit
-                                                            </button></span>
-                                                            </td>
-                                                            <td>
-                                                            <button type="button" data-target="#removePeddler" data-toggle="modal" class="btn  btn-danger btn-fill" id="add-btn"> 
-                                                            Remove Peddler
-                                                            </button>   
-                                                            </td>
-                                                        </tr>
-                                                        @empty
-                                                            <h3 style="text-align: center"> No terms stored. </h3>
-                                                        @endforelse
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            </div>
-                                        </div>
-                                    <div class="col-md-4">
-                                            <div class="card">
-                                                <div class="header">
-                                                    <center>
-                                                    <h4 class="title">{{$term[0]->fname}} {{$term[0]->mname}}. {{$term[0]->lname}}</h4>
-                                                    <p class="category">Collector</p>
-                                                    <br><hr>
-                                                    <h4 class="title">{{$term[0]->location}}</h4>
-                                                    <p class="category">Term Location</p>
-                                                    <hr>    
-                                                    </center>
-                                                </div>
-                                            </div>
-                                        </div>     
-                                        </div>  
-                                      </div>
-</div>
-                                <!-- Items Tab -->
-                                <div role="tabpanel" class="tab-pane fade" id="itm_list">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="col-md-10">
-                                            <div class="card">
-                                            <div class="header">
-                                                <div class="col-md-4"><h4 class="title">Item List</h4></div>
-                                                <div class="col-md-8">
-                                                    <span class="pull-right">
-                                                    <button type="button" data-target="#removeItem" data-toggle="modal" class="btn btn-danger btn-fill" id="add-btn"> 
-                                                        Remove Item
-                                                    </button>   
-                                                    <button type="button" data-target="#addItem" data-toggle="modal" class="btn btn-success btn-fill" id="add-btn"> 
-                                                        Add Item
-                                                    </button>
-                                                    <button type="button" data-target="#updateItem" data-toggle="modal" class="btn btn-info btn-fill" id="add-btn"> 
-                                                        Update Quantity
-                                                    </button>
-                                                    <button type="button" data-target="#print" data-toggle="modal" class="btn btn-basic btn-fill" id="add-btn"> 
-                                                        Print
-                                                    </button>      
-                                                    </span>    
-                                                </div>
-                                            </div>
-                                            <div class="content table-responsive table-full-width">
-                                                <table class="table table-hover table-striped">
-                                                    <thead>
-                                                        <th>Item Name</th>
-                                                        <th><span data-toggle="tooltip" data-placement="bottom" title="Supplier's price added 25%.">
-                                                            Owner's Price</span></th>
-                                                        <th>Original Quantity</th>
-                                                        <th>Damaged Quantity</th>
-                                                        <th>Returns Quantity</th>
-                                                        <th>Sold Quantity</th>
-                                                    </thead>
-                                                    <tbody class="qtty">
-                                                        <tr>
-                                                            <td>Table</td>
-                                                            <td>&#8369; 250.00</td>
-                                                            <td>45</td>
-                                                            <td>4</td>
-                                                            <td>7</td>
-                                                            <td>34</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            </div>
-                                        </div>
-                                    <div class="col-md-2">
-                                            <div class="card">
-                                                <div class="header">
-                                                    <center>
-                                                    <p class="category">Number of items</p>    
-                                                    <h4 class="title">1</h4>
-                                                    <br><hr>
-                                                    <p class="category">Total damaged quantity</p>    
-                                                    <h4 class="title">4</h4>
-                                                    <br><hr>
-                                                    <p class="category">Total returned quantity</p>    
-                                                    <h4 class="title">7</h4>
-                                                    <br><hr>  
-                                                    <p class="category">Total sold quantity</p>
-                                                    <h4 class="title">34</h4>    
-                                                    <hr>    
-                                                    </center>
-                                                </div>
-                                            </div>
-                                        </div>      
-                                </div>
-                                </div>
-</div>
-                                <!-- Expense Tab -->
-                                <div role="tabpanel" class="tab-pane fade" id="expense">
-                                      <div class="row">
+                                <li role="presentation"><a href="#expense" aria-controls="profile" role="tab" data-toggle="tab">
+                                    <!-- <a> -->
+                                        <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the expneses used for the term.">Expenses
+                                        </span>
+                                    </a>
+                                </li>  
+                                
+                                <li role="presentation"><a href="#sales" aria-controls="profile" role="tab" data-toggle="tab">
+                                    <!-- <a> -->
+                                        <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the sales and share calculated in the term.">Sales
+                                        </span>
+                                    </a>
+                                </li>
+                                
+                                <li role="presentation"><a href="#Clist" aria-controls="profile" role="tab" data-toggle="tab">
+                                    <!-- <a> -->
+                                        <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the sales and share calculated in the term.">Customer List
+                                        </span>
+                                    </a>
+                                </li>
+                            </ul>
+
+                            <br>
+
+                            <div class="tab-content">
+
+                                <!-- TERM WORKERS & LOCATION -->
+                                <div role="tabpanel" class="tab-pane fade in active" id="mbrNloc">
+                                    <div class="row">
                                         <div class="col-md-12">
                                             <div class="col-md-8">
-                                            <div class="card">
-                                            <div class="header">
-                                                <div class="col-md-4"><h4 class="title">Expense List</h4></div>
-                                                <div class="col-md-8">
-                                                    <span class="pull-right">
-                                                    <button type="button" data-target="#addExpense" data-toggle="modal" class="btn btn-success btn-fill" id="add-btn">Add Expense</button>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="content table-responsive table-full-width">
-                                                <table class="table table-hover table-striped">
-                                                    <thead>
-                                                        <th>Expense Details</th>
-                                                        <th>Amount</th>
-                                                        <th>Edit</th>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>Gasoline expense</td> 
-                                                            <td>&#8369; 1,000.00</td>
-                                                            <td>
-                                                            <button type="button" data-target="#editExpense" data-toggle="modal" class="btn  btn-warning btn-fill" id="add-btn"> 
-                                                                Edit Expense
-                                                            </button>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            </div>
-                                        </div>
-                                    <div class="col-md-4">
-                                            <div class="card">
-                                                <div class="header"><br><br>
-                                                    <center>
-                                                    <h3 class="title">Total expense</h3>    
-                                                    <p class="category">&#8369; 1,000.00</p>
-                                                    <br><br>
-                                                    <hr>    
-                                                    </center>
-                                                </div>
-                                            </div>
-                                        </div>  
-                                        </div>
-                                    </div>
-</div>
-                                <!-- Collection Tab -->
-                                <div role="tabpanel" class="tab-pane fade" id="sales">
-                                      <div class="row">
-                                          <div class="col-md-12">
-                                            <div class="col-md-8">
-                                            <div class="card">
-                                            <div class="header">
-                                                <div class="col-md-4"><h4 class="title">Collection List</h4></div>
-                                                    <span class="pull-right">
-                                                    <button type="button" data-target="#addCollection" data-toggle="modal" class="btn btn-success btn-fill" id="add-btn">Add Collection</button>
-                                                    </span>
-                                            </div>
-                                            <div class="content table-responsive table-full-width">
-                                                <table class="table table-hover table-striped">
-                                                    <thead>
-                                                        <th>Date</th>
-                                                        <th>Amount</th>
-                                                        <th>Edit</th>
-                                                        <th><span data-toggle="tooltip" data-placement="bottom" title="View note contains the details in where a payment isn't cash.">
-                                                            View Note</span></th>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>01/01/18</td> 
-                                                            <td>&#8369; 250.00</td>
-                                                            <td>
-                                                            <button type="button" data-target="#editCollection" data-toggle="modal" class="btn  btn-warning btn-fill" id="add-btn"> 
-                                                                Edit Collection
-                                                            </button>
-                                                            </td>
-                                                            <td>
-                                                            <span data-toggle="tooltip" data-placement="bottom" title="View if there are any comments or payment changes.">
-                                                                <button type="button" data-target="#viewNote" data-toggle="modal" class="btn  btn-info btn-fill" id="add-btn">View Note</button></span>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            </div>
-                                        </div>
-                                    <div class="col-md-4">
-                                            <div class="card">
-                                                <div class="header"><br><br>
-                                                    <h4 class="title">Total Expenses</h4>    
-                                                    <p class="category">&#8369; 1,000.00</p>
-                                                    <br><br>
-                                                    <h4 class="title">Total Sold Items</h4>    
-                                                    <p class="category">&#8369; 9,500.00</p>
-                                                    <br><br> 
-                                                    <h4 class="title">Total Revenue of Owner</h4>    
-                                                    <p class="category">&#8369; 2,375.00</p>
-                                                    <br><br>
-                                                    <h4 class="title">Total Payment</h4>    
-                                                    <p class="category">&#8369; 10,500.00</p>
-                                                    <br><br><br>   
-                                                    <div class="modal-footer">
-                                                    <h4 class="title">Current Payment</h4>    
-                                                    <p class="category">&#8369; 250.00</p>
-                                                    <br><br>
-                                                    </div>
-                                                    <hr>     
-                                                </div>
-                                            </div>
-                                        </div>
-                                          </div>
-                                    </div>
-</div>
-                                <!--Customer's Tab-->
-                                <div role="tabpanel" class="tab-pane fade" id="Clist">
-                                      <div class="row">
-                                          <div class="col-md-12">
-                                        
-                                                <!-- LIst of unpaid customers-->
-                                            <div class="col-md-12">
                                                 <div class="card">
                                                     <div class="header">
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <h4 class="title">List of unpaid customers</h4>
-                                                                <p class="category">This list contains the unpaid customers.</p>
-                                                            </div>
-
-                                                            <div class="col-md-2 pull-right">
-                                                                <button data-target="#addC" id="" data-toggle="modal" data-id='' class="edit-btn btn btn-success btn-fill pull-right">
-                                                                    Add customer 
-                                                                </button>
-                                                            </div>
+                                                        <div class="col-md-4">
+                                                            <h4 class="title">List of Peddlers</h4>
                                                         </div>
-
+                                                        <div class="col-md-8">
+                                                            <span class="pull-right">      
+                                                                <button type="button" data-target="#addPeddler" data-toggle="modal" class="btn btn-success btn-fill" id="add-btn">Add Peddler</button>  
+                                                            </span>
+                                                        </div>
                                                     </div>
                                                     <div class="content table-responsive table-full-width">
                                                         <table class="table table-hover table-striped">
                                                             <thead>
-                                                                <th>No.</th>
-                                                                <th>Date</th>
-                                                                <th>Contact</th>
-                                                                <th>Payment Amount</th>
-                                                                <th>Edit</th>
-                                                                <th>View</th>
+                                                                <th>Name</th>
+                                                                <th>Position</th>
+                                                                <!--<th>Edit</th>
+                                                                <th>Remove</th> -->
                                                             </thead>
-                                                            <tbody>
+                                                            <tbody>  
+                                                                @forelse($workers as $worker)
                                                                 <tr>
-                                                                    <td>1</td>
-                                                                    <td>02/12/17</td>
-                                                                    <td>09XXXXXXXXX</td><!--Add an if if it still not ended indicates as "Has not ended or set yet"-->
-                                                                    <td>&#8369; <span>2,000.00</span></td>
                                                                     <td>
-                                                                    <button data-target="#editC" id="" data-toggle="modal" data-id='' class="edit-btn btn-sm btn btn-success btn-fill">
-                                                                    Edit 
-                                                                </button>
+                                                                        {{$worker->fname}}
+                                                                        {{$worker->mname}}.
+                                                                        {{$worker->lname}}
+                                                                    </td> 
+                                                                   
+                                                                    @if ($worker->worker_type == 0)
+                                                                            
+                                                                        @elseif ($worker->worker_type == 1)
+                                                                            <td> Leader </td>
+                                                                        @elseif ($worker->worker_type == 2)
+                                                                            <td> Permament Staff </td>
+                                                                        @else
+                                                                            <td> Temporary Staff </td>
+                                                                    @endif
+                                                                    
+                                                                    <td>
+                                                                        <span data-toggle="tooltip" data-placement="bottom" title="Edit the position of the peddler."> 
+                                                                            <button type="button" data-target="#editPeddler" data-id='{{$worker->worker_id}}' data-toggle="modal" class="ep_btn btn  btn-primary btn-fill" id="ep_btn"> 
+                                                                            Edit
+                                                                            </button>
+                                                                        </span>
                                                                     </td>
                                                                     <td>
-                                                                    <button data-target="#viewC" data-toggle="modal" data-id='' class="btn btn-sm btn-info btn-fill">
-                                                                        View
+                                                                        <button type="button" data-target="#removePeddler" data-id='{{$worker->worker_id}}' data-toggle="modal" class="rp_btn btn  btn-danger btn-fill" id="rp_btn"> 
+                                                                        Remove
+                                                                        </button>   
+                                                                    </td>
+                                                                </tr>
+                                                                @empty
+                                                                    <h3 style="text-align: center"> No peddlers for this term.</h3>
+                                                                @endforelse
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="card">
+                                                    <div class="header">
+                                                        <center>
+                                                                <h4 class="title">
+                                                                    {{$term[0]->fname}} {{$term[0]->mname}}. {{$term[0]->lname}}
+                                                                </h4>
+                                                                <p class="category">
+                                                                    Collector
+                                                                </p>
+                                                                <br>
+                                                                <hr>
+                                                                <h4 class="title">
+                                                                    {{$term[0]->location}}
+                                                                </h4>
+                                                                <p class="category">
+                                                                    Term Location
+                                                                </p>
+                                                                <hr>    
+                                                        </center>
+                                                    </div>
+                                                </div>
+                                            </div>         
+                                        </div>  
+                                    </div>
+                                </div>
+
+                                <!-- TERM ITEMS -->
+                                <div role="tabpanel" class="tab-pane fade" id="itm_list">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-10">
+                                                <div class="card">
+                                                    <div class="header">
+                                                        <div class="col-md-4">
+                                                            <h4 class="title">Item List</h4>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <span class="pull-right">
+                                                                <button type="button" data-target="#removeItem" data-toggle="modal" class="btn btn-danger btn-fill" id="add-btn"> 
+                                                                    Remove Item
+                                                                </button>   
+                                                                <button type="button" data-target="#addItem" data-toggle="modal" class="btn btn-success btn-fill" id="add-btn"> 
+                                                                    Add Item
+                                                                </button>
+                                                                <button type="button" data-target="#updateItem" data-toggle="modal" class="btn btn-info btn-fill" id="add-btn"> 
+                                                                    Update Quantity
+                                                                </button>
+
+                                                                <button type="button" data-target="#print" data-toggle="modal" class="btn btn-basic btn-fill" id="add-btn"> 
+                                                                    Print
+                                                                </button> 
+                                                            </span>    
+                                                        </div>
+                                                    </div>
+                                                    <div class="content table-responsive table-full-width">
+                                                        <table class="table table-hover table-striped">
+                                                            <thead>
+                                                                <th>Item Name</th>
+                                                                <th>
+                                                                    <span data-toggle="tooltip" data-placement="bottom" title="Supplier's price added 25%.">
+                                                                    Owner's Price
+                                                                    </span>
+                                                                </th>
+                                                                <th>Original Quantity</th>
+                                                                <th>Damaged Quantity</th>
+                                                                <th>Returns Quantity</th>
+                                                                <th>Sold Quantity</th>
+                                                            </thead>
+                                                            <tbody class="qtty">
+                                                                <tr>
+                                                                    <td>Table</td>
+                                                                    <td>&#8369; 250.00</td>
+                                                                    <td>45</td>
+                                                                    <td>4</td>
+                                                                    <td>7</td>
+                                                                    <td>34</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="card">
+                                                    <div class="header">
+                                                        <center>
+                                                            <p class="category">
+                                                                Number of items
+                                                            </p>    
+                                                            <h4 class="title">1</h4>
+                                                            <br><hr>
+
+                                                            <p class="category">
+                                                                Total damaged quantity
+                                                            </p>    
+                                                            <h4 class="title">4</h4>
+                                                            <br><hr>
+
+                                                            <p class="category">
+                                                                Total returned quantity
+                                                            </p>    
+                                                            <h4 class="title">7</h4>
+                                                            <br><hr>  
+
+                                                            <p class="category">
+                                                                Total sold quantity</p>
+                                                            <h4 class="title">34</h4>    
+                                                            <hr>    
+                                                        </center>
+                                                    </div>
+                                                </div>
+                                            </div>      
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- TERM EXPENSES -->
+                                <div role="tabpanel" class="tab-pane fade" id="expense">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-8">
+                                                <div class="card">
+                                                    <div class="header">
+                                                        <div class="col-md-4">
+                                                            <h4 class="title"> Expense List </h4>
+                                                        </div>
+
+                                                        <div class="col-md-8">
+                                                            <span class="pull-right">
+                                                                <button type="button" data-target="#addExpense" data-toggle="modal" class="btn btn-success btn-fill" id="ae_btn"> Add Expense
+                                                                </button>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="content table-responsive table-full-width">
+                                                        <table class="table table-hover table-striped">
+                                                            <thead>
+                                                                <th>Expense</th>
+                                                                <th>Amount</th>
+                                                                <th>Date Incurred</th>
+                                                            </thead>
+                                                            <tbody>
+                                                                @forelse ($expenses as $expense)
+                                                                <tr>
+                                                                    <td>
+                                                                        {{$expense -> expense_name}} 
+                                                                    </td> 
+                                                                    <td> 
+                                                                        &#8369; {{$expense -> expense_amt}} 
+                                                                    </td>
+                                                                    <td> 
+                                                                        {{$expense -> expense_date}} 
+                                                                    </td>
+                                                                    <td>
+                                                                        <button type="button" data-target="#editExpense" data-toggle="modal" data-id="{{$expense->expense_id}}" class="btn  btn-warning btn-fill" id="ee_btn"> 
+                                                                            View
+                                                                        </button>
+                                                                    </td>
+                                                                    <td>
+                                                                        <button type="button" data-target="#removeExpense" data-toggle="modal" data-id="{{$expense->expense_id}}" class="btn  btn-warning btn-fill" id="re_btn"> 
+                                                                            Remove
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                                @empty
+                                                                    <h3 style="text-align: center"> No expenses for this term.</h3>
+                                                                @endforelse
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="card">
+                                                    <div class="header"><br><br>
+                                                        <center>
+                                                            <h3 class="title">Total expenses</h3>    
+                                                            <p class="category">&#8369; 1,000.00</p>
+                                                            <br>
+                                                            <br>
+                                                            <hr>    
+                                                        </center>
+                                                    </div>
+                                                </div>
+                                            </div>  
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- TERM SALES -->
+                                <div role="tabpanel" class="tab-pane fade" id="sales">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-8">
+                                                <div class="card">
+                                                    <div class="header">
+                                                        <div class="col-md-4">
+                                                            <h4 class="title">Collection List</h4>
+                                                        </div>
+                                                        <span class="pull-right">
+                                                            <button type="button" data-target="#addCollection" data-toggle="modal" class="btn btn-success btn-fill" id="add-btn">Add Collection</button>
+                                                        </span>
+                                                    </div>
+                                                    <div class="content table-responsive table-full-width">
+                                                        <table class="table table-hover table-striped">
+                                                            <thead>
+                                                                <th>Date</th>
+                                                                <th>Amount</th>
+                                                                <th>Edit</th>
+                                                                <th><span data-toggle="tooltip" data-placement="bottom" title="View note contains the details in where a payment isn't cash.">
+                                                                    View Note</span></th>
+                                                            </thead>
+                                                            <tbody>
+                                                                @forelse($sales as $sale)
+                                                                <tr>
+                                                                    <td>{{$sale->sale_date}}</td> 
+                                                                    <td>&#8369; {{$sale->sale_amount}}</td>
+                                                                    <td>
+                                                                    <button type="button" data-target="#editCollection" data-toggle="modal" class="btn  btn-warning btn-fill" id="add-btn"> 
+                                                                        Edit Collection
                                                                     </button>
                                                                     </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                                <!-- List of paid customers-->
-                                            <div class="col-md-12">
-                                                <div class="card">
-                                                    <div class="header">
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <h4 class="title">List of paid customers</h4>
-                                                                <p class="category">This list contains the unpaid customers.</p>
-                                                            </div>
-                                                            <!--Just leaving this "div" part incase if we add some buttons and stuff-->
-                                                            <div class="col-md-2 pull-right">
-
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                    <div class="content table-responsive table-full-width">
-                                                        <table class="table table-hover table-striped">
-                                                            <thead>
-                                                                <th>No.</th>
-                                                                <th>Date</th>
-                                                                <th>Contact</th>
-                                                                <th>Payment Amount</th>
-                                                                <th>View</th>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td>1</td>
-                                                                    <td>02/12/17</td>
-                                                                    <td>09XXXXXXXXX</td><!--Add an if if it still not ended indicates as "Has not ended or set yet"-->
-                                                                    <td>&#8369; <span>2,000.00</span></td>
                                                                     <td>
-                                                                    <button data-target="#viewC" id="" data-toggle="modal" data-id='' class="edit-btn btn-sm btn btn-info btn-fill">
-                                                                    View 
-                                                                </button>
+                                                                    <span data-toggle="tooltip" data-placement="bottom" title="View if there are any comments or payment changes.">
+                                                                        <button type="button" data-target="#viewNote" data-toggle="modal" class="btn  btn-info btn-fill" id="add-btn">View Note</button></span>
                                                                     </td>
                                                                 </tr>
+                                                                @empty
+                                                                    <h3 style="text-align: center"> No sales for this term.</h3>  
+                                                                @endforelse
                                                             </tbody>
                                                         </table>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-md-4">
+                                                <div class="card">
+                                                    <div class="header"><br><br>
+                                                        <h4 class="title">Total Expenses</h4>    
+                                                        <p class="category">&#8369; 1,000.00</p>
+                                                        <br><br>
 
+                                                        <h4 class="title">Total Sold Items</h4>    
+                                                        <p class="category">&#8369; 9,500.00</p>
+                                                        <br><br> 
 
-                                
+                                                        <h4 class="title">Total Revenue of Owner</h4>    
+                                                        <p class="category">&#8369; 2,375.00</p>
+                                                        <br><br>
 
-                            </div>
-                        </div>
-                    </div>
+                                                        <h4 class="title">Total Payment</h4>    
+                                                        <p class="category">&#8369; 10,500.00</p>
+                                                        <br><br><br> 
+
+                                                        <div class="modal-footer">
+                                                            <h4 class="title">Current Payment</h4>    
+                                                            <p class="category">&#8369; 250.00</p>
+                                                            <br><br>
+                                                        </div>
+                                                        <hr>     
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- TERM CUSTOMERS -->
+                                <div role="tabpanel" class="tab-pane fade" id="Clist">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            
+                                                <!-- LIst of unpaid customers-->
+                                                <div class="col-md-12">
+                                                    <div class="card">
+                                                        <div class="header">
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <h4 class="title">List of unpaid customers</h4>
+                                                                    <p class="category">This list contains the unpaid customers.</p>
+                                                                </div>
+
+                                                                <div class="col-md-2 pull-right">
+                                                                    <button data-target="#addC" id="" data-toggle="modal" data-id='' class="edit-btn btn btn-success btn-fill pull-right">
+                                                                        Add customer 
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="content table-responsive table-full-width">
+                                                            <table class="table table-hover table-striped">
+                                                                <thead>
+                                                                    <th>No.</th>
+                                                                    <th>Date</th>
+                                                                    <th>Contact</th>
+                                                                    <th>Payment Amount</th>
+                                                                    <th>Edit</th>
+                                                                    <th>View</th>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>1</td>
+                                                                        <td>02/12/17</td>
+                                                                        <td>09XXXXXXXXX</td><!--Add an if if it still not ended indicates as "Has not ended or set yet"-->
+                                                                        <td>&#8369; <span>2,000.00</span></td>
+                                                                        <td>
+                                                                        <button data-target="#editC" id="" data-toggle="modal" data-id='' class="edit-btn btn-sm btn btn-success btn-fill">
+                                                                        Edit 
+                                                                    </button>
+                                                                        </td>
+                                                                        <td>
+                                                                        <button data-target="#viewC" data-toggle="modal" data-id='' class="btn btn-sm btn-info btn-fill">
+                                                                            View
+                                                                        </button>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                    <!-- List of paid customers-->
+                                                <div class="col-md-12">
+                                                    <div class="card">
+                                                        <div class="header">
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <h4 class="title">List of paid customers</h4>
+                                                                    <p class="category">This list contains the unpaid customers.</p>
+                                                                </div>
+                                                                <!--Just leaving this "div" part incase if we add some buttons and stuff-->
+                                                                <div class="col-md-2 pull-right">
+
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="content table-responsive table-full-width">
+                                                            <table class="table table-hover table-striped">
+                                                                <thead>
+                                                                    <th>No.</th>
+                                                                    <th>Date</th>
+                                                                    <th>Contact</th>
+                                                                    <th>Payment Amount</th>
+                                                                    <th>View</th>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>1</td>
+                                                                        <td>02/12/17</td>
+                                                                        <td>09XXXXXXXXX</td><!--Add an if if it still not ended indicates as "Has not ended or set yet"-->
+                                                                        <td>&#8369; <span>2,000.00</span></td>
+                                                                        <td>
+                                                                        <button data-target="#viewC" id="" data-toggle="modal" data-id='' class="edit-btn btn-sm btn btn-info btn-fill">
+                                                                        View 
+                                                                    </button>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div><!--End div of Content-->
-        </div><!--End div of main panel-->
-    </div><!--End div of wraper-->
-    <!----------------------------------------MODALS--------------------------------------------->
-    <!--Add Peddler-->
-    <div class="modal fade" role="dialog" id="addPeddler">
+            </div>
+        </div>
+    </div>
+
+<!--MODALS-->
+
+<!--Add Peddler-->
+<div class="modal fade" role="dialog" id="addPeddler">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <center>
+                    <h4 class="modal-title">Add Peddler</h4>
+                </center>
+            </div>
+            
+            <form method="POST" class="form-horizontal" action="/workers">
+                {{ csrf_field() }}
+                <div class="modal-body">
+                    <div id="view-edit-content" class="row">
+                        <!-- Term edit form-->
+                        <div class="col-md-12">             
+                            <!-- Collector initialization-->       
+                            <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">                         
+                            <div class="row form-group">                       
+                                <div class="{{ $errors->has('peddler') ? ' has-error' : '' }}"> 
+                                    <div class="col-md-8">   
+                                        <!--Acquires the list of workers within users table-->
+                                        <label class="sel1">Peddler Name:</label>
+                                          <select class="form-control" name="peddler" required id="peddler">
+                                                <option value="" data-hidden="true" selected="selected">
+                                                </option>
+                                                @foreach($a_peddlers as $a_peddler)
+                                                    <option value="{{$a_peddler->user_id}}">
+                                                        {{$a_peddler->fname}}&nbsp
+                                                        {{$a_peddler->mname}}.
+                                                        {{$a_peddler->lname}}
+                                                    </option>
+                                                @endforeach
+                                            </select>           
+                                            @if ($errors->has('peddler'))
+                                                <span class="help-block">
+                                                    <strong>{{ $errors->first('peddler') }}</strong>
+                                                </span>
+                                            @endif                   
+                                    </div>
+                                </div>
+                            </div>                                                                    
+                            <div class="row form-group"> 
+                            <!--Identifies the position of the peddler-->                      
+                                <div class="{{ $errors->has('position') ? ' has-error' : '' }}"> 
+                                    <div class="col-md-8">    
+                                        <label class="sel1">Position:</label>
+                                            <select name="position" required class="form-control" id="position">
+                                                <option value="" selected="selected"></option>
+                                                <option value="1">Team Leader</option>
+                                                <option value="2">Permanent Staff</option>
+                                                <option value="3">Temporary Staff</option>  
+                                            </select>
+                                            @if ($errors->has('position'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{ $errors->first('position') }}
+                                                    </strong>
+                                                </span>
+                                            @endif 
+                                    </div>
+                                </div>
+                            </div>     
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic">
+                        Cancel
+                    </button>
+
+                    <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-add">
+                      Add
+                    </button>      
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--Remove peddler-->
+<div class="modal fade" role="dialog" id="removePeddler">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <center>
-                        <h4 class="modal-title">Add Peddler</h4>
-                    </center>
+                    <h4 class="modal-title">Remove Peddler</h4>
                 </div>
+                     
+                <form method="POST" class="form-horizontal" id="removePeddler_form">  
+                {{csrf_field()}}
+                <input type="hidden" name="_method" value="DELETE">
 
-                <form method="POST" class="form-horizontal" action="/workers">
-                    {{ csrf_field() }}
-                    <div class="modal-body">
-                        <div id="view-edit-content" class="row">
-                            <!-- Term edit form-->
-                            <div class="col-md-12">             
-                                <!-- Collector initialization-->       
-                                <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">                         
+                <div class="modal-body">
+                    <div id="view-edit-content" class="row">
+                        <!-- Term edit form-->
+                        <div class="col-md-12"> 
                                 <div class="row form-group">                       
-                                    <div class="{{ $errors->has('peddler') ? ' has-error' : '' }}"> 
-                                        <div class="col-md-8">   
-                                            <!--Acquires the list of workers within users table-->
-                                            <label class="sel1">Peddler Name:</label>
-                                              <select class="form-control" name="peddler" required id="peddler">
-                                                    <option value="" data-hidden="true" selected="selected">
-                                                    </option>
-                                                    @foreach($a_peddlers as $a_peddler)
-                                                        <option value="{{$a_peddler->user_id}}">
-                                                            {{$a_peddler->fname}}&nbsp
-                                                            {{$a_peddler->mname}}.
-                                                            {{$a_peddler->lname}}
-                                                        </option>
-                                                    @endforeach
-                                                </select>           
-                                                @if ($errors->has('peddler'))
-                                                    <span class="help-block">
-                                                        <strong>{{ $errors->first('peddler') }}</strong>
-                                                    </span>
-                                                @endif                   
+                                    <div class=""> 
+                                        <div class="col-md-12">   
+                                            You are about to remove a peddler from this term. Do you want to proceed?
                                         </div>
                                     </div>
-                                </div>                                                                    
-                                <div class="row form-group"> 
-                                <!--Identifies the position of the peddler-->                      
-                                    <div class="{{ $errors->has('position') ? ' has-error' : '' }}"> 
-                                        <div class="col-md-8">    
-                                            <label class="sel1">Position:</label>
-                                                <select name="position" required class="form-control" id="position">
-                                                    <option value="0">Team Leader</option>
-                                                    <option value="1">Permanent Staff</option>
-                                                    <option value="2">Temporary Staff</option>  
-                                                </select>
-                                                @if ($errors->has('position'))
-                                                    <span class="help-block">
-                                                        <strong>
-                                                            {{ $errors->first('position') }}
-                                                        </strong>
-                                                    </span>
-                                                @endif 
-                                        </div>
-                                    </div>
-                                </div>     
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic">
-                            Cancel
-                        </button>
-
-                        <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-add">
-                          Add
-                        </button>      
+                            <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">No</button>
+                          <!--ADD New Term button-->
+                          <button type="submit" class="btn btn-bg btn-success btn-fill">Remove</button>   
                     </div>
-                </form>
+                    </form>
+                </div>
             </div>
-        </div>
-</div><!--End  div of modal-->
-    <!--Remove peddler-->
-    <div class="modal fade" role="dialog" id="removePeddler">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Remove Peddler</h4>
-                    </div>
+        </div><!--End  div of modal-->
 
-                    <div class="modal-body">
-                        <div id="view-edit-content" class="row">
-                            <!-- Term edit form-->
-                            <div class="col-md-12"> 
-                                <form method="POST" class="form-horizontal" id="view-edit-profile">      
-                                    <!-- Collector initialization-->                                    
-                                    <div class="row form-group">                       
-                                        <div class=""> 
-                                            <div class="col-md-12">   
-                                                    <center><h4 class="title">Are you sure you want to remove <br>
-                                                    <span>Marko G. Garduvilia</span> ? <!--The collectors name is inside the span tag or just just the code itself is fine.-->
-                                                        </h4></center>
-
-                                                    <span class="help-block">
-                                                        <strong>
-
-                                                        </strong>
-                                                    </span>
-
-                                            </div>
+<!--Edit peddler-->
+<div class="modal fade" role="dialog" id="editPeddler">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Edit Peddler</h4>
+                </div>
+                                    
+                <div class="modal-body">
+                    <div id="view-edit-content" class="row">
+                        <!-- Term edit form-->
+                        <div class="col-md-12"> 
+                            <form method="POST" class="form-horizontal" id="view-edit-profile">      
+                                <!-- Collector initialization-->                                    
+                                <div class="row form-group">                       
+                                    <div class=""> 
+                                        <div class="col-md-8">   
+                                        
+                                            <label class="sel1">Peddler Name:</label>
+                                            <input class="form-control" id="disabledInput" type="text" placeholder="Marko G. Garduvilia" disabled>
+                                                <span class="help-block">
+                                                    <strong>
+                                                        
+                                                    </strong>
+                                                </span>
+                                            
                                         </div>
                                     </div>
-                                </form>
-                                </div>
+                                </div>                                                                    
+                                <div class="row form-group"> <!--Identifies the position of the peddler-->                      
+                                    <div class=""> 
+                                        <div class="col-md-8">    
+                                            <label class="sel1">Position:</label>
+                                              <form>
+                                                
+                                                  <select class="form-control" id="sel1">
+                                                    <option>Team leader</option>
+                                                    <option>Subordinate</option>  
+                                                  </select>
+                                              </form>
+                                                <span class="help-block">
+                                                    <strong>
+                                                        
+                                                    </strong>
+                                                </span>
+                                        </div>
+                                    </div>
+                                </div> 
+                            </form>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                          <center>
-                              <!--ADD New Term button-->
-                              <button type="button" class="btn btn-bg btn-success btn-fill">Remove</button>
-                              <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
-                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <center>
+                          <!--ADD New Term button-->
+                          <button type="button" class="btn btn-bg btn-success btn-fill">save</button>
+                          <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
                     </div>
                 </div>
-</div><!--End  div of modal-->
-    <!--Edit peddler-->
-    <div class="modal fade" role="dialog" id="editPeddler">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Edit Peddler</h4>
-                    </div>
+            </div>
+        </div><!--End  div of modal-->
 
-                    <div class="modal-body">
-                        <div id="view-edit-content" class="row">
-                            <!-- Term edit form-->
-                            <div class="col-md-12"> 
-                                <form method="POST" class="form-horizontal" id="view-edit-profile">      
-                                    <!-- Collector initialization-->                                    
-                                    <div class="row form-group">                       
-                                        <div class=""> 
-                                            <div class="col-md-8">   
-
-                                                <label class="sel1">Peddler Name:</label>
-                                                <input class="form-control" id="disabledInput" type="text" placeholder="Marko G. Garduvilia" disabled>
-                                                    <span class="help-block">
-                                                        <strong>
-
-                                                        </strong>
-                                                    </span>
-
-                                            </div>
+<!--Remove Item-->
+<div class="modal fade" role="dialog" id="removeItem">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Remove Item</h4>
+                </div>
+                                    
+                <div class="modal-body">
+                    <div id="view-edit-content" class="row">
+                        <!-- Term edit form-->
+                        <div class="col-md-12"> 
+                            <form method="POST" class="form-horizontal" id="view-edit-profile">      
+                                <!-- Collector initialization-->                                    
+                                <div class="row form-group">                       
+                                    <div class=""> 
+                                        <div class="col-md-8">   
+                                            <!--Picks existing item-->
+                                            <label class="sel1">Item Name:</label>
+                                              <form>
+                                                  <!-- Generate list of item within the existing term.-->
+                                                  <select class="form-control" id="sel1">
+                                                    <option>chair</option>
+                                                  </select>
+                                              </form>
+                                            
+                                                <span class="help-block">
+                                                    <strong>
+                                                        
+                                                    </strong>
+                                                </span>
+                                            
                                         </div>
-                                    </div>                                                                    
-                                    <div class="row form-group"> <!--Identifies the position of the peddler-->                      
-                                        <div class=""> 
-                                            <div class="col-md-8">    
-                                                <label class="sel1">Position:</label>
-                                                  <form>
-
-                                                      <select class="form-control" id="sel1">
-                                                        <option>Team leader</option>
-                                                        <option>Subordinate</option>  
-                                                      </select>
-                                                  </form>
-                                                    <span class="help-block">
-                                                        <strong>
-
-                                                        </strong>
-                                                    </span>
-                                            </div>
-                                        </div>
-                                    </div> 
-                                </form>
-                                </div>
+                                    </div>
+                                </div> 
+                            </form>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                          <center>
-                              <!--ADD New Term button-->
-                              <button type="button" class="btn btn-bg btn-success btn-fill">save</button>
-                              <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
-                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <center>
+                          <!--ADD New Term button-->
+                          <button type="button" class="btn btn-bg btn-success btn-fill">Remove</button>
+                          <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
                     </div>
                 </div>
-</div><!--End  div of modal-->
-    <!--Remove Item-->
-    <div class="modal fade" role="dialog" id="removeItem">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Remove Item</h4>
-                    </div>
+            </div>
+        </div><!--End  div of modal-->
 
-                    <div class="modal-body">
-                        <div id="view-edit-content" class="row">
-                            <!-- Term edit form-->
-                            <div class="col-md-12"> 
-                                <form method="POST" class="form-horizontal" id="view-edit-profile">      
-                                    <!-- Collector initialization-->                                    
-                                    <div class="row form-group">                       
-                                        <div class=""> 
-                                            <div class="col-md-8">   
-                                                <!--Picks existing item-->
-                                                <label class="sel1">Item Name:</label>
-                                                  <form>
-                                                      <!-- Generate list of item within the existing term.-->
-                                                      <select class="form-control" id="sel1">
-                                                        <option>chair</option>
-                                                      </select>
-                                                  </form>
-
-                                                    <span class="help-block">
-                                                        <strong>
-
-                                                        </strong>
-                                                    </span>
-
-                                            </div>
+<!--Add Item-->
+<div class="modal fade" role="dialog" id="addItem">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add Item</h4>
+                </div>
+                                    
+                <div class="modal-body">
+                    <div id="view-edit-content" class="row">
+                        <!-- Term edit form-->
+                        <div class="col-md-12"> 
+                            <form method="POST" class="form-horizontal" id="view-edit-profile">      
+                                <!-- Collector initialization-->                                    
+                                <div class="row">                       
+                                    <div class=""> 
+                                        <div class="col-md-8">   
+                                            <!--Picks items that are available within the inventory. Only Items that the quantity is greater than 0 can be generated.-->
+                                            <label class="sel1">Item Name:</label>
+                                              <form>
+                                                  <!-- Generate list of item within the existing term.-->
+                                                  <select class="form-control" id="sel1">
+                                                    <option>chair</option>
+                                                  </select>
+                                              </form>
+                                            
+                                                <span class="help-block">
+                                                    <strong>
+                                                        
+                                                    </strong>
+                                                </span>
+                                            
                                         </div>
-                                    </div> 
-                                </form>
-                                </div>
+                                    
+                                    <div class="">
+                                        <div class="col-md-6">  
+                                            <label>Collector's price:</label>
+                                            <input type="text" required name="Term_address" id="T_address" class="form-control">
+                                                                                
+                                                <span class="help-block">
+                                                    
+                                                </span>
+                                
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-6">  
+                                            <!--Note: Must not exceed with the existing quantity.-->
+                                            <label>Quantity</label>
+                                            <input type="number" required name="cnum" id="cnum2" class="form-control" value="">
+                                                                                
+                                                <span class="help-block">
+                                                    
+                                                </span>
+                                
+                                        </div>
+                                    </div>  
+                                    </div>
+                                </div> 
+                            </form>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                          <center>
-                              <!--ADD New Term button-->
-                              <button type="button" class="btn btn-bg btn-success btn-fill">Remove</button>
-                              <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
-                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <center>
+                          <!--ADD New Term button-->
+                          <button type="button" class="btn btn-bg btn-success btn-fill">Add</button>
+                          <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
                     </div>
                 </div>
-</div><!--End  div of modal-->
-    <!--Add Item-->
-    <div class="modal fade" role="dialog" id="addItem">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Add Item</h4>
+            </div>
+        </div><!--End  div of modal--> 
+
+<!--Edit Item-->    
+<div class="modal fade" role="dialog" id="updateItem">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Update Item</h4>
+                </div>
+                                    
+                <div class="modal-body">
+                    <div id="view-edit-content" class="row">
+                        <!-- Term edit form-->
+                        <div class="col-md-12"> 
+                            <form method="POST" class="form-horizontal" id="view-edit-profile">      
+                                <!-- Collector initialization-->                                    
+                                <div class="row">                       
+                                    <div class=""> 
+                                        <div class="col-md-8">   
+                                            <!--Gdenerates Items that exist within this term. -->
+                                            <label class="sel1">Item Name:</label>
+                                              <form>
+                                                  <!-- Generate list of item within the existing term.-->
+                                                  <select class="form-control" id="sel1">
+                                                    <option>chair</option>
+                                                  </select>
+                                              </form>
+                                            
+                                                <span class="help-block">
+                                                    <strong>
+                                                        
+                                                    </strong>
+                                                </span>
+                                            
+                                        </div>
+  
+                                    </div>
+                                </div> 
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-6">  
+                                            <!--Note: Must not exceed with the existing quantity.-->
+                                            <label>Damaged Quantity</label>
+                                            <input type="number" required name="cnum" id="cnum2" class="form-control" value="">
+                                                                                
+                                                <span class="help-block">
+                                                    
+                                                </span>
+                                
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-6">  
+                                            <!--Note: Must not exceed with the existing quantity.-->
+                                            <label>Returns Quantity:</label>
+                                            <input type="number" required name="cnum" id="cnum2" class="form-control" value="">
+                                                                                
+                                                <span class="help-block">
+                                                    
+                                                </span>
+                                
+                                        </div>
+                                    </div>  
+                                </div>
+
+                            </form>
+                            </div>
+                        </div>
                     </div>
+                    <div class="modal-footer">
+                      <center>
+                          <!--ADD New Term button-->
+                          <button type="button" class="btn btn-bg btn-success btn-fill">Update</button>
+                          <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
+                    </div>
+                </div>
+            </div>
+        </div><!--End  div of modal-->
 
-                    <div class="modal-body">
-                        <div id="view-edit-content" class="row">
-                            <!-- Term edit form-->
-                            <div class="col-md-12"> 
-                                <form method="POST" class="form-horizontal" id="view-edit-profile">      
-                                    <!-- Collector initialization-->                                    
-                                    <div class="row">                       
-                                        <div class=""> 
-                                            <div class="col-md-8">   
-                                                <!--Picks items that are available within the inventory. Only Items that the quantity is greater than 0 can be generated.-->
-                                                <label class="sel1">Item Name:</label>
-                                                  <form>
-                                                      <!-- Generate list of item within the existing term.-->
-                                                      <select class="form-control" id="sel1">
-                                                        <option>chair</option>
-                                                      </select>
-                                                  </form>
+<!--Add Expense-->   
+<div class="modal fade" role="dialog" id="addExpense">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add Expense</h4>
+                </div>
+                                    
+                <div class="modal-body">
+                    <div id="view-edit-content" class="row">
+                        <!-- Term edit form-->
+                        <div class="col-md-12"> 
+                            <form method="POST" class="form-horizontal" id="view-edit-profile">      
+                                <!-- Collector initialization-->                                    
+                                             
+                                    <div class=""> 
+                                    <div class="row">
+                                            <div class="">
+                                                <div class="col-md-12">  
+                                                    <!--Note: Must not exceed with the existing quantity.-->
+                                                    <label>Expense used:</label>
+                                                    <input class="form-control" type="text" id="expenseNote" placeholder="Write expense used here">
 
-                                                    <span class="help-block">
-                                                        <strong>
+                                                        <span class="help-block">
 
-                                                        </strong>
-                                                    </span>
+                                                        </span>
 
+                                                </div>
                                             </div>
-
+                                        </div>
+                                        <div class="row">
                                         <div class="">
                                             <div class="col-md-6">  
-                                                <label>Collector's price:</label>
+                                                <label>Expense amount:</label>
                                                 <input type="text" required name="Term_address" id="T_address" class="form-control">
 
                                                     <span class="help-block">
@@ -823,401 +1061,293 @@
                                                     </span>
 
                                             </div>
-                                        </div>
-                                        <div class="">
-                                            <div class="col-md-6">  
-                                                <!--Note: Must not exceed with the existing quantity.-->
-                                                <label>Quantity</label>
-                                                <input type="number" required name="cnum" id="cnum2" class="form-control" value="">
-
-                                                    <span class="help-block">
-
-                                                    </span>
-
-                                            </div>
-                                        </div>  
-                                        </div>
-                                    </div> 
-                                </form>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                          <center>
-                              <!--ADD New Term button-->
-                              <button type="button" class="btn btn-bg btn-success btn-fill">Add</button>
-                              <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
-                        </div>
-                    </div>
-                </div>
-</div><!--End  div of modal--> 
-    <!--Update items quantity-->    
-    <div class="modal fade" role="dialog" id="updateItem">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Update Item</h4>
-                    </div>
-
-                    <div class="modal-body">
-                        <div id="view-edit-content" class="row">
-                            <!-- Term edit form-->
-                            <div class="col-md-12"> 
-                                <form method="POST" class="form-horizontal" id="view-edit-profile">      
-                                    <!-- Collector initialization-->                                    
-                                    <div class="row">                       
-                                        <div class=""> 
-                                            <div class="col-md-8">   
-                                                <!--Gdenerates Items that exist within this term. -->
-                                                <label class="sel1">Item Name:</label>
-                                                  <form>
-                                                      <!-- Generate list of item within the existing term.-->
-                                                      <select class="form-control" id="sel1">
-                                                        <option>chair</option>
-                                                      </select>
-                                                  </form>
-
-                                                    <span class="help-block">
-                                                        <strong>
-
-                                                        </strong>
-                                                    </span>
-
-                                            </div>
-
-                                        </div>
-                                    </div> 
-                                    <div class="row">
-                                        <div class="">
-                                            <div class="col-md-6">  
-                                                <!--Note: Must not exceed with the existing quantity.-->
-                                                <label>Damaged Quantity</label>
-                                                <input type="number" required name="cnum" id="cnum2" class="form-control" value="">
-
-                                                    <span class="help-block">
-
-                                                    </span>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="">
-                                            <div class="col-md-6">  
-                                                <!--Note: Must not exceed with the existing quantity.-->
-                                                <label>Returns Quantity:</label>
-                                                <input type="number" required name="cnum" id="cnum2" class="form-control" value="">
-
-                                                    <span class="help-block">
-
-                                                    </span>
-
-                                            </div>
-                                        </div>  
-                                    </div>
-
-                                </form>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                          <center>
-                              <!--ADD New Term button-->
-                              <button type="button" class="btn btn-bg btn-success btn-fill">Update</button>
-                              <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
-                        </div>
-                    </div>
-                </div>
-</div><!--End  div of modal-->
-    <!--Add Expense-->   
-    <div class="modal fade" role="dialog" id="addExpense">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Add Expense</h4>
-                    </div>
-
-                    <div class="modal-body">
-                        <div id="view-edit-content" class="row">
-                            <!-- Term edit form-->
-                            <div class="col-md-12"> 
-                                <form method="POST" class="form-horizontal" id="view-edit-profile">      
-                                    <!-- Collector initialization-->                                    
-
-                                        <div class=""> 
-                                        <div class="row">
-                                                <div class="">
-                                                    <div class="col-md-12">  
-                                                        <!--Note: Must not exceed with the existing quantity.-->
-                                                        <label>Expense used:</label>
-                                                        <input class="form-control" type="text" id="expenseNote" placeholder="Write expense used here">
-
-                                                            <span class="help-block">
-
-                                                            </span>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                            <div class="">
-                                                <div class="col-md-6">  
-                                                    <label>Expense amount:</label>
-                                                    <input type="text" required name="Term_address" id="T_address" class="form-control">
-
-                                                        <span class="help-block">
-
-                                                        </span>
-
-                                                </div>
-                                            </div> 
-                                            </div>
-                                        </div>
-
-                                </form>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                          <center>
-                              <!--ADD New Term button-->
-                              <button type="button" class="btn btn-bg btn-success btn-fill">Add</button>
-                              <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
-                        </div>
-                    </div>
-                </div>
-</div><!--End  div of modal-->
-    <!--Edit Expense--> 
-    <div class="modal fade" role="dialog" id="editExpense">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Edit Expense</h4>
-                    </div>
-
-                    <div class="modal-body">
-                        <div id="view-edit-content" class="row">
-                            <div class="col-md-12"> 
-                                <form method="POST" class="form-horizontal" id="view-edit-profile">      
-
-
-                                        <div class=""> 
-                                        <div class="row">
-                                                <div class="">
-                                                    <div class="col-md-12">  
-
-                                                        <label>Expense used:</label>
-                                                        <input class="form-control" type="text" id="expenseNote" placeholder="">
-
-                                                            <span class="help-block">
-
-                                                            </span>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                            <div class="">
-                                                <div class="col-md-6">  
-                                                    <label>Expense amount:</label>
-                                                    <input type="text" required name="Term_address" id="T_address" class="form-control">
-
-                                                        <span class="help-block">
-
-                                                        </span>
-
-                                                </div>
-                                            </div> 
-                                            </div>
-                                        </div>
-
-                                </form>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                          <center>
-                              <!--ADD New Term button-->
-                              <button type="button" class="btn btn-bg btn-success btn-fill">Save</button>
-                              <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
-                        </div>
-                    </div>
-                </div>
-</div><!--End  div of modal-->
-    <!--Add Collection-->
-    <div class="modal fade" role="dialog" id="addCollection">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Add Collection</h4>
-                    </div>
-
-                    <div class="modal-body">
-                        <div id="view-edit-content" class="row">
-                            <div class="col-md-12"> 
-                                <form method="POST" class="form-horizontal" id="view-edit-profile">                                        
-
-                                        <div class="">
-                                    <div class="row form-group">
-                                        <div class="">
-                                                <div class="col-md-6">
-                                                    <label>Date</label>
-                                                    <!--I think this should be initialized for current date rather than adding this manualy? Just incase I'm putting this.-->
-                                                    <input name="initialTerm_Date"  id="initT_Date" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'">
-
-                                                        <span class="help-block">
-                                                            <strong>  </strong>
-                                                        </span>
-
-                                                </div>
                                         </div> 
-                                    </div> 
-                                            <div class="row">
-                                            <div class="">
-                                                <div class="col-md-6">  
-                                                    <label>Collection amount:</label>
-                                                    <input type="text" required name="Term_address" id="T_address" class="form-control">
-
-                                                        <span class="help-block">
-
-                                                        </span>
-
-                                                </div>
-                                            </div> 
-                                            </div>
-                                        <div class="row">
-                                        <div class="">
-                                            <div class="col-md-12">  
-                                                <!--Note: Must not exceed with the existing quantity.-->
-                                                <label>Note:</label>
-                                                <textarea rows="8" required name="cnum" id="cnum2" class="form-control" value=""></textarea>
-
-                                                    <span class="help-block">
-
-                                                    </span>
-
-                                            </div>
                                         </div>
                                     </div>
-                                        </div>
-
-                                </form>
-                                </div>
+                                
+                            </form>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                          <center>
-                              <!--ADD New Term button-->
-                              <button type="button" class="btn btn-bg btn-success btn-fill">Add</button>
-                              <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
-                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <center>
+                          <!--ADD New Term button-->
+                          <button type="button" class="btn btn-bg btn-success btn-fill">Add</button>
+                          <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
                     </div>
                 </div>
-</div><!--End  div of modal-->
-    <!--Edit Collection-->
-    <div class="modal fade" role="dialog" id="editCollection">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Edit Collection</h4>
-                    </div>
+            </div>
+        </div><!--End  div of modal-->
 
-                    <div class="modal-body">
-                        <div id="view-edit-content" class="row">
-                            <div class="col-md-12"> 
-                                <form method="POST" class="form-horizontal" id="view-edit-profile">                                        
+<!--Edit Expense--> 
+<div class="modal fade" role="dialog" id="editExpense">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Edit Expense</h4>
+            </div>
+                             
+            <form method="POST" class="form-horizontal" id="ee_form">      
+                {{csrf_field()}}
+                <input type="hidden" name="_method" value="PUT">  
 
-                                        <div class="">
-                                    <div class="row form-group">
-                                        <div class="">
-                                                <div class="col-md-6">
-                                                    <label>Date</label>
-                                                    <!--I think this should be initialized for current date rather than adding is manualy? Just incase I'm putting this.-->
-                                                    <input name="initialTerm_Date"  id="initT_Date" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'">
-
-                                                        <span class="help-block">
-                                                            <strong>  </strong>
-                                                        </span>
-
-                                                </div>
-                                        </div> 
-                                    </div> 
-                                            <div class="row">
-                                            <div class="">
-                                                <div class="col-md-6">  
-                                                    <label>Collection amount:</label>
-                                                    <input type="text" required name="Term_address" id="T_address" class="form-control">
-
-                                                        <span class="help-block">
-
-                                                        </span>
-
-                                                </div>
-                                            </div> 
-                                            </div>
-                                        </div>
-
-                                </form>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                          <center>
-                              <!--ADD New Term button-->
-                              <button type="button" class="btn btn-bg btn-success btn-fill">Save</button>
-                              <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
-                        </div>
-                    </div>
-                </div>
-</div><!--End  div of modal-->
-    <!--View Note of the item list.-->
-    <div class="modal fade" role="dialog" id="viewNote">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Item <span><!--This is where the name of the selectd item is placed.--> </span>Note</h4>
-                    </div>
-
-                    <div class="modal-body">
-                        <div id="view-edit-content" class="row">
-                            <div class="col-md-12"> 
-                                <form method="POST" class="form-horizontal" id="view-edit-profile">                                                          
+                <div class="modal-body">
+                    <div id="view-edit-content" class="row">
+                        <div class="col-md-12">                                 
+                            <div class=""> 
+                                <div class="row">
                                     <div class="">
-                                        <div class="row form-group">
-                                            <div class="col-md-12">
-                                            <p class="category">
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac dolor non nunc ullamcorper imperdiet nec at odio. Sed pellentesque consectetur nisl. Nullam vitae tellus diam. Suspendisse quis ipsum id felis aliquet tincidunt non sed eros. Nam vel fringilla diam. Vivamus vitae aliquam neque. Donec convallis sem diam.
+                                        <div class="col-md-12">  
+                                            
+                                            <label>Expense Name</label>
+                                            <input class="form-control" type="text" id="expenseNote" placeholder="">
 
-                                            Sed bibendum tincidunt blandit. Proin consequat faucibus dolor, sed egestas purus gravida nec. Aliquam erat volutpat. Nulla ultricies dolor nec elit porttitor, eget consectetur eros maximus. Ut tincidunt lectus eget lectus aliquet mollis. Maecenas vel porta ex. Cras consequat augue sem, eget placerat nisl placerat vitae. Cras eros felis, auctor et justo at, bibendum cursus dolor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Phasellus vitae ipsum neque. Sed elementum magna orci, quis commodo eros egestas at. Donec non turpis massa. Sed maximus diam eu ipsum semper luctus.
+                                                <span class="help-block">
 
-                                            Pellentesque luctus vestibulum ligula vel iaculis. Pellentesque convallis velit ut efficitur commodo. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc placerat nibh ac neque suscipit rutrum. Vestibulum nec tortor augue. Aliquam blandit, tortor nec tristique pulvinar, augue ligula euismod felis, eu finibus mi velit eget urna. Praesent placerat neque in euismod luctus.
+                                                </span>
 
-                                            Donec non quam augue. Praesent quis justo id odio egestas blandit nec ut libero. Pellentesque id accumsan lorem. Phasellus imperdiet suscipit accumsan. In bibendum diam vitae risus suscipit, vitae aliquam erat ornare. Suspendisse potenti. Integer fringilla metus vitae dolor hendrerit ullamcorper. Nam faucibus vel arcu eu maximus. Praesent ullamcorper pretium vulputate.
-
-                                            Mauris vitae pretium felis, sed blandit turpis. Sed id tempor erat, quis feugiat ante. Curabitur eu sem vel turpis facilisis vestibulum. Maecenas id vehicula massa, pellentesque tempus risus. Nullam eleifend sem id nunc iaculis, ac suscipit erat mattis. Nunc accumsan eget nisl ullamcorper condimentum. Mauris tincidunt ligula non leo pharetra finibus. Sed metus nulla, eleifend nec purus eu, consectetur posuere leo. Cras nunc nisl, porta quis ultrices vitae, lacinia at sapien.
-                                            </p><!--The note's contents are here-->
-                                            </div>
-                                        </div> 
+                                        </div>
                                     </div>
-                                </form>
+                                </div>
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-6">  
+                                            <label>Expense Amount</label>
+                                            <input type="text" required name="Term_address" id="T_address" class="form-control">
+
+                                                <span class="help-block">
+
+                                                </span>
+
+                                        </div>
+                                    </div> 
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                          <center>
-                              <!--ADD New Term button-->
-                              <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Return</button></center>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <center>
+                      <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">    Cancel
+                      </button>
+                      <button type="sumit" class="btn btn-bg btn-success btn-fill">Edit</button>
+                    </center>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--Remove Expense-->
+<div class="modal fade" role="dialog" id="removeExpense">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Remove Expense</h4>
+            </div>
+                          
+            <form method="POST" class="form-horizontal" id="re_form">   
+                {{csrf_field()}}
+                <input type="hidden" name="_method" value="DELETE">
+
+                <div class="modal-body">
+                    <div id="view-edit-content" class="row">
+                        <div class="col-md-12">                                     
+                            <div class="row form-group">                       
+                                <div class=""> 
+                                    <div class="col-md-12">   
+                                        You are about to remove an expense from this term. Do you want to proceed?
+                                    </div>
+                                </div>
+                            </div> 
                         </div>
                     </div>
                 </div>
-</div><!--End  div of modal-->
-    <!--Customer view Modal-->
+                <div class="modal-footer">
+                    <center>
+                        <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">No
+                        </button>
+
+                        <button type="submit" class="btn btn-bg btn-success btn-fill">Yes
+                        </button>         
+                    </center>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--Add Collection-->
+<div class="modal fade" role="dialog" id="addCollection">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add Collection</h4>
+                </div>
+                                    
+                <div class="modal-body">
+                    <div id="view-edit-content" class="row">
+                        <div class="col-md-12"> 
+                            <form method="POST" class="form-horizontal" id="view-edit-profile">                                        
+                                             
+                                    <div class="">
+                                <div class="row form-group">
+                                    <div class="">
+                                            <div class="col-md-6">
+                                                <label>Date</label>
+                                                <!--I think this should be initialized for current date rather than adding this manualy? Just incase I'm putting this.-->
+                                                <input name="initialTerm_Date"  id="initT_Date" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'">
+                                                                                    
+                                                    <span class="help-block">
+                                                        <strong>  </strong>
+                                                    </span>
+                                            
+                                            </div>
+                                    </div> 
+                                </div> 
+                                        <div class="row">
+                                        <div class="">
+                                            <div class="col-md-6">  
+                                                <label>Collection amount:</label>
+                                                <input type="text" required name="Term_address" id="T_address" class="form-control">
+
+                                                    <span class="help-block">
+
+                                                    </span>
+
+                                            </div>
+                                        </div> 
+                                        </div>
+                                    <div class="row">
+                                    <div class="">
+                                        <div class="col-md-12">  
+                                            <!--Note: Must not exceed with the existing quantity.-->
+                                            <label>Note:</label>
+                                            <textarea rows="8" required name="cnum" id="cnum2" class="form-control" value=""></textarea>
+                                                                     
+                                                <span class="help-block">
+                                                    
+                                                </span>
+                                
+                                        </div>
+                                    </div>
+                                </div>
+                                    </div>
+                                
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <center>
+                          <!--ADD New Term button-->
+                          <button type="button" class="btn btn-bg btn-success btn-fill">Add</button>
+                          <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
+                    </div>
+                </div>
+            </div>
+        </div><!--End  div of modal-->
+
+<!--Edit Collection-->
+<div class="modal fade" role="dialog" id="editCollection">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Edit Collection</h4>
+                </div>
+                                    
+                <div class="modal-body">
+                    <div id="view-edit-content" class="row">
+                        <div class="col-md-12"> 
+                            <form method="POST" class="form-horizontal" id="view-edit-profile">                                        
+                                             
+                                    <div class="">
+                                <div class="row form-group">
+                                    <div class="">
+                                            <div class="col-md-6">
+                                                <label>Date</label>
+                                                <!--I think this should be initialized for current date rather than adding is manualy? Just incase I'm putting this.-->
+                                                <input name="initialTerm_Date"  id="initT_Date" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'">
+                                                                                    
+                                                    <span class="help-block">
+                                                        <strong>  </strong>
+                                                    </span>
+                                            
+                                            </div>
+                                    </div> 
+                                </div> 
+                                        <div class="row">
+                                        <div class="">
+                                            <div class="col-md-6">  
+                                                <label>Collection amount:</label>
+                                                <input type="text" required name="Term_address" id="T_address" class="form-control">
+
+                                                    <span class="help-block">
+
+                                                    </span>
+
+                                            </div>
+                                        </div> 
+                                        </div>
+                                    </div>
+                                
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <center>
+                          <!--ADD New Term button-->
+                          <button type="button" class="btn btn-bg btn-success btn-fill">Save</button>
+                          <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
+                    </div>
+                </div>
+            </div>
+        </div><!--End  div of modal-->
+
+<!--View Note of the item list.-->
+<div class="modal fade" role="dialog" id="viewNote">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Item <span><!--This is where the name of the selectd item is placed.--> </span>Note</h4>
+                </div>
+                                    
+                <div class="modal-body">
+                    <div id="view-edit-content" class="row">
+                        <div class="col-md-12"> 
+                            <form method="POST" class="form-horizontal" id="view-edit-profile">                                                          
+                                <div class="">
+                                    <div class="row form-group">
+                                        <div class="col-md-12">
+                                        <p class="category">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                                        </p><!--The note's contents are here-->
+                                        </div>
+                                    </div> 
+                                </div>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <center>
+                          <!--ADD New Term button-->
+                          <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Return</button></center>
+                    </div>
+                </div>
+            </div>
+        </div><!--End  div of modal-->
+
+
+<!--Customer view Modal-->
     <div class="modal fade" role="dialog" id="viewC" >
             <div class="modal-dialog">
               <!-- Modal content-->
@@ -1502,6 +1632,7 @@
           </div>
         </div>
 </div><!--End div of modal-->
+
 </body>
 
     <!--   Core JS Files   -->
@@ -1522,5 +1653,25 @@
           e.preventDefault()
           $(this).tab('show')
         })
+    </script>
+
+    <script>
+        //DELETE PEDDLER FROM TERM
+        $(document).on("click", ".rp_btn", function () {
+            var id = $(this).data('id');
+
+            //FORM
+            $("#removePeddler_form").attr("action", "/workers/" +id);
+
+        }); 
+
+        //EDIT PEDDLER FROM TERM
+        $(document).on("click", ".ep_btn", function () {
+            var id = $(this).data('id');
+
+            //FORM
+            $("#editPeddler_form").attr("action", "/workers/" +id);
+        }); 
+
     </script>
 @endsection
