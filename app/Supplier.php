@@ -40,7 +40,7 @@ class Supplier extends Model
         return 'suppliers_index';
     }
 
-    public function inventory()
+    public function inventories()
     {
         return $this->hasMany('App\Inventory', 'inventory_supplier_id');
     }
