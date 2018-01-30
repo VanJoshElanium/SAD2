@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Supply;
+use App\Repair;
 use App\Stockin;
 use App\Supplier;
 use App\Inventory;
@@ -44,6 +45,15 @@ class InventoryController extends Controller
             $items = Inventory::search($request->input('titlesearch')) 
                 -> paginate(5);
         }else{
+            //DAMAGED ITEMS
+            $repairs = Repair::join('inventories', 'inventories.inventory_id', '=', 'repairs.repair_inventory_id')
+                -> join('suppliers', 'suppliers.supplier_id', '=', 'inventories.inventory_supplier_id')
+                -> select('inventories.*',  'repairs.*', 'suppliers.supplier_name', 'suppliers.supplier_id')
+                -> where([
+                        ['inventory_status' , '!=', 0]
+                    ])
+                -> sortable() 
+                -> paginate(5);
 
             //ACTIVE INVENTORY ITEMS
             $items = Inventory::join('suppliers', 'suppliers.supplier_id', '=', 'inventories.inventory_supplier_id')
@@ -55,7 +65,7 @@ class InventoryController extends Controller
                 -> sortable() 
                 -> paginate(5);
         } 
-        return view('inventory', compact('items', 'curr_usr', 'suppliers', 'workers'));
+        return view('inventory', compact('items', 'curr_usr', 'suppliers', 'workers', 'repairs'));
     }
 
     public function getItem($id)
