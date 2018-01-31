@@ -778,11 +778,11 @@
                                         <!--Acquires the list of workers within users table-->
                                         <label class="sel1">Peddler Name:</label>
                                         <select class="form-control" name="edit_peddler" required id="edit_peddler" disabled="disabled" required>
-                                            @foreach($a_peddlers as $a_peddler)
+                                            @foreach($peddlers as $peddler)
                                                 <option value="{{$a_peddler->user_id}}">
-                                                    {{$a_peddler->fname}}&nbsp
-                                                    {{$a_peddler->mname}}.
-                                                    {{$a_peddler->lname}}
+                                                    {{$peddler->fname}}&nbsp
+                                                    {{$peddler->mname}}.
+                                                    {{$peddler->lname}}
                                                 </option>
                                             @endforeach
                                         </select>           
