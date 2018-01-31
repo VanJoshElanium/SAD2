@@ -42,3 +42,12 @@ HOW TO LARAVEL W/ SAD-BOIZ
      and type in 'localhost:<portnumber>', where <portnumber> is the port number provided by laravel
      
 11.) Login with admin123 as username and password
+
+
+
+
+
+
+Extra package:
+Charts = http://lavacharts.com/#chart-line
+
