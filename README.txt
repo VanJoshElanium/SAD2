@@ -1,7 +1,7 @@
-HOW TO LARAVEL, A TUTORIAL BY ANN HIHI :>
+HOW TO LARAVEL W/ SAD-BOIZ
 
-/* FOLLOW STEPS #'s 1-5, #7, and #'s 19-20  IF YOU ARE USING LARAVEL FOR THE FIRST TIME */
-/* OTHERWISE, FOLLOW STEPS: #2 AND #'s 6-22*/
+/* FOLLOW ALL STEPS IF YOU ARE USING LARAVEL FOR THE FIRST TIME */
+/* IF NOT, FOLLOW STEPS: #2 AND #'s 4-11 */
 
 1. Download Wamp Server (http://www.wampserver.com/en/)
     - Set up Wamp to your preffered location, text editor, and web browser.
@@ -18,69 +18,28 @@ HOW TO LARAVEL, A TUTORIAL BY ANN HIHI :>
     
 2.) Go to your web browser and type in, localhost:8080/phpmyadmin/
      - Username: root, Password(is blank): 
-     - Create a new database called 'laravel'
-     - If you already have a db called 'laravel', delete all tables in it
+     - Create a new database called 'pp'
+     - If you already have a db called 'pp', delete all tables in it
      
 3.) Download Composer (https://getcomposer.org/Composer-Setup.exe)
       - Change the location of the PHP to C:\wamp64\bin\php\php7.1.9
       - In command prompt, type composer, a composer documentation should appear
 
-4.) In command prompt, type-> cd 'C:\wamp64\www\' (wamp64 if version is 64-bit, and just wamp if version is 32-bit)
+4.) Clone or download the SAD2-master project to C:\wamp64\www (64-bit WAMP) or C:\wamp\www (32-bit WAMP) directory
 
-5.) Next, type 'composer create laravel/laravel name-of-project', where name-of-project is the name of the project you want to make
-
-6.) Clone or download the SAD2-master project to C:\wamp64\www (64-bit WAMP) or C:\wamp\www (32-bit WAMP) directory
-
-7.) Open command prompt and change the directory to the root of the project
+5.) Open command prompt and change the directory to the root of the project
     (ex. if your project is in C:\wamp64\www then type 'cd C:\wamp64\www\project-name, 
-     where project-name is SAD2-master or whatever your renamed the project to) 
-//FOR ONES THAT JUST DOWNLOADED THE ENTIRE FILE & FINISHED INSTALLING WAMP & COMPOSER START HERE
-8.) Then, type 'composer install' and after 'composer dump-autoload'
+     where project-name is SAD2-master or whatever your renamed the project to)
+     
+6.) In the command prompt, type: composer dump-autoload -o
 
-9.) Next, type 'composer require laravel/scout'
+7.) Next, type: php artisan migrate:refresh --seed
 
-10.) Open this file in a text editor: config/app.php
+8.) Then, type: php artisan key:generate //ONLY DO THIS STEP IF THERE IS NO .env FILE IN THE ROOT OF THE PROJECT
 
-11.) Find this:
-	'providers' => [
-		/* INSERT NEW ONES HERE*/
-	
-		////////////////////////////
-	]
+9.) Lastly, type: php artisan serve
 
-12.) Insert exactly the code below on the line after /* INSERT NEW ONES HERE*/
-	Laravel\Scout\ScoutServiceProvider::class,
-
-13.) In the command prompt type, php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"
-
-14.) Then type, 'composer require algolia/algoliasearch-client-php'
-
-15.) Then, 'composer require kyslik/column-sortable'
-
-15.) Open config/app.php in a text editor again, on the next line after Laravel\Scout\ScoutServiceProvider::class, add 
-	Kyslik\ColumnSortable\ColumnSortableServiceProvider::class,
-    
-16.) In command prompt type, php artisan vendor:publish --provider="Kyslik\ColumnSortable\ColumnSortableServiceProvider" --tag="config"
-
-17.) Next, type 'php artisan migrate --seed'
-
-18.) Then, type 'php artisan key:generate' //ONLY DO THIS STEP IF THERE IS NO .env FILE IN THE ROOT OF THE PROJECT
-
-19.) Lastly, type 'php artisan serve'
-
-20.) Check the portnumber of the php artisan serve (usually it is 8000) and then open your browser
+10.) Check the portnumber of the php artisan serve (usually it is 8000) and then open your browser
      and type in 'localhost:<portnumber>', where <portnumber> is the port number provided by laravel
      
-21.) Watch the videos in this youtube playlist to learn more about Laravel (https://www.youtube.com/watch?v=a8ZpAf_tNh0&list=PL3ZhWMazGi9IYymniZgqwnYuPFDvaEHJb&index=1)
-
-22.) Happy Laravel Programming! :)
-
-
-!!! IMPORTANT LINKS !!!
-1.) VUE JS plugin instruction video for installation and build:
-	https://www.youtube.com/watch?v=20xpzlv-aFA&list=PL9q0eNDLXnF16GY2oBHlHo6lJ7I4JMm9l
-2.) FULL TEXT SEARCHING USING SCOUT AND ALGOLIA
-	http://itsolutionstuff.com/post/laravel-5-full-text-search-example-using-scout-and-algolia-packagesexample.html
-3.) COLUMN SORTING WITH PAGINATION USING KYSLIK
-	http://itsolutionstuff.com/post/laravel-5-column-sorting-with-pagination-example-from-scratchexample.html
-	https://github.com/Kyslik/column-sortable#laravels-55-auto-discovery
+11.) Login with admin123 as username and password
