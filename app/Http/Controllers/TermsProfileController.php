@@ -90,7 +90,17 @@ class TermsProfileController extends Controller
                             ['user_status' , '=', 1]
                         ])
                     -> get();
-
+        
+        //ALL PEDDLERS
+        $peddlers = DB::table('profiles as T1')
+                    -> join('users as T2', 'T2.user_id', '=', 'T1.profile_user_id')
+                    -> select('user_id', 'fname', 'mname', 'lname')
+                    -> where([
+                            ['user_type' , '=', 3],
+                            ['user_status' , '=', 1]
+                        ])
+                    -> get();
+        
         //TERM PEDDLERS
         $workers = Term::join('workers', 'terms.term_id', '=', 'worker_term_id')
                 -> join('users', 'workers.worker_user_id', '=', 'users.user_id')
@@ -136,7 +146,7 @@ class TermsProfileController extends Controller
                     -> paginate(5);
 
 
-        return view('termsprofile', compact('curr_user', 'workers', 'term', 'a_peddlers', 'expenses', 'term_items', 'sales', 'total_expense'));
+        return view('termsprofile', compact('curr_user', 'workers', 'term', 'a_peddlers', 'expenses', 'term_items', 'sales', 'total_expense', 'peddlers'));
     }
 
     /**
