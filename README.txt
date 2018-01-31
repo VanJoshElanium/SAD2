@@ -17,7 +17,6 @@ HOW TO LARAVEL W/ SAD-BOIZ
     - Restart WAMP services, after a while, the icon should be GREEN.
     
 2.) Go to your web browser and type in, localhost:8080/phpmyadmin/
-     - Username: root, Password(is blank): 
      - Create a new database called 'pp'
      - If you already have a db called 'pp', delete all tables in it
      
