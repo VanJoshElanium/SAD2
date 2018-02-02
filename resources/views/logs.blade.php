@@ -135,14 +135,13 @@
             <div class="content">
                 <div class="container-fluid">
                     <div class="col-md-12">
-                        <!--Undamaged Content-->
                         <div class="card box">
                                   <div class="row">
                                     <div class="col-md-12">                                      
                                         <div class="content table-responsive table-full-width">
                                             <div class="col-md-4">
                                             <div class="header">
-                                                <h4 class="title">Undamaged Item logs</h4> 
+                                                <h4 class="title">Logs</h4> 
                                             </div> 
                                             </div>
                                             <div class="col-md-4">
@@ -169,49 +168,9 @@
                                                         <button data-target="#itemDetails" id="" data-toggle="modal" data-id='' class="btn btn-bg btn-info btn-fill">
                                                             View
                                                         </button>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                       <!--Damaged Content-->
-                            <div class="card box">
-                                  <div class="row">
-                                    <div class="col-md-12">                                      
-                                        <div class="content table-responsive table-full-width">
-                                         <div class="col-md-4">
-                                            <div class="header">
-                                                <h4 class="title">Damaged Item logs</h4> 
-                                            </div> 
-                                        </div> 
-                                            <div class="col-md-4">
-                                                <!--Date Time picker-->
-                                            <center><label>Select Date:</label></center>
-                                            <input name="Log_Date"  id="initL_Date" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'">
-                                            </div>
-                                            <table class="table table-hover table-striped">
-                                                <thead>
-                                                    <th>ID</th>
-                                                    <th>Date</th>
-                                                    <th>Event type</th>
-                                                    <th>Worker Handler</th>  
-                                                    <th>View Details</th>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>1</td>
-                                                        <td>03/04/17</td>
-                                                        <td>Update</td>
-                                                        <td>Arman Dumaging</td>
-                                                    <!-- this is a button that will show the list of items updated-->
-                                                        <td>
-                                                        <button data-target="#itemDetails" id="" data-toggle="modal" data-id='' class="btn btn-bg btn-info btn-fill">
-                                                            View
-                                                        </button>
+                                                        <button data-target="#1" id="" data-toggle="modal" data-id='' class="btn btn-bg btn-info btn-fill">
+                                                            Modal tester button
+                                                        </button>    
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -230,7 +189,7 @@
 
     
 <!-- This is the Modal content for the Item Log   -->
-    <div class="modal fade" id="itemDetails" role="dialog">
+    <div class="modal fade" role="dialog" id="itemDetails">
     <div class="modal-dialog">
       <!-- Modal content-->
       <div class="modal-content">
@@ -283,8 +242,8 @@
       </div>
     </div>
   </div>
-<!-- This is the Modal content for the Supplier Log   -->
-    <div class="modal fade" id="SupplierDetails" role="dialog">
+<!-- This is the Modal content for the Password -->
+    <div class="modal fade" role="dialog" id="1" >
     <div class="modal-dialog">
       <!-- Modal content-->
       <div class="modal-content">
@@ -298,10 +257,20 @@
                 <tbody>
                     <tr>
                         <td><p><b>ID:</b>  <span> 1 </span></p></td>
-                        <td><p><b>Date:</b> <span> 01/12/18</span></p></td>                                                
+                        <td><p><b><span data-toggle="tooltip" data-placement="bottom" title="Indicates when the event was logged.">
+                            Date:</span></b> <span> 01/12/18</span></p></td>                                                
                     </tr>
                     <tr>
-                        <td><p><b>Event type:</b> <span> Update </span></p></td>
+                        <td><p><b><span data-toggle="tooltip" data-placement="bottom" title="Indicates whether it was updated or added.">
+                            Event type:</span></b> <span> Update </span></p></td>
+                        <td><p><b><span data-toggle="tooltip" data-placement="bottom" title="The one responsible for handling the items in the warehouse.">
+                            Worker Handler:</span></b> <span> Arman Dumaging</span></p></td>
+                    </tr>
+                    <tr>
+                        <td><p><b><span data-toggle="tooltip" data-placement="bottom" title="Indicates whether it is from the Terms, new supplies, or damages.">
+                            From:</span></b> <span> Terms </span></p></td><!--This sets whether it is from the terms, damaged supplies, or from new supplies-->
+                        <td><p><b><span data-toggle="tooltip" data-placement="bottom" title="Indicates if it's from damages or undamaged logs">
+                            Type:</span></b> <span> Damages</span></p></td>
                     </tr>
                 </tbody>
             </table>
@@ -321,7 +290,6 @@
                 </tbody>
             </table>                                 
         </div>
-          
         <div class="modal-footer">
           <center><button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Close</button></center>
         </div>
