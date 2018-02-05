@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateWorkersTable extends Migration
+class CreateSalesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,21 @@ class CreateWorkersTable extends Migration
      */
     public function up()
     {
-        Schema::create('workers', function (Blueprint $table) {
-            $table ->increments('worker_id');
-            $table ->integer('worker_user_id') -> unsigned();
-            $table ->integer('worker_term_id') -> unsigned();
-            $table ->integer('worker_type');
+        Schema::create('sales', function (Blueprint $table) {
+            $table ->increments('sale_id');
+            $table ->integer('sale_term_id') -> unsigned();
+            
+            $table ->int('sales_amt');
+            $table ->date('sales_date', '6');
+            $table ->string('sales_remarks', '100');
 
-            $table ->foreign('worker_user_id')
-                    ->references('user_id')
-                    ->on('users')
+            $table ->foreign('ti_term_id')
+                    ->references('term_id')
+                    ->on('terms')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
 
-            $table ->foreign('worker_term_id')
+            $table ->foreign('sale_term_id')
                     ->references('term_id')
                     ->on('terms')
                     ->onUpdate('cascade')
@@ -41,6 +43,6 @@ class CreateWorkersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('workers');
+        Schema::dropIfExists('sales');
     }
 }
