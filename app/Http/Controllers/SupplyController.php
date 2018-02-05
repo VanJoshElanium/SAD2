@@ -152,7 +152,7 @@ class SupplyController extends Controller
         //Session::flash('message', 'User has been successfully removed!');*/
     }
 
-     public function getSuppliedItem($id)
+    public function getSuppliedItem($id)
     {
         $supplydata = Inventory::find($id);
         //Session::flash('message', 'User has been successfully created!');

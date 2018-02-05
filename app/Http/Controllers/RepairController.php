@@ -48,31 +48,38 @@ class RepairController extends Controller
             //dd( $input['supply_name'][0]);
             // dd($request);
 
-        for ($i=0; $i < count($input['dm_item_name']); ++$i) {
+        if ($validator->fails()) {
+            return redirect('/inventory')
+                ->withErrors($validator, 'addRepair')
+                ->withInput($request->all());
+                // ->with('input_error_id', $error_id);
+        }
+        else{
+            for ($i=0; $i < count($input['dm_item_name']); ++$i) {
             
-            $inrepair = Repair::where([
-                            ['repair_inventory_id', '=', $input['dm_item_name'][$i]],
-                            ['repair_status', '=', $input['dm_item_state'][$i]],
-                            ['repair_user_id', '=', $request -> inventory_user_id],
-                            ['repair_date', '=', $request -> received_at]
-                        ]) 
-                        -> get();
+                $inrepair = Repair::where([
+                                ['repair_inventory_id', '=', $input['dm_item_name'][$i]],
+                                ['repair_status', '=', $input['dm_item_state'][$i]],
+                                ['repair_user_id', '=', $request -> inventory_user_id],
+                                ['repair_date', '=', $request -> received_at]
+                            ]) 
+                            -> get();
 
-            if (!empty($inrepairs)){
-                    $inrepair -> repair_qty += $input['dm_qty'][$i];
-            }
-            else {
-                $repair = new Repair;
-                $repair -> repair_inventory_id = $input['dm_item_name'][$i];
-                $repair -> repair_user_id = $request -> inventory_user_id;
-                $repair -> repair_date = $request -> received_at;
-                $repair -> repair_qty = $input['dm_qty'][$i];
-                $repair -> repair_status = $input['dm_item_state'][$i];
-                $repair -> save(); 
-            }
-
-            
+                if (!empty($inrepairs)){
+                        $inrepair -> repair_qty += $input['dm_qty'][$i];
+                }
+                else {
+                    $repair = new Repair;
+                    $repair -> repair_inventory_id = $input['dm_item_name'][$i];
+                    $repair -> repair_user_id = $request -> inventory_user_id;
+                    $repair -> repair_date = $request -> received_at;
+                    $repair -> repair_qty = $input['dm_qty'][$i];
+                    $repair -> repair_status = $input['dm_item_state'][$i];
+                    $repair -> save(); 
+                } 
+            } 
         } 
+        
         //session()->flash('message', 'Successfully created a new supplier!');
         return redirect('/inventory');
     }
