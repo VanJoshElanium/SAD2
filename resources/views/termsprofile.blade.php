@@ -1448,6 +1448,7 @@
                 <form method="POST" class="form-horizontal" id="editCustomer_form"> 
                     {{csrf_field()}} 
                     {{method_field('PUT')}}
+
                     <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">      
                     <div class="modal-body">
                         <div id="view-edit-content" class="row">
@@ -1807,7 +1808,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Confirm Cutomer Payment</h4>
+                    <h4 class="modal-title">Confirm Customer Payment</h4>
                 </div>
                               
                 <form method="POST" class="form-horizontal" id="payCustomer_form">
@@ -1815,24 +1816,26 @@
                     {{csrf_field()}}
                     {{method_field('PUT')}}
 
+                    <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">
+                    <input type="hidden" name="update_type" value="confirm_payment">
+
                     <div class="modal-body">
                         <div id="view-edit-content" class="row">
                             <div class="col-md-12">                                     
-                                <div class="row form-group">                       
-                                    <div class=""> 
-                                        <div class="col-md-12">   
-                                            You are about to confirm that this user has paid. Do you want to proceed?
-                                        </div>
+                                <div class="row form-group">
+                                    <div class="col-md-6">
+                                        <label> Date Paid </label>
+                                        <input type="date" class="form-control" name="collect_date" required value="{{Carbon\Carbon::now()->toDateString()}}">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                            <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">No
+                            <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancel
                             </button>
 
-                            <button type="submit" class="btn btn-bg btn-success btn-fill">Yes
+                            <button type="submit" class="btn btn-bg btn-success btn-fill">Confirm
                             </button>         
                     </div>
                 </form>
