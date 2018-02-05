@@ -35,7 +35,7 @@ class User extends Authenticatable
         return $this->hasOne('App\Worker', 'worker_user_id');
     }
 
-    public function stockin()
+    public function stockins()
     {
         return $this->hasMany('App\Stockin', 'si_user_id');
     }
