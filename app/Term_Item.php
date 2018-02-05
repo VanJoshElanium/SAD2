@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Term_Item extends Model
 {
     protected $primaryKey = 'ti_id';
+    protected $table = 'term_items';
 
     /* The attributes that are mass assignable. */
     protected $fillable = [

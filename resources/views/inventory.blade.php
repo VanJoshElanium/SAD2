@@ -287,12 +287,12 @@
                                                             <td>{{$repair->supplier_name}}</td>
                                                             <td>{{$repair->repair_qty}}</td>
                                                             <td> 
-                                                                <button data-target="#viewModal-dm" data-toggle="modal" id="view-repair-btn" data-id='{{$repair->repair_id}}' class="view-repair-btn btn btn-info btn-fill">
+                                                                <button data-target="#viewModal-dm" data-toggle="modal" id="view-repair-btn" data-id='{{$repair->repair_id}}' class="view-repair-btn btn btn-primary btn-fill">
                                                                     View
                                                                 </button>
                                                             </td>
                                                             <td> 
-                                                                <button data-target="#editModal-dm" data-toggle="modal" id="edit-repair-btn" data-id='{{$repair->repair_id}}' class="edit-repair-btn btn btn-primary btn-fill">
+                                                                <button data-target="#editModal-dm" data-toggle="modal" id="edit-repair-btn" data-id='{{$repair->repair_id}}' class="edit-repair-btn btn btn-info btn-fill">
                                                                     Edit
                                                                 </button>
                                                             </td>
@@ -376,10 +376,19 @@
 
                                 <div id="un-form">
                                     <div class="row form-group" style="margin-top: 5%">
-                                        <div class="col-md-4">              
-                                            <label>Item Name</label>
-                                            <select class="form-control item_name" name="supply_name[]" required>
-                                            </select> 
+                                        <div class="{{$errors->addUn->has('supply_name') ? ' has-error' : ''}}"> 
+                                            <div class="col-md-4">              
+                                                <label>Item Name</label>
+                                                <select class="form-control item_name" name="supply_name[]" required>
+                                                </select> 
+                                                @if ($errors->addUn->has('supply_name'))
+                                                    <span class="help-block">
+                                                        <strong>
+                                                            {{ $errors->addUn->first('supply_name') }}
+                                                        </strong>
+                                                    </span>
+                                                @endif
+                                            </div>
                                         </div>
                                         <!-- 
                                         <div class="col-md-2">              
@@ -397,7 +406,6 @@
 
 
                                 <div class="modal-footer">
-
                                     <!-- SUBMIT BUTTON -->
                                     <button type="button" class="btn btn-info btn-fill pull-left" id="add-form">
                                         Add Item Form
@@ -656,7 +664,7 @@
                                     <div class="row form-group" style="margin-top: 5%">
                                         <div class="col-md-4">              
                                             <label>Item Name</label>
-                                            <input type="text" class="form-control item_name" name="view_item_name" id="view_item_name"required> 
+                                            <input type="text" class="form-control item_name" name="view_item_name" id="view_item_name" required> 
                                         </div>
 
                                             <input type="hidden" class="form-control" name="item_id" id="item_id">
@@ -995,8 +1003,19 @@
     <!-- Light Bootstrap Table DEMO methods, don't include it in your project! -->
     <script src="/js/demo.js"></script>
 
-    
+    <!-- VALIDATION ERRORS -->
     <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            if ({!!count($errors->addRepair)!!} > 0)
+                $("#addModal").modal();  
+
+            if ({!!count($errors->addUn)!!} > 0)
+                $("#addModal-un").modal();    
+        });
+    </script>
+
+    <script>
+
         // LOAD LIST OF SUPPLIED ITEMS ONCE A SUPPLIER IS CHOSEN - UNDAMAGED//
         $(document).ready(function(){ 
 
@@ -1005,6 +1024,7 @@
             $('#supplier_name').click(function() {
                 var id = document.getElementById("supplier_name");
                 
+                var options = "";
                 $('.item_name').empty();
                 if (id && id.value) {
                     var value = $('#supplier_name').val();
@@ -1036,6 +1056,13 @@
                             "<select class='form-control item_name' name='supply_name[]' id='item-row-"+i+"'  required>"+
                                 
                             "</select>"+ 
+                            "@if ($errors->addUn->has('supply_name'))"+
+                                "<span class='help-block'>"+
+                                    "<strong>"+
+                                        "{{ $errors->addUn->first('supply_name') }}"+
+                                    "</strong>"+
+                                "</span>"+
+                            "@endif"+
                         "</div>"+
 
                         // "<div class='col-md-2'>"+             
@@ -1104,6 +1131,13 @@
                             // "<label>Item Name</label>"+
                                 "<select class='form-control dm_item_name' id='dm-item-row-"+i+"' name='dm_item_name[]' required>"+
                                 "</select> "+ 
+                                "@if ($errors->addRepair->has('dm_item_name'))"+
+                                "<span class='help-block'>"+
+                                    "<strong>"+
+                                        "{{ $errors->addRepair->first('dm_item_name') }}"+
+                                    "</strong>"+
+                                "</span>"+
+                            "@endif"+
                         "</div>"+
 
                         "<div class='col-md-4'>"+    

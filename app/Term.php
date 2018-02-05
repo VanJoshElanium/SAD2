@@ -33,6 +33,11 @@ class Term extends Model
         return $this->hasMany('App\Sale', 'sale_term_id');
     } 
 
+    public function customer_orders()
+    {
+        return $this->hasMany('App\Customer_Order', 'co_term_id');
+    } 
+
     public function inventories()
     {
         return $this->belongsToMany('App\Inventories', 'term_items', 'term_id', 'inventory_id');
