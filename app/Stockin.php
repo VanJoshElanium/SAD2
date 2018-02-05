@@ -9,7 +9,7 @@ class Stockin extends Model
     protected $primaryKey = 'si_id';
 
     protected $fillable = [
-        'si_date', 'si_inventory_id', 'si_user_id'
+        'si_date', 'si_inventory_id', 'si_user_id,', 'si_qty'
     ];
 
     public function inventory()
