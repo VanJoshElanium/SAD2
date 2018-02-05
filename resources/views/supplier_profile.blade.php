@@ -331,7 +331,7 @@
                         <div class="col-md-12"> 
                             <form method="POST" class="form-horizontal" id="view-edit-profile">
                                 {{ csrf_field() }}
-                                {{method_field('PUT')}}
+                                {{ method_field('PUT')}}
                                 <!-- SUPPLIER NAME & ADDR DETAILS-->                                    
                                 <div class="row form-group">   
                                     <div class="{{$errors->editSupply->has('supply_name') ? ' has-error' : ''}}"> 
@@ -405,7 +405,7 @@
 
                 <div class="modal-footer" id="delete-modal-footer">
                     <form method="POST" class="form-horizontal" id="delete-profile">
-                        {{csrf_field()}}
+                        {{ csrf_field()}}
                         <input type="hidden" name="_method" value="DELETE">
                         <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic">
                             No
@@ -481,7 +481,7 @@
             });
           
             //FORM
-            $("#view-edit-profile").attr("action", id);
+            $("#view-edit-profile").attr("action", "/supplies/" +id);
             
             //MODAL
             $(".modal-title").text = "Edit Supplied Item";; 
@@ -495,7 +495,7 @@
             var id = $(this).data('id');
 
             //FORM
-            $("#delete-profile").attr("action", id);
+            $("#delete-profile").attr("action", "/supplies/" +id);
 
             //MODAL
             $(".modal-title").html = "Remove Supplied Item";

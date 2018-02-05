@@ -245,7 +245,7 @@
                                 <!-- USER NAME DETAILS-->                                    
                                 <div class="row form-group">                   
                                     <div class="{{$errors->has('fname') ? ' has-error' : ''}}"> 
-                                        <div class="col-md-9">    
+                                        <div class="col-md-4">    
                                             <label>First Name</label>
                                             <input type="text" id="fname" class="form-control"  name="fname" required  value="{{ old('fname') }}"> 
                                             @if ($errors->has('fname'))
@@ -259,7 +259,7 @@
                                     </div>
 
                                     <div class="{{$errors->has('mname') ? ' has-error' : ''}}"> 
-                                        <div class="col-md-3"> 
+                                        <div class="col-md-4"> 
                                             <label>M.I.</label>
                                             <input type="text" id="mname" class="form-control" required name="mname" value="{{ old('mname') }}">
                                             @if ($errors->has('mname'))
@@ -271,11 +271,9 @@
                                             @endif                   
                                         </div>      
                                     </div>
-                                </div>
-                                                                            
-                                <div class="row form-group">
+
                                     <div class="{{$errors->has('lname') ? ' has-error' : ''}}">
-                                        <div class="col-md-12">              
+                                        <div class="col-md-4">              
                                             <label>Last Name</label>
                                              <input type="text" id="lname" class="form-control" required name="lname" value="{{ old('lname') }}"> 
                                              @if ($errors->has('lname'))
@@ -353,7 +351,7 @@
                                 <div class="in-sys-details">
                                     <div class="row form-group">
                                         <div class="{{ $errors->has('username') ? ' has-error' : '' }}">
-                                            <div class="col-md-12">    
+                                            <div class="col-md-6">    
                                                 <label>Username</label>
                                                 <input type="text" required name="username" class="form-control" id="username" value="{{ old('username') }}">     
                                                 @if ($errors->has('username'))
@@ -363,11 +361,8 @@
                                                 @endif
                                             </div>
                                         </div>
-                                    </div>
-                                    
-                                    <div class="row form-group">
                                         <div class="{{ $errors->has('password') ? ' has-error' : '' }}">
-                                            <div class="col-md-12">    
+                                            <div class="col-md-6">    
                                                 <label>Password</label>
                                                 <input type="password" class="form-control" name="password" id="password" required value="{{ old('password') }}">
                                                 @if ($errors->has('password'))
@@ -448,7 +443,7 @@
                                 <!-- USER NAME DETAILS-->                                    
                                 <div class="row form-group">                       
                                     <div class="{{$errors->editUser->has('profile_fname') ? ' has-error' : ''}}"> 
-                                        <div class="col-md-9">    
+                                        <div class="col-md-4">    
                                             <label>First Name</label>
                                             <input type="text" id="profile_fname" class="form-control" name="profile_fname">
                                             @if ($errors->editUser->has('profile_fname'))
@@ -462,7 +457,7 @@
                                     </div>
 
                                     <div class="{{$errors->editUser->has('profile_mname') ? ' has-error' : ''}}"> 
-                                        <div class="col-md-3"> 
+                                        <div class="col-md-4"> 
                                             <label>M.I.</label>
                                             <input type="text" id="profile_mname" class="form-control" required name="profile_mname">
                                             @if ($errors->editUser->has('profile_mname'))
@@ -474,11 +469,9 @@
                                             @endif                   
                                         </div>      
                                     </div>
-                                </div>
-                                                                            
-                                <div class="row form-group">
+
                                     <div class="{{$errors->editUser->has('profile_lname') ? ' has-error' : ''}}">
-                                        <div class="col-md-12">              
+                                        <div class="col-md-4">              
                                             <label>Last Name</label>
                                              <input type="text" id="profile_lname" class="form-control" required name="profile_lname"> 
                                              @if ($errors->editUser->has('profile_lname'))
@@ -555,9 +548,9 @@
 
                                 <!-- IN-SYSTEM USER DETAILS -->
                                 <div class="in-sys-details">
-                                    <div class="row form-group">
+                                    <div class="row form-group" style="margin-bottom: 0px">
                                         <div class="{{ $errors->editUser->has('profile_username') ? ' has-error' : '' }}">
-                                            <div class="col-md-12">    
+                                            <div class="col-md-8">    
                                                 <label>Username</label>
                                                 <input type="text" required name="profile_username" class="form-control" id="profile_username">     
                                                 @if ($errors->editUser->has('profile_username'))
@@ -567,13 +560,9 @@
                                                 @endif
                                             </div>
                                         </div>
-                                    </div>
-                                    
-                                    <!--  -->
 
-                                    <div class="row form-group" style="margin-bottom: 0px">
                                         <div class="{{ $errors->editUser->has('profile_user_type') ? ' has-error' : '' }}">
-                                            <div class="col-md-5">
+                                            <div class="col-md-4">
                                                 <label>User Type</label>
                                                 <select class="form-control select" id="profile_user_type" required name="profile_user_type" >
                                                     
@@ -593,20 +582,25 @@
                                                  @endif
                                             </div>                                    
                                         </div>
-
-                                        <div class="col-md-7">
-                                            <!-- SUBMIT BUTTON -->
-                                            <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-edit" style="margin-top: 12%">
-                                                Edit
-                                            </button>
-                                            <div class="clearfix"></div>
-                                        </div>
                                     </div>
+                                    <div class="col-md-12" style="margin-top: 4%">
+                                        <!-- SUBMIT BUTTON -->
+                                        <a id="change-pass-btn" class="change-pass" data-dismiss="modal" data-target="#passwordModal" data-toggle="modal"> 
+                                            Change Password 
+                                        </a>
 
-                                    <a id="change-pass-btn" class="change-pass" data-dismiss="modal" data-target="#passwordModal" data-toggle="modal"> Change Password </a> 
+                                        <button type="submit" class="pull-right btn btn-success btn-fill" id="form-button-edit" >
+                                            Edit
+                                        </button>
+
+                                        <button data-dismiss="modal" type="submit" class= "pull-right btn btn-default" style="margin-right: 3%" >
+                                            Cancel
+                                        </button>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>         
                                 </div>      
-                            </form>   
-                                        
+                            </form>                    
                         </div>
                     </div>
 
@@ -729,6 +723,7 @@
             
             if({!!count($errors->editUser)!!} > 0)
                 $("#view-edit-{{ session()-> get( 'error_id' ) }}").click();
+                // do it heeree, callback JS
 
             if ({!!count($errors->editPass)!!} > 0)
                 $("#passwordModal").modal();   
