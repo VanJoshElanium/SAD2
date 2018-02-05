@@ -34,25 +34,13 @@
             border: 0px solid #888888;
             box-shadow: 5px 5px 8px 5px #888888;
         }
-        tbody.qtty{
-            text-align: center;
-        }
-        tbody.qtty tr td:nth-child(1) {
-            text-align: left;
-        }
-        tbody.qtty tr td:nth-child(2) {
-            text-align: left;
-        }
-        tbody.qtty tr td:last-child{
-            text-align: left;
-        }
     
     </style>
 </head>
 
 <body>
-    <div class="wrapper">
 
+    <div class="wrapper">
         <!-- SIDEBAR -->
         <div class="sidebar" data-color="none" data-image="/images/lol.png">
             <div class="sidebar-wrapper">
@@ -108,6 +96,7 @@
                 </ul>
             </div>
         </div>
+
         <div class="main-panel bgd">
 
             <!-- NAVBAR -->
@@ -141,12 +130,11 @@
                 </div>
             </nav>
 
-            <!-- CONTENTS -->
+            <!-- TAB CONTENTS -->
             <div class="content">
                 <div class="container-fluid">
                     <div class="col-md-12">
-                        <div class="card box">      
-                            
+                        <div class="card box">        
                             <!-- NAVIGATION TABS -->
                             <ul class="nav nav-tabs" role="tablist">
                                 <li role="presentation" class="active">
@@ -175,7 +163,7 @@
                                 <li role="presentation">
                                     <a href="#tl_sales" aria-controls="profile" role="tab" data-toggle="tab">
                                         <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the sales and share calculated in the term.">
-                                            Sales
+                                            Collections
                                         </span>
                                     </a>
                                 </li>
@@ -188,11 +176,10 @@
                                     </a>
                                 </li>
                             </ul>
-
                             <br>
-
                             <!-- NAVTABS CONTENT -->
                             <div class="tab-content">
+
                                 <!-- TERM WORKERS & LOCATION -->
                                 <div role="tabpanel" class="tab-pane fade in active" id="tl_members">
                                     <div class="row">
@@ -256,6 +243,9 @@
                                                         </table>
                                                     </div>
                                                 </div>
+                                                <div style="margin-left: 1%"> 
+                                                    {{$workers->links()}} 
+                                                </div>
                                             </div>
 
                                             <div class="col-md-4">
@@ -297,47 +287,80 @@
                                                         </div>
                                                         <div class="col-md-8">
                                                             <span class="pull-right">
-                                                                <button type="button" data-target="#removeItem" data-toggle="modal" class="btn btn-danger btn-fill" id="add-btn"> 
-                                                                    Remove Item
-                                                                </button>   
-                                                                <button type="button" data-target="#addItem" data-toggle="modal" class="btn btn-success btn-fill" id="add-btn"> 
+                                                                  
+                                                                <button type="button" data-target="#addItem" data-toggle="modal" class="btn btn-success btn-fill"> 
                                                                     Add Item
                                                                 </button>
-                                                                <button type="button" data-target="#updateItem" data-toggle="modal" class="btn btn-info btn-fill" id="add-btn"> 
-                                                                    Update Quantity
+                                                                <button type="button" data-target="#editItem" data-toggle="modal" class="btn btn-info btn-fill" > 
+                                                                    Edit Item
                                                                 </button>
-
-                                                                <button type="button" data-target="#print" data-toggle="modal" class="btn btn-basic btn-fill" id="add-btn"> 
-                                                                    Print
+                                                                <button type="button" data-target="#printItems" data-toggle="modal" class="btn btn-basic btn-fill"> 
+                                                                    Print Items
                                                                 </button> 
                                                             </span>    
                                                         </div>
                                                     </div>
                                                     <div class="content table-responsive table-full-width">
-                                                        <table class="table table-hover table-striped">
+                                                        <table class="table table-hover table-striped" cellspacing="0" width="100%">
                                                             <thead>
+                                                                <th>ID</th>
                                                                 <th>Item Name</th>
+                                                                <th>Supplier Name</th>
                                                                 <th>
-                                                                    <span data-toggle="tooltip" data-placement="bottom" title="Supplier's price added 25%.">
-                                                                    Owner's Price
+                                                                    <span data-toggle="tooltip" data-placement="bottom" title="Original Price + 25%">
+                                                                    Price
                                                                     </span>
                                                                 </th>
-                                                                <th>Original Quantity</th>
-                                                                <th>Damaged Quantity</th>
-                                                                <th>Returns Quantity</th>
-                                                                <th>Sold Quantity</th>
+                                                                <th>Original</th>
+                                                                <th>Damaged</th>
+                                                                <th>Returned</th>
+                                                                <th>Sold</th>
                                                             </thead>
-                                                            <tbody class="qtty">
-                                                                <tr>
-                                                                    <td>Table</td>
-                                                                    <td>&#8369; 250.00</td>
-                                                                    <td>45</td>
-                                                                    <td>4</td>
-                                                                    <td>7</td>
-                                                                    <td>34</td>
+                                                            <tbody>
+                                                                @forelse($term_items as $term_item)
+                                                                <tr style="text-align: left">
+                                                                    <td> 
+                                                                        {{$term_item -> ti_id}}
+                                                                    </td>
+                                                                    <td> 
+                                                                        {{$term_item -> inventory_name}}
+                                                                    </td>
+
+                                                                    <td>
+                                                                        {{$term_item -> supplier_name}}
+                                                                    </td>
+                                                                    <td>
+                                                                        &#8369;{{$term_item -> inventory_price + ($term_item -> inventory_price * 0.25)}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{$term_item->ti_original}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{$term_item->ti_damaged}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{$term_item->ti_returned}}
+                                                                    </td>
+                                                                    <td>
+                                                                        @if($term_item->ti_returned != 0 && $term_item->ti_returned != 0)
+                                                                            {{$term_item->ti_original -($term_item->ti_damaged + $term_item->ti_returned)}}
+                                                                        @else 0
+                                                                        @endif
+                                                                    </td>
+                                                                    <td>
+                                                                        <button type="button" data-target="#removeItem" data-toggle="modal" data-id="{{$term_item->ti_id}}" class="btn btn-sm  btn-danger btn-fill ri_btn"> 
+                                                                            -
+                                                                        </button> 
+                                                                    </td>
                                                                 </tr>
+                                                                @empty
+                                                                    <h3 style="text-align: center"> No items for this term.</h3>
+                                                                @endforelse
                                                             </tbody>
                                                         </table>
+                                                    </div>
+                                                    <div > 
+                                                        {{$term_items->links()}} 
                                                     </div>
                                                 </div>
                                             </div>
@@ -348,24 +371,32 @@
                                                             <p class="category">
                                                                 Number of items
                                                             </p>    
-                                                            <h4 class="title">1</h4>
+                                                            <h4 class="title">
+                                                                {{$total_items}}
+                                                            </h4>
                                                             <br><hr>
 
                                                             <p class="category">
-                                                                Total damaged quantity
+                                                                Total damaged items
                                                             </p>    
-                                                            <h4 class="title">4</h4>
+                                                            <h4 class="title">
+                                                                {{$total_damages}}
+                                                            </h4>
                                                             <br><hr>
 
                                                             <p class="category">
-                                                                Total returned quantity
+                                                                Total returned items
                                                             </p>    
-                                                            <h4 class="title">7</h4>
+                                                            <h4 class="title">
+                                                                {{$total_returns}}
+                                                            </h4>
                                                             <br><hr>  
 
                                                             <p class="category">
-                                                                Total sold quantity</p>
-                                                            <h4 class="title">34</h4>    
+                                                                Total sold items</p>
+                                                            <h4 class="title">
+                                                                {{$total_sales}}
+                                                            </h4>    
                                                             <hr>    
                                                         </center>
                                                     </div>
@@ -433,6 +464,9 @@
                                                         </table>
                                                     </div>
                                                 </div>
+                                                <div style="margin-left: 1%"> 
+                                                    {{$expenses->links()}} 
+                                                </div>
                                             </div>
 
                                             <div class="col-md-4">
@@ -458,6 +492,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="col-md-8">
+
                                                 <div class="card">
                                                     <div class="header">
                                                         <div class="col-md-4">
@@ -542,45 +577,62 @@
                                                         <div class="header">
                                                             <div class="row">
                                                                 <div class="col-md-6">
-                                                                    <h4 class="title">List of unpaid customers</h4>
-                                                                    <p class="category">This list contains the unpaid customers.</p>
+                                                                    <h4 class="title">Unpaid Customers</h4>
+                                                                    <p class="category">Customers whose payments have not yet been collected.</p>
                                                                 </div>
 
                                                                 <div class="col-md-2 pull-right">
-                                                                    <button data-target="#addC" id="" data-toggle="modal" data-id='' class="edit-btn btn btn-success btn-fill pull-right">
-                                                                        Add customer 
+                                                                    <button data-target="#addCustomer
+                                                                    " id="" data-toggle="modal" data-id='' class="edit-btn btn btn-success btn-fill pull-right">
+                                                                        Add Customer 
                                                                     </button>
                                                                 </div>
                                                             </div>
-
                                                         </div>
                                                         <div class="content table-responsive table-full-width">
                                                             <table class="table table-hover table-striped">
                                                                 <thead>
                                                                     <th>No.</th>
-                                                                    <th>Date</th>
-                                                                    <th>Contact</th>
-                                                                    <th>Payment Amount</th>
-                                                                    <th>Edit</th>
-                                                                    <th>View</th>
+                                                                    <th>Name</th>
+                                                                    <th>Contact Number</th>
+                                                                    <th>Total Payable</th>
+                                                                    <!-- <th>Edit</th>
+                                                                    <th>View</th> -->
                                                                 </thead>
                                                                 <tbody>
+                                                                @forelse ($unpaid_customers as $unpaid_customer)
                                                                     <tr>
-                                                                        <td>1</td>
-                                                                        <td>02/12/17</td>
-                                                                        <td>09XXXXXXXXX</td><!--Add an if if it still not ended indicates as "Has not ended or set yet"-->
-                                                                        <td>&#8369; <span>2,000.00</span></td>
-                                                                        <td>
-                                                                        <button data-target="#editC" id="" data-toggle="modal" data-id='' class="edit-btn btn-sm btn btn-success btn-fill">
-                                                                        Edit 
-                                                                    </button>
+                                                                        <td> 
+                                                                            {{$unpaid_customer -> customer_id}} </td>
+                                                                        <td> 
+                                                                            {{$unpaid_customer -> customer_fname}} 
+                                                                            {{$unpaid_customer -> customer_mname}}. {{$unpaid_customer -> customer_lname}}
+                                                                        </td>
+                                                                        <td> 
+                                                                            {{$unpaid_customer -> customer_cnum}} 
                                                                         </td>
                                                                         <td>
-                                                                        <button data-target="#viewC" data-toggle="modal" data-id='' class="btn btn-sm btn-info btn-fill">
-                                                                            View
-                                                                        </button>
+                                                                            &#8369;{{$unpaid_customer -> total_payable}}
+                                                                        </td>
+                                                                        <td>
+                                                                            <button data-target="#editCustomer" data-toggle="modal" id="viewCustomer-{{$unpaid_customer -> co_id}}" data-id='{{$unpaid_customer -> co_id}}' class="viewCustomer_btn btn btn-primary btn-fill">
+                                                                                View
+                                                                            </button>
+                                                                        </td>
+                                                                        <td>
+                                                                            <button data-target="#payCustomer" data-toggle="modal" data-id='{{$unpaid_customer -> co_id}}' class="payCustomer_btn btn btn-info btn-fill">
+                                                                                Paid
+                                                                            </button>
+                                                                        </td>
+                                                                        <td>
+                                                                            <button data-target="#removeCustomer" data-toggle="modal" data-id='{{$unpaid_customer -> co_id}}' class="btn btn-danger btn-fill removeCustomer_btn">
+                                                                                Remove
+                                                                            </button>
                                                                         </td>
                                                                     </tr>
+                                                                @empty
+                                                                    <h3> No unpaid customers for this term</h3>
+                                                                @endforelse
                                                                 </tbody>
                                                             </table>
                                                         </div>
@@ -592,8 +644,8 @@
                                                         <div class="header">
                                                             <div class="row">
                                                                 <div class="col-md-6">
-                                                                    <h4 class="title">List of paid customers</h4>
-                                                                    <p class="category">This list contains the unpaid customers.</p>
+                                                                    <h4 class="title">Paid Customers</h4>
+                                                                    <p class="category">Customers whose payments have already been collected.</p>
                                                                 </div>
                                                                 <!--Just leaving this "div" part incase if we add some buttons and stuff-->
                                                                 <div class="col-md-2 pull-right">
@@ -606,23 +658,35 @@
                                                             <table class="table table-hover table-striped">
                                                                 <thead>
                                                                     <th>No.</th>
-                                                                    <th>Date</th>
-                                                                    <th>Contact</th>
-                                                                    <th>Payment Amount</th>
+                                                                    <th>Name</th>
+                                                                    <th>Date Paid</th>
+                                                                    <th>Total Paid</th>
                                                                     <th>View</th>
                                                                 </thead>
                                                                 <tbody>
+                                                                @forelse($paid_customers as $paid_customer)
                                                                     <tr>
-                                                                        <td>1</td>
-                                                                        <td>02/12/17</td>
-                                                                        <td>09XXXXXXXXX</td><!--Add an if if it still not ended indicates as "Has not ended or set yet"-->
-                                                                        <td>&#8369; <span>2,000.00</span></td>
+                                                                        <td>{{$paid_customer -> customer_id}}</td>
+                                                                        <td>
+                                                                            {{$paid_customer -> customer_fname}}
+                                                                            {{$paid_customer -> customer_mname}}.
+                                                                            {{$paid_customer -> customer_lname}}
+                                                                        </td>
+                                                                        <td>
+                                                                            {{$paid_customer -> co_collect_date}}
+                                                                        </td>
+                                                                        <td>
+                                                                            &#8369; {{$paid_customer -> total_payable}}
+                                                                        </td>
                                                                         <td>
                                                                         <button data-target="#viewC" id="" data-toggle="modal" data-id='' class="edit-btn btn-sm btn btn-info btn-fill">
-                                                                        View 
-                                                                    </button>
+                                                                            View 
+                                                                        </button>
                                                                         </td>
                                                                     </tr>
+                                                                    @empty
+                                                                        <h3> No paid customers for this term</h3>
+                                                                    @endforelse
                                                                 </tbody>
                                                             </table>
                                                         </div>
@@ -640,86 +704,86 @@
         </div>
     </div>
 
-<!--MODALS-->
+    <!--MODALS-->
 
-<!--Add Peddler-->
-<div class="modal fade" role="dialog" id="addPeddler">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <center>
-                    <h4 class="modal-title">Add Peddler</h4>
-                </center>
-            </div>
-            
-            <form method="POST" class="form-horizontal" action="/workers">
-                {{ csrf_field() }}
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12">                   
-                            <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">                         
-                            <div class="row form-group">                       
-                                <div class="{{ $errors->addPeddler->has('peddler') ? ' has-error' : '' }}"> 
-                                    <div class="col-md-8">   
-                                        <!--Acquires the list of workers within users table-->
-                                        <label class="sel1">Peddler Name:</label>
-                                        <select class="form-control" name="peddler" required id="peddler">
-                                            <option value="" data-hidden="true" selected="selected">
-                                            </option>
-                                            @foreach($a_peddlers as $a_peddler)
-                                                <option value="{{$a_peddler->user_id}}">
-                                                    {{$a_peddler->fname}}&nbsp
-                                                    {{$a_peddler->mname}}.
-                                                    {{$a_peddler->lname}}
+    <!--ADD PEDDLER-->
+    <div class="modal fade" role="dialog" id="addPeddler">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <center>
+                        <h4 class="modal-title">Add Peddler</h4>
+                    </center>
+                </div>
+                
+                <form method="POST" class="form-horizontal" action="/workers">
+                    {{ csrf_field() }}
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">                   
+                                <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">                         
+                                <div class="row form-group">                       
+                                    <div class="{{ $errors->addPeddler->has('peddler') ? ' has-error' : '' }}"> 
+                                        <div class="col-md-8">   
+                                            <!--Acquires the list of workers within users table-->
+                                            <label class="sel1">Peddler Name:</label>
+                                            <select class="form-control" name="peddler" required id="peddler">
+                                                <option value="" data-hidden="true" selected="selected">
                                                 </option>
-                                            @endforeach
-                                        </select>           
-                                        @if ($errors->addPeddler->has('peddler'))
-                                            <span class="help-block">
-                                                <strong>{{ $errors->addPeddler->first('peddler') }}</strong>
-                                            </span>
-                                        @endif                   
+                                                @foreach($a_peddlers as $a_peddler)
+                                                    <option value="{{$a_peddler->user_id}}">
+                                                        {{$a_peddler->fname}}&nbsp
+                                                        {{$a_peddler->mname}}.
+                                                        {{$a_peddler->lname}}
+                                                    </option>
+                                                @endforeach
+                                            </select>           
+                                            @if ($errors->addPeddler->has('peddler'))
+                                                <span class="help-block">
+                                                    <strong>{{ $errors->addPeddler->first('peddler') }}</strong>
+                                                </span>
+                                            @endif                   
+                                        </div>
                                     </div>
-                                </div>
-                                                    
-                                <div class="{{ $errors->addPeddler->has('position') ? ' has-error' : '' }}"> 
-                                    <div class="col-md-4">    
-                                        <label class="sel1">Position:</label>
-                                        <select name="position" required class="form-control" id="position">
-                                            <option value="" selected="selected"></option>
-                                            <option value="1">Team Leader</option>
-                                            <option value="2">Permanent Staff</option>
-                                            <option value="3">Temporary Staff</option>  
-                                        </select>
-                                        @if ($errors->addPeddler->has('position'))
-                                            <span class="help-block">
-                                                <strong>
-                                                    {{ $errors->addPeddler->first('position') }}
-                                                </strong>
-                                            </span>
-                                        @endif 
+                                                        
+                                    <div class="{{ $errors->addPeddler->has('position') ? ' has-error' : '' }}"> 
+                                        <div class="col-md-4">    
+                                            <label class="sel1">Position:</label>
+                                            <select name="position" required class="form-control" id="position">
+                                                <option value="" selected="selected"></option>
+                                                <option value="1">Team Leader</option>
+                                                <option value="2">Permanent Staff</option>
+                                                <option value="3">Temporary Staff</option>  
+                                            </select>
+                                            @if ($errors->addPeddler->has('position'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{ $errors->addPeddler->first('position') }}
+                                                    </strong>
+                                                </span>
+                                            @endif 
+                                        </div>
                                     </div>
-                                </div>
-                            </div>     
+                                </div>     
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic">
-                        Cancel
-                    </button>
-                    <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-add">
-                      Add
-                    </button>      
-                </div>
-            </form>
+                    <div class="modal-footer">
+                        <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-add">
+                          Add
+                        </button>      
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-<!--Remove peddler-->
-<div class="modal fade" role="dialog" id="removePeddler">
+    <!--REMOVE PEDDLER-->
+    <div class="modal fade" role="dialog" id="removePeddler">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -728,13 +792,12 @@
                 </div>
                      
                 <form method="POST" class="form-horizontal" id="removePeddler_form">  
-                {{csrf_field()}}
-                <input type="hidden" name="_method" value="DELETE">
+                    {{csrf_field()}}
+                    <input type="hidden" name="_method" value="DELETE">
 
-                <div class="modal-body">
-                    <div id="view-edit-content" class="row">
-                        <!-- Term edit form-->
-                        <div class="col-md-12"> 
+                    <div class="modal-body">
+                        <div id="view-edit-content" class="row">
+                            <div class="col-md-12"> 
                                 <div class="row form-group">                       
                                     <div class=""> 
                                         <div class="col-md-12">   
@@ -745,898 +808,1090 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="modal-footer">
                             <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancel</button>
                           <!--ADD New Term button-->
                           <button type="submit" class="btn btn-bg btn-success btn-fill">Remove</button>   
                     </div>
-                    </form>
-                </div>
+                </form>
             </div>
-        </div><!--End  div of modal-->
-
-<!--Edit peddler-->
-<div class="modal fade" role="dialog" id="editPeddler">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Edit Peddler</h4>
-            </div>
-            
-            <form method="POST" class="form-horizontal" id="editPeddler_form">  
-                {{csrf_field()}}
-                {{method_field('PUT')}} 
-
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12">                   
-                            <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">                         
-                            <div class="row form-group">                       
-                                <div class="{{ $errors->editPeddler->has('edit_peddler') ? ' has-error' : '' }}"> 
-                                    <div class="col-md-8">   
-                                        <!--Acquires the list of workers within users table-->
-                                        <label class="sel1">Peddler Name:</label>
-                                        <select class="form-control" name="edit_peddler" required id="edit_peddler" disabled="disabled" required>
-                                            @foreach($peddlers as $peddler)
-                                                <option value="{{$a_peddler->user_id}}">
-                                                    {{$peddler->fname}}&nbsp
-                                                    {{$peddler->mname}}.
-                                                    {{$peddler->lname}}
-                                                </option>
-                                            @endforeach
-                                        </select>           
-                                        @if ($errors->editPeddler->has('edit_peddler'))
-                                            <span class="help-block">
-                                                <strong>{{ $errors->editPeddler->first('edit_peddler') }}</strong>
-                                            </span>
-                                        @endif                   
-                                    </div>
-                                </div>
-                                                    
-                                <div class="{{ $errors->editPeddler->has('edit_position') ? ' has-error' : '' }}"> 
-                                    <div class="col-md-4">    
-                                        <label class="sel1">Position:</label>
-                                        <select name="edit_position" required class="form-control" id="edit_position" required>
-                                            <option value="1">Team Leader</option>
-                                            <option value="2">Permanent Staff</option>
-                                            <option value="3">Temporary Staff</option>  
-                                        </select>
-                                        @if ($errors->editPeddler->has('edit_position'))
-                                            <span class="help-block">
-                                                <strong>
-                                                    {{ $errors->editPeddler->first('edit_position') }}
-                                                </strong>
-                                            </span>
-                                        @endif 
-                                    </div>
-                                </div>
-                            </div>     
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">
-                        Cancel
-                    </button>
-                    <button type="submit" class="btn btn-bg btn-success btn-fill" >
-                        Edit
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
-</div>
 
-<!--Remove Item-->
-<div class="modal fade" role="dialog" id="removeItem">
+    <!--EDIT PEDDLER-->
+    <div class="modal fade" role="dialog" id="editPeddler">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Edit Peddler</h4>
+                </div>
+                
+                <form method="POST" class="form-horizontal" id="editPeddler_form">  
+                    {{csrf_field()}}
+                    {{method_field('PUT')}} 
+
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">                   
+                                <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">                         
+                                <div class="row form-group">                       
+                                    <div class="{{ $errors->editPeddler->has('edit_peddler') ? ' has-error' : '' }}"> 
+                                        <div class="col-md-8">   
+                                            <!--Acquires the list of workers within users table-->
+                                            <label class="sel1">Peddler Name:</label>
+                                            <select class="form-control" name="edit_peddler" required id="edit_peddler" disabled="disabled" required>
+                                                @foreach($peddlers as $peddler)
+                                                    <option value="{{$peddler->user_id}}">
+                                                        {{$peddler->fname}}&nbsp
+                                                        {{$peddler->mname}}.
+                                                        {{$peddler->lname}}
+                                                    </option>
+                                                @endforeach
+                                            </select>           
+                                            @if ($errors->editPeddler->has('edit_peddler'))
+                                                <span class="help-block">
+                                                    <strong>{{ $errors->editPeddler->first('edit_peddler') }}</strong>
+                                                </span>
+                                            @endif                   
+                                        </div>
+                                    </div>
+                                                        
+                                    <div class="{{ $errors->editPeddler->has('edit_position') ? ' has-error' : '' }}"> 
+                                        <div class="col-md-4">    
+                                            <label class="sel1">Position:</label>
+                                            <select name="edit_position" required class="form-control" id="edit_position" required>
+                                                <option value="1">Team Leader</option>
+                                                <option value="2">Permanent Staff</option>
+                                                <option value="3">Temporary Staff</option>  
+                                            </select>
+                                            @if ($errors->editPeddler->has('edit_position'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{ $errors->editPeddler->first('edit_position') }}
+                                                    </strong>
+                                                </span>
+                                            @endif 
+                                        </div>
+                                    </div>
+                                </div>     
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-bg btn-success btn-fill" >
+                            Edit
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--REMOVE ITEM-->
+    <div class="modal fade" role="dialog" id="removeItem">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Remove Item</h4>
                 </div>
-                                    
-                <div class="modal-body">
-                    <div id="view-edit-content" class="row">
-                        <!-- Term edit form-->
-                        <div class="col-md-12"> 
-                            <form method="POST" class="form-horizontal" id="view-edit-profile">      
-                                <!-- Collector initialization-->                                    
+                                        
+                <form method="POST" class="form-horizontal" id="removeItem_form">  
+
+                    {{csrf_field()}}
+                    {{method_field('DELETE')}}
+
+                    <div class="modal-body">
+                        <div id="view-edit-content" class="row">
+                            <div class="col-md-12"> 
                                 <div class="row form-group">                       
-                                    <div class=""> 
-                                        <div class="col-md-8">   
-                                            <!--Picks existing item-->
-                                            <label class="sel1">Item Name:</label>
-                                              <form>
-                                                  <!-- Generate list of item within the existing term.-->
-                                                  <select class="form-control" id="sel1">
-                                                    <option>chair</option>
-                                                  </select>
-                                              </form>
-                                            
-                                                <span class="help-block">
-                                                    <strong>
-                                                        
-                                                    </strong>
-                                                </span>
-                                            
-                                        </div>
-                                    </div>
-                                </div> 
-                            </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                      <center>
-                          <!--ADD New Term button-->
-                          <button type="button" class="btn btn-bg btn-success btn-fill">Remove</button>
-                          <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
-                    </div>
-                </div>
-            </div>
-        </div><!--End  div of modal-->
-
-<!--Add Item-->
-<div class="modal fade" role="dialog" id="addItem">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Add Item</h4>
-                </div>
-                                    
-                <div class="modal-body">
-                    <div id="view-edit-content" class="row">
-                        <!-- Term edit form-->
-                        <div class="col-md-12"> 
-                            <form method="POST" class="form-horizontal" id="view-edit-profile">      
-                                <!-- Collector initialization-->                                    
-                                <div class="row">                       
-                                    <div class=""> 
-                                        <div class="col-md-8">   
-                                            <!--Picks items that are available within the inventory. Only Items that the quantity is greater than 0 can be generated.-->
-                                            <label class="sel1">Item Name:</label>
-                                              <form>
-                                                  <!-- Generate list of item within the existing term.-->
-                                                  <select class="form-control" id="sel1">
-                                                    <option>chair</option>
-                                                  </select>
-                                              </form>
-                                            
-                                                <span class="help-block">
-                                                    <strong>
-                                                        
-                                                    </strong>
-                                                </span>
-                                            
-                                        </div>
-                                    
-                                    <div class="">
-                                        <div class="col-md-6">  
-                                            <label>Collector's price:</label>
-                                            <input type="text" required name="Term_address" id="T_address" class="form-control">
-                                                                                
-                                                <span class="help-block">
-                                                    
-                                                </span>
-                                
-                                        </div>
-                                    </div>
-                                    <div class="">
-                                        <div class="col-md-6">  
-                                            <!--Note: Must not exceed with the existing quantity.-->
-                                            <label>Quantity</label>
-                                            <input type="number" required name="cnum" id="cnum2" class="form-control" value="">
-                                                                                
-                                                <span class="help-block">
-                                                    
-                                                </span>
-                                
-                                        </div>
-                                    </div>  
-                                    </div>
-                                </div> 
-                            </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                      <center>
-                          <!--ADD New Term button-->
-                          <button type="button" class="btn btn-bg btn-success btn-fill">Add</button>
-                          <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
-                    </div>
-                </div>
-            </div>
-        </div><!--End  div of modal--> 
-
-<!--Edit Item-->    
-<div class="modal fade" role="dialog" id="updateItem">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Update Item</h4>
-                </div>
-                                    
-                <div class="modal-body">
-                    <div id="view-edit-content" class="row">
-                        <!-- Term edit form-->
-                        <div class="col-md-12"> 
-                            <form method="POST" class="form-horizontal" id="view-edit-profile">      
-                                <!-- Collector initialization-->                                    
-                                <div class="row">                       
-                                    <div class=""> 
-                                        <div class="col-md-8">   
-                                            <!--Gdenerates Items that exist within this term. -->
-                                            <label class="sel1">Item Name:</label>
-                                              <form>
-                                                  <!-- Generate list of item within the existing term.-->
-                                                  <select class="form-control" id="sel1">
-                                                    <option>chair</option>
-                                                  </select>
-                                              </form>
-                                            
-                                                <span class="help-block">
-                                                    <strong>
-                                                        
-                                                    </strong>
-                                                </span>
-                                            
-                                        </div>
-  
-                                    </div>
-                                </div> 
-                                <div class="row">
-                                    <div class="">
-                                        <div class="col-md-6">  
-                                            <!--Note: Must not exceed with the existing quantity.-->
-                                            <label>Damaged Quantity</label>
-                                            <input type="number" required name="cnum" id="cnum2" class="form-control" value="">
-                                                                                
-                                                <span class="help-block">
-                                                    
-                                                </span>
-                                
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="">
-                                        <div class="col-md-6">  
-                                            <!--Note: Must not exceed with the existing quantity.-->
-                                            <label>Returns Quantity:</label>
-                                            <input type="number" required name="cnum" id="cnum2" class="form-control" value="">
-                                                                                
-                                                <span class="help-block">
-                                                    
-                                                </span>
-                                
-                                        </div>
-                                    </div>  
-                                </div>
-
-                            </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                      <center>
-                          <!--ADD New Term button-->
-                          <button type="button" class="btn btn-bg btn-success btn-fill">Update</button>
-                          <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
-                    </div>
-                </div>
-            </div>
-        </div><!--End  div of modal-->
-
-<!--Add Expense-->   
-<div class="modal fade" role="dialog" id="addExpense">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Add Expense</h4>
-            </div>
-                             
-            <form method="POST" class="form-horizontal" id="addExpense_form" action="/expenses">   
-                {{csrf_field()}} 
-
-                <!-- TERM_ID -->
-                <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">
-
-                <div class="modal-body">
-                    <div id="view-add-content" class="row">                                 
-                        <div class="row form-group col-md-12">
-                            <div class="{{$errors->addExpense->has('add_exp_name') ? ' has-error' : ''}}"> 
-                                <div class="col-md-8">  
-                                    <label>Expense Name</label>
-                                    <input class="form-control" type="text" id="add_exp_name" name="add_exp_name" required> 
-                                    @if ($errors->addExpense->has('add_exp_name'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->addExpense->first('add_exp_name') }}</strong>
-                                        </span>
-                                    @endif   
-                                </div>
-                            </div>
-
-                            <div class="{{$errors->addExpense->has('add_exp_amt') ? ' has-error' : ''}}"> 
-                                <div class="col-md-4">  
-                                    <label>Expense Amount</label>
-                                    <input type="number" required name="add_exp_amt" id="add_exp_amt" class="form-control" required>
-                                    @if ($errors->addExpense->has('add_exp_amt'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->addExpense->first('exit_exp_amt') }}</strong>
-                                        </span>
-                                    @endif
-                                </div>
-                            </div> 
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                      <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">    Cancel
-                      </button>
-                      <button type="submit" class="btn btn-bg btn-success btn-fill">Add</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!--Edit Expense--> 
-<div class="modal fade" role="dialog" id="editExpense">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Edit Expense</h4>
-            </div>
-                             
-            <form method="POST" class="form-horizontal" id="editExpense_form">   
-
-                {{csrf_field()}}
-                {{method_field('PUT')}}  
-
-                <!-- TERM_ID -->
-                <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">
-
-                <div class="modal-body">
-                    <div id="view-edit-content" class="row">                                 
-                        <div class="row form-group col-md-12">
-                            <div class="{{$errors->editExpense->has('edit_exp_name') ? ' has-error' : ''}}"> 
-                                <div class="col-md-8">  
-                                    <label>Expense Name</label>
-                                    <input class="form-control" type="text" id="edit_exp_name" name="edit_exp_name" required> 
-                                    @if ($errors->editExpense->has('edit_exp_name'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->editExpense->first('edit_exp_name') }}</strong>
-                                        </span>
-                                    @endif   
-                                </div>
-                            </div>
-                        
-                            <div class="{{$errors->editExpense->has('edit_exp_amt') ? ' has-error' : ''}}"> 
-                                <div class="col-md-4">  
-                                    <label>Expense Amount</label>
-                                    <input type="number" required name="edit_exp_amt" id="edit_exp_amt" class="form-control" required>
-                                    @if ($errors->editExpense->has('edit_exp_amt'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->editExpense->first('exit_exp_amt') }}</strong>
-                                        </span>
-                                    @endif
-                                </div>
-                            </div> 
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                      <button type="button" class="btn btn-bg btn-default" data-dismiss="modal"> Cancel
-                      </button>
-                      <button type="submit" class="btn btn-bg btn-success btn-fill">Edit</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!--Remove Expense-->
-<div class="modal fade" role="dialog" id="removeExpense">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Remove Expense</h4>
-            </div>
-                          
-            <form method="POST" class="form-horizontal" id="removeExpense_form">
-
-                {{csrf_field()}}
-                {{method_field('DELETE')}}
-
-                <div class="modal-body">
-                    <div id="view-edit-content" class="row">
-                        <div class="col-md-12">                                     
-                            <div class="row form-group">                       
-                                <div class=""> 
                                     <div class="col-md-12">   
-                                        You are about to remove an expense from this term. Do you want to proceed?
+                                        You are about to remove an item from this term. Do you want to proceed?
                                     </div>
                                 </div>
-                            </div> 
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                        <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">No
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-bg btn-success btn-fill">Remove</button>   
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--ADD ITEM-->
+    <div class="modal fade" role="dialog" id="addItem">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"> 
+                        <center> Add Term Item </center>
+                    </h4>
+                </div>             
+                <form method="POST" class="form-horizontal" id="addItem_form" action="/term_items">   
+                    {{csrf_field()}} 
+                    <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">
+
+                    <div class="modal-body">
+                        <div id="view-edit-content" class="row">
+                            <div class="col-md-12">                                 
+                                <div class="row form-group">
+                                    <div class="{{ $errors->addItem->has('add_ti_date') ? ' has-error' : '' }}">
+                                        <div class="col-md-6">
+                                            <label>Stock Out</label>
+                                            <input type="datetime-local" id="add_ti_date" class="form-control"  name="add_ti_date" required value="{{App\Inventory::currdate()}}"> 
+                                                                                
+                                            @if ($errors->addItem->has('add_ti_date'))
+                                                <span class="help-block">
+                                                    <strong>{{ $errors->addItem->first('add_ti_date') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div> 
+                                </div>
+                                <div id="item-form"> 
+                                    <div class="row form-group">   
+                                        <div class="{{$errors->addItem->has('add_ti_item_name') ? ' has-error' : ''}}"> 
+                                            <div class="col-md-8">              
+                                                <label>Item Name</label>
+                                                <select  class="form-control" id="add_ti_item_name" name="add_ti_item_name[]" required> 
+                                                    <option value="" selected> </option>
+                                                    @foreach($a_items as $a_item)
+                                                        <option value='{{$a_item -> inventory_id}}'> 
+                                                            {{$a_item -> supplier_name}}: {{$a_item -> inventory_name}} &#8369; {{$a_item -> inventory_price + ($a_item -> inventory_price * 0.25)}}
+                                                        </option>
+                                                    @endforeach
+                                                </select> 
+                                                @if ($errors->addItem->has('add_ti_item_name'))
+                                                    <span class="help-block">
+                                                        <strong>
+                                                            {{ $errors->addItem->first('add_ti_item_name') }}
+                                                        </strong>
+                                                    </span>
+                                                @endif
+                                                <input type="hidden" name="input-item-name" value="1">
+                                            </div>
+                                        </div>
+                                        <div class="{{$errors->addItem->has('add_ti_qty') ? ' has-error' : ''}}">
+                                            <div class="col-md-2">              
+                                                <label>Quantity</label>
+                                                <input type="number" class="form-control" name="add_ti_qty[]" id="add_ti_qty" required>
+                                                @if ($errors->addItem->has('add_ti_qty'))
+                                                    <span class="help-block">
+                                                        <strong>
+                                                            {{ $errors->addItem->first('add_ti_qty') }}
+                                                        </strong>
+                                                    </span>
+                                                @endif
+                                                <input type="hidden" name="input-item-qty" value="1">
+                                            </div>
+                                        </div>
+                                    </div>   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info btn-fill pull-left" id="add-form">
+                            Add Item Form
                         </button>
 
-                        <button type="submit" class="btn btn-bg btn-success btn-fill">Yes
-                        </button>         
+                        <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">
+                            Cancel
+                        </button>
+
+                        <button type="submit" class="btn btn-bg btn-success btn-fill">
+                            Add Item/s
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div> 
+
+    <!--EDIT ITEM-->    
+    <div class="modal fade" role="dialog" id="editItem">
+        <div class="modal-dialog  modal-md">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <center> <h4 class="modal-title">Edit Item</h4> </center>
                 </div>
-            </form>
+                                    
+                <form method="POST" class="form-horizontal" id="editItem_form" action="/term_items/1">      
+                    {{csrf_field()}}
+                    {{method_field('PUT')}}
+                    <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">
+
+                    <div class="modal-body">
+                        <div id="view-edit-content" class="row">
+                            <div class="col-md-12">
+                                <div class="row form-group">
+                                    <div class="{{ $errors->editItem->has('edit_ti_item_name') ? ' has-error' : '' }}">
+                                        <div class="col-md-8">   
+                                            <label>Item Name</label>
+                                            <select  class="form-control" id="edit_ti_item_name" name="edit_ti_item_name" required value="{{ old('edit_ti_item_name') }}"> 
+                                                <option value="" selected> </option>
+                                                @foreach($term_items as $term_item)
+                                                    <option value='{{$term_item -> ti_id}}'> 
+                                                        {{$term_item -> supplier_name}}: {{$term_item -> inventory_name}} &#8369; {{$a_item -> inventory_price + ($term_item -> inventory_price * 0.25)}}
+                                                    </option>
+                                                @endforeach
+                                            </select> 
+                                            @if ($errors->editItem->has('edit_ti_item_name'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{$errors->addItem->first('edit_ti_item_name')}}
+                                                    </strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="{{ $errors->editItem->has('edit_item_original') ? ' has-error' : '' }}">
+                                        <div class="col-md-4">
+                                            <label>Original Qty</label>
+                                            <input  class="form-control" type="number" id="edit_item_original" name="edit_item_original" required value="{{ old('edit_item_original') }}">
+                                            @if ($errors->editItem->has('edit_item_original'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{$errors->editItem->first('edit_item_original')}}
+                                                    </strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div> 
+
+                                <div class="row form-group">
+                                    <div class="{{ $errors->editItem->has('edit_item_returns') ? ' has-error' : '' }}">
+                                        <div class="col-md-6">
+                                            <label>Returned Qty</label>
+                                            <input  class="form-control" type="number" id="edit_item_returns" name="edit_item_returns" required value="{{ old('edit_item_returns') }}">
+                                            @if ($errors->editItem->has('edit_item_returns'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{$errors->editItem->first('edit_item_returns')}}
+                                                    </strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="{{ $errors->editItem->has('edit_item_damages') ? ' has-error' : '' }}">
+                                        <div class="col-md-6">  
+                                            <label class="sel1">Damaged Qty</label>
+                                            <input class="form-control" type="number" id="edit_item_damages" name="edit_item_damages" value="{{ old('edit_item_returns') }}">
+                                            @if ($errors->editItem->has('edit_item_damages'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{$errors->dditItem->first('edit_item_damages')}}
+                                                    </strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" id="editItem_btn" class="btn btn-bg btn-success btn-fill">Edit</button>  
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-<!--Add Collection-->
-<div class="modal fade" role="dialog" id="addCollection">
+    <!--ADD EXPENSE-->   
+    <div class="modal fade" role="dialog" id="addExpense">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Add Collection</h4>
+                    <h4 class="modal-title">Add Expense</h4>
                 </div>
-                                    
-                <div class="modal-body">
-                    <div id="view-edit-content" class="row">
-                        <div class="col-md-12"> 
-                            <form method="POST" class="form-horizontal" id="view-edit-profile">                                        
-                                             
-                                    <div class="">
-                                <div class="row form-group">
-                                    <div class="">
-                                            <div class="col-md-6">
-                                                <label>Date</label>
-                                                <!--I think this should be initialized for current date rather than adding this manualy? Just incase I'm putting this.-->
-                                                <input name="initialTerm_Date"  id="initT_Date" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'">
-                                                                                    
-                                                    <span class="help-block">
-                                                        <strong>  </strong>
-                                                    </span>
-                                            
-                                            </div>
-                                    </div> 
-                                </div> 
-                                        <div class="row">
-                                        <div class="">
-                                            <div class="col-md-6">  
-                                                <label>Collection amount:</label>
-                                                <input type="text" required name="Term_address" id="T_address" class="form-control">
+                                 
+                <form method="POST" class="form-horizontal" id="addExpense_form" action="/expenses">   
+                    {{csrf_field()}} 
 
-                                                    <span class="help-block">
+                    <!-- TERM_ID -->
+                    <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">
 
-                                                    </span>
-
-                                            </div>
-                                        </div> 
-                                        </div>
-                                    <div class="row">
-                                    <div class="">
-                                        <div class="col-md-12">  
-                                            <!--Note: Must not exceed with the existing quantity.-->
-                                            <label>Note:</label>
-                                            <textarea rows="8" required name="cnum" id="cnum2" class="form-control" value=""></textarea>
-                                                                     
-                                                <span class="help-block">
-                                                    
-                                                </span>
-                                
-                                        </div>
+                    <div class="modal-body">
+                        <div id="view-add-content" class="row">                                 
+                            <div class="row form-group col-md-12">
+                                <div class="{{$errors->addExpense->has('add_exp_name') ? ' has-error' : ''}}"> 
+                                    <div class="col-md-8">  
+                                        <label>Expense Name</label>
+                                        <input class="form-control" type="text" id="add_exp_name" name="add_exp_name" required> 
+                                        @if ($errors->addExpense->has('add_exp_name'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->addExpense->first('add_exp_name') }}</strong>
+                                            </span>
+                                        @endif   
                                     </div>
                                 </div>
+
+                                <div class="{{$errors->addExpense->has('add_exp_amt') ? ' has-error' : ''}}"> 
+                                    <div class="col-md-4">  
+                                        <label>Expense Amount</label>
+                                        <input type="number"  name="add_exp_amt" id="add_exp_amt" class="form-control" required>
+                                        @if ($errors->addExpense->has('add_exp_amt'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->addExpense->first('add_exp_amt') }}</strong>
+                                            </span>
+                                        @endif
                                     </div>
-                                
-                            </form>
+                                </div> 
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                      <center>
-                          <!--ADD New Term button-->
-                          <button type="button" class="btn btn-bg btn-success btn-fill">Add</button>
-                          <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
-                    </div>
-                </div>
-            </div>
-        </div><!--End  div of modal-->
 
-<!--Edit Collection-->
-<div class="modal fade" role="dialog" id="editCollection">
+                    <div class="modal-footer">
+                          <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">    Cancel
+                          </button>
+                          <button type="submit" class="btn btn-bg btn-success btn-fill">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--EDIT EXPENSE--> 
+    <div class="modal fade" role="dialog" id="editExpense">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Edit Collection</h4>
+                    <h4 class="modal-title">Edit Expense</h4>
                 </div>
-                                    
-                <div class="modal-body">
-                    <div id="view-edit-content" class="row">
-                        <div class="col-md-12"> 
-                            <form method="POST" class="form-horizontal" id="view-edit-profile">                                        
-                                             
-                                    <div class="">
-                                <div class="row form-group">
-                                    <div class="">
-                                            <div class="col-md-6">
-                                                <label>Date</label>
-                                                <!--I think this should be initialized for current date rather than adding is manualy? Just incase I'm putting this.-->
-                                                <input name="initialTerm_Date"  id="initT_Date" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'">
-                                                                                    
-                                                    <span class="help-block">
-                                                        <strong>  </strong>
-                                                    </span>
-                                            
-                                            </div>
-                                    </div> 
+                                 
+                <form method="POST" class="form-horizontal" id="editExpense_form">   
+
+                    {{csrf_field()}}
+                    {{method_field('PUT')}}  
+
+                    <!-- TERM_ID -->
+                    <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">
+
+                    <div class="modal-body">
+                        <div id="view-edit-content" class="row">                                 
+                            <div class="row form-group col-md-12">
+                                <div class="{{$errors->editExpense->has('edit_exp_name') ? ' has-error' : ''}}"> 
+                                    <div class="col-md-8">  
+                                        <label>Expense Name</label>
+                                        <input class="form-control" type="text" id="edit_exp_name" name="edit_exp_name" required> 
+                                        @if ($errors->editExpense->has('edit_exp_name'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->editExpense->first('edit_exp_name') }}</strong>
+                                            </span>
+                                        @endif   
+                                    </div>
+                                </div>
+                            
+                                <div class="{{$errors->editExpense->has('edit_exp_amt') ? ' has-error' : ''}}"> 
+                                    <div class="col-md-4">  
+                                        <label>Expense Amount</label>
+                                        <input type="number" required name="edit_exp_amt" id="edit_exp_amt" class="form-control" required>
+                                        @if ($errors->editExpense->has('edit_exp_amt'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->editExpense->first('exit_exp_amt') }}</strong>
+                                            </span>
+                                        @endif
+                                    </div>
                                 </div> 
-                                        <div class="row">
-                                        <div class="">
-                                            <div class="col-md-6">  
-                                                <label>Collection amount:</label>
-                                                <input type="text" required name="Term_address" id="T_address" class="form-control">
+                            </div>
+                        </div>
+                    </div>
 
-                                                    <span class="help-block">
+                    <div class="modal-footer">
+                          <button type="button" class="btn btn-bg btn-default" data-dismiss="modal"> Cancel
+                          </button>
+                          <button type="submit" class="btn btn-bg btn-success btn-fill">Edit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-                                                    </span>
+    <!--REMOVE EXPENSE-->
+    <div class="modal fade" role="dialog" id="removeExpense">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Remove Expense</h4>
+                </div>
+                              
+                <form method="POST" class="form-horizontal" id="removeExpense_form">
 
-                                            </div>
-                                        </div> 
+                    {{csrf_field()}}
+                    {{method_field('DELETE')}}
+
+                    <div class="modal-body">
+                        <div id="view-edit-content" class="row">
+                            <div class="col-md-12">                                     
+                                <div class="row form-group">                       
+                                    <div class=""> 
+                                        <div class="col-md-12">   
+                                            You are about to remove an expense from this term. Do you want to proceed?
                                         </div>
                                     </div>
-                                
-                            </form>
+                                </div> 
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                      <center>
-                          <!--ADD New Term button-->
-                          <button type="button" class="btn btn-bg btn-success btn-fill">Save</button>
-                          <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
-                    </div>
-                </div>
-            </div>
-        </div><!--End  div of modal-->
+                            <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">No
+                            </button>
 
-<!--View Note of the item list.-->
-<div class="modal fade" role="dialog" id="viewNote">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Item <span><!--This is where the name of the selectd item is placed.--> </span>Note</h4>
-                </div>
-                                    
-                <div class="modal-body">
-                    <div id="view-edit-content" class="row">
-                        <div class="col-md-12"> 
-                            <form method="POST" class="form-horizontal" id="view-edit-profile">                                                          
-                                <div class="">
+                            <button type="submit" class="btn btn-bg btn-success btn-fill">Yes
+                            </button>         
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--ADD COLLECTION-->
+    <div class="modal fade" role="dialog" id="addCollection">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Add Collection</h4>
+                    </div>
+                                        
+                    <div class="modal-body">
+                        <div id="view-edit-content" class="row">
+                            <div class="col-md-12"> 
+                                <form method="POST" class="form-horizontal" id="view-edit-profile">                                        
+                                                 
+                                        <div class="">
                                     <div class="row form-group">
-                                        <div class="col-md-12">
-                                        <p class="category">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                                        </p><!--The note's contents are here-->
+                                        <div class="">
+                                                <div class="col-md-6">
+                                                    <label>Date</label>
+                                                    <!--I think this should be initialized for current date rather than adding this manualy? Just incase I'm putting this.-->
+                                                    <input name="initialTerm_Date"  id="initT_Date" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'">
+                                                                                        
+                                                        <span class="help-block">
+                                                            <strong>  </strong>
+                                                        </span>
+                                                
+                                                </div>
+                                        </div> 
+                                    </div> 
+                                            <div class="row">
+                                            <div class="">
+                                                <div class="col-md-6">  
+                                                    <label>Collection amount:</label>
+                                                    <input type="text" required name="Term_address" id="T_address" class="form-control">
+
+                                                        <span class="help-block">
+
+                                                        </span>
+
+                                                </div>
+                                            </div> 
+                                            </div>
+                                        <div class="row">
+                                        <div class="">
+                                            <div class="col-md-12">  
+                                                <!--Note: Must not exceed with the existing quantity.-->
+                                                <label>Note:</label>
+                                                <textarea rows="8" required name="cnum" id="cnum2" class="form-control" value=""></textarea>
+                                                                         
+                                                    <span class="help-block">
+                                                        
+                                                    </span>
+                                    
+                                            </div>
+                                        </div>
+                                    </div>
+                                        </div>
+                                    
+                                </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                          <center>
+                              <!--ADD New Term button-->
+                              <button type="button" class="btn btn-bg btn-success btn-fill">Add</button>
+                              <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
+                        </div>
+                    </div>
+                </div>
+            </div><!--End  div of modal-->
+
+    <!--EDIT COLLECTION-->
+    <div class="modal fade" role="dialog" id="editCollection">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Edit Collection</h4>
+                    </div>
+                                        
+                    <div class="modal-body">
+                        <div id="view-edit-content" class="row">
+                            <div class="col-md-12"> 
+                                <form method="POST" class="form-horizontal" id="view-edit-profile">                                        
+                                                 
+                                        <div class="">
+                                    <div class="row form-group">
+                                        <div class="">
+                                                <div class="col-md-6">
+                                                    <label>Date</label>
+                                                    <!--I think this should be initialized for current date rather than adding is manualy? Just incase I'm putting this.-->
+                                                    <input name="initialTerm_Date"  id="initT_Date" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'">
+                                                                                        
+                                                        <span class="help-block">
+                                                            <strong>  </strong>
+                                                        </span>
+                                                
+                                                </div>
+                                        </div> 
+                                    </div> 
+                                            <div class="row">
+                                            <div class="">
+                                                <div class="col-md-6">  
+                                                    <label>Collection amount:</label>
+                                                    <input type="text" required name="Term_address" id="T_address" class="form-control">
+
+                                                        <span class="help-block">
+
+                                                        </span>
+
+                                                </div>
+                                            </div> 
+                                            </div>
+                                        </div>
+                                    
+                                </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                          <center>
+                              <!--ADD New Term button-->
+                              <button type="button" class="btn btn-bg btn-success btn-fill">Save</button>
+                              <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancel</button></center>
+                        </div>
+                    </div>
+                </div>
+            </div><!--End  div of modal-->
+
+    <!--VIEW NOTE OF THE ITEM LIST-->
+    <div class="modal fade" role="dialog" id="viewNote">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Item <span><!--This is where the name of the selectd item is placed.--> </span>Note</h4>
+                    </div>
+                                        
+                    <div class="modal-body">
+                        <div id="view-edit-content" class="row">
+                            <div class="col-md-12"> 
+                                <form method="POST" class="form-horizontal" id="view-edit-profile">                                                          
+                                    <div class="">
+                                        <div class="row form-group">
+                                            <div class="col-md-12">
+                                            <p class="category">
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                                            </p><!--The note's contents are here-->
+                                            </div>
+                                        </div> 
+                                    </div>
+                                </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                          <center>
+                              <!--ADD New Term button-->
+                              <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Return</button></center>
+                        </div>
+                    </div>
+                </div>
+            </div><!--End  div of modal-->
+
+    <!--CUSTOMER VIEW/EDIT MODAL-->  
+    <div class="modal fade" role="dialog" id="editCustomer">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <center> 
+                        <h4 class="modal-title">
+                            Customer Details
+                        </h4> 
+                    </center>
+                </div>    
+
+                <form method="POST" class="form-horizontal" id="editCustomer_form"> 
+                    {{csrf_field()}} 
+                    {{method_field('PUT')}}
+                    <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">      
+                    <div class="modal-body">
+                        <div id="view-edit-content" class="row">
+                            <div class="col-md-12"> 
+                                <div class="row form-group">                   
+                                    <div class="{{$errors->editCustomer->has('fname') ? ' has-error' : ''}}"> 
+                                        <div class="col-md-4">    
+                                            <label>First Name</label>
+                                            <input type="text" id="edit_fname" class="form-control"  name="edit_fname" required  > 
+                                            @if ($errors->editCustomer->has('edit_fname'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{ $errors->editCustomer->first('edit_fname') }}
+                                                    </strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="{{$errors->editCustomer->has('edit_mname') ? ' has-error' : ''}}"> 
+                                        <div class="col-md-4"> 
+                                            <label>M.I.</label>
+                                            <input type="text" id="edit_mname" class="form-control" required name="edit_mname" >
+                                            @if ($errors->editCustomer->has('edit_mname'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{ $errors->editCustomer->first('edit_mname') }}
+                                                    </strong>
+                                                </span>
+                                            @endif                   
+                                        </div>      
+                                    </div>
+
+                                    <div class="{{$errors->editCustomer->has('edit_lname') ? ' has-error' : ''}}">
+                                        <div class="col-md-4">              
+                                            <label>Last Name</label>
+                                             <input type="text" id="edit_lname" class="form-control" required name="edit_lname" > 
+                                             @if ($errors->editCustomer->has('edit_lname'))
+                                                 <span class="help-block">
+                                                    <strong>
+                                                        {{ $errors->editCustomer->first('edit_lname') }}</strong>
+                                                 </span>
+                                            @endif
                                         </div>
                                     </div> 
+                                </div> 
+                                    
+                                <div class="row form-group">
+                                    <div class="{{ $errors->editCustomer->has('edit_edit_cnum') ? ' has-error' : '' }}">
+                                        <div class="col-md-8">  
+                                            <label>Contact Number</label>
+                                            <input type="number" required name="edit_cnum" id="edit_cnum" class="form-control" >
+                                                                                
+                                            @if ($errors->editCustomer->has('edit_cnum'))
+                                                <span class="help-block">
+                                                    <strong>{{$errors->editCustomer->first('edit_cnum')}}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="{{ $errors->editCustomer->has('edit_gender') ? ' has-error' : '' }}">
+                                            <div class="col-md-4">
+                                                <label for="sel1">Gender</label>
+                                                <select class="form-control" name="edit_gender" required id="edit_gender">
+                                                    <option value="" data-hidden="true"  
+                                                        selected="selected">
+                                                    </option>
+
+                                                    <option value="0">
+                                                        Male
+                                                    </option>
+                                                    
+                                                    <option value="1">
+                                                        Female
+                                                    </option>
+                                                </select>         
+                                                @if ($errors->editCustomer->has('edit_gender'))
+                                                    <span class="help-block">
+                                                        <strong>{{ $errors->editCustomer->first('edit_gender') }}</strong>
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
                                 </div>
-                            </form>
+
+                                <div class="row form-group">
+                                    <div class="{{$errors->editCustomer->has('edit_addr') ? ' has-error' : ''}}"> 
+                                        <div class="col-md-12"> 
+                                            <label>Address</label>
+                                            <textarea id="edit_addr" class="form-control" required name="edit_addr" rows='2' cols="30"> </textarea>
+                                            @if ($errors->editCustomer->has('edit_addr'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{ $errors->editCustomer->first('edit_addr') }}
+                                                    </strong>
+                                                </span>
+                                            @endif                   
+                                        </div>      
+                                    </div> 
+                                </div>
+
+                                <hr>
+
+                                <center> <h5> Purchased Items </h5> </center>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <label> Item Name </label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label> Item Qty </label>
+                                        </div>
+                                    </div>
+                                    <div id="purchased-items"></div>   
+                            </div>              
+                        </div>                        
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-edit">
+                            Edit
+                        </button>
+
+                        <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic pull-right" style="margin-right: 2%">
+                            Cancel
+                        </button>              
+                    </div>  
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--CUSTOMER ADD MODAL-->        
+    <div class="modal fade" role="dialog" id="addCustomer">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <center> 
+                        <h4 class="modal-title">
+                            Add Customer
+                        </h4> 
+                    </center>
+                </div>    
+
+                <form method="POST" class="form-horizontal" id="addCustomer_form" action="/customers">
+                    {{csrf_field()}}   
+                    <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">
+
+                    <div class="modal-body">
+                        <div id="view-edit-content" class="row">
+                            <div class="col-md-12"> 
+                                <div class="row form-group">                   
+                                    <div class="{{$errors->addCustomer->has('fname') ? ' has-error' : ''}}"> 
+                                        <div class="col-md-4">    
+                                            <label>First Name</label>
+                                            <input type="text" id="fname" class="form-control"  name="fname" required  value="{{ old('fname') }}"> 
+                                            @if ($errors->addCustomer->has('fname'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{ $errors->addCustomer->first('fname') }}
+                                                    </strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="{{$errors->addCustomer->has('mname') ? ' has-error' : ''}}"> 
+                                        <div class="col-md-4"> 
+                                            <label>M.I.</label>
+                                            <input type="text" id="mname" class="form-control" required name="mname" value="{{ old('mname') }}">
+                                            @if ($errors->addCustomer->has('mname'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{ $errors->addCustomer->first('mname') }}
+                                                    </strong>
+                                                </span>
+                                            @endif                   
+                                        </div>      
+                                    </div>
+
+                                    <div class="{{$errors->addCustomer->has('lname') ? ' has-error' : ''}}">
+                                        <div class="col-md-4">              
+                                            <label>Last Name</label>
+                                             <input type="text" id="lname" class="form-control" required name="lname" value="{{ old('lname') }}"> 
+                                             @if ($errors->addCustomer->has('lname'))
+                                                 <span class="help-block">
+                                                    <strong>
+                                                        {{ $errors->addCustomer->first('lname') }}</strong>
+                                                 </span>
+                                            @endif
+                                        </div>
+                                    </div> 
+                                </div> 
+                                    
+                                <div class="row form-group">
+                                    <div class="{{ $errors->addCustomer->has('supplier_cnum') ? ' has-error' : '' }}">
+                                        <div class="col-md-8">  
+                                            <label>Contact Number</label>
+                                            <input type="number" required name="cnum" id="cnum" class="form-control" value="{{ old('cnum') }}">
+                                                                                
+                                            @if ($errors->addCustomer->has('cnum'))
+                                                <span class="help-block">
+                                                    <strong>{{$errors->addCustomer->first('cnum')}}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="{{ $errors->addCustomer->has('gender') ? ' has-error' : '' }}">
+                                            <div class="col-md-4">
+                                                <label for="sel1">Gender</label>
+                                                <select class="form-control" name="gender" required id="gender">
+                                                    <option value="" data-hidden="true"  
+                                                        selected="selected">
+                                                    </option>
+
+                                                    <option value="0" 
+                                                        @if (old('gender') == 0) 
+                                                            selected="selected"  @endif>
+                                                        Male
+                                                    </option>
+                                                    
+                                                    <option value="1" 
+                                                        @if (old('gender') == 1) 
+                                                            selected="selected" @endif>
+                                                        Female
+                                                    </option>
+                                                </select>         
+                                                @if ($errors->addCustomer->has('gender'))
+                                                    <span class="help-block">
+                                                        <strong>{{ $errors->addCustomer->first('gender') }}</strong>
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                </div>
+
+                                <div class="row form-group">
+                                    <div class="{{$errors->addCustomer->has('addr') ? ' has-error' : ''}}"> 
+                                        <div class="col-md-12"> 
+                                            <label>Address</label>
+                                            <textarea id="addr" class="form-control" required name="addr" rows='2' cols="30" value="{{ old('addr')}}"> </textarea>
+                                            @if ($errors->addCustomer->has('addr'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{ $errors->addCustomer->first('addr') }}
+                                                    </strong>
+                                                </span>
+                                            @endif                   
+                                        </div>      
+                                    </div> 
+                                </div>
+
+                                <hr>
+
+                                <center> <h5> Purchased Items </h5> </center>
+                                <div id="item-form-collector"> 
+                                    <div class="row form-group">   
+                                        <div class="{{$errors->addCustomer->has('item_name') ? ' has-error' : ''}}"> 
+                                            <div class="col-md-8">              
+                                                <label>Item Name</label>
+                                                <select  class="form-control" id="item_name" name="item_name[]" required> 
+                                                    <option value="" selected> </option>
+                                                    @foreach($term_items as $term_item)
+                                                        <option value='{{$term_item->ti_id}}'> 
+                                                            {{$term_item -> supplier_name}}: {{$term_item -> inventory_name}} &#8369; {{$term_item -> inventory_price + ($term_item -> inventory_price * 0.25)}}
+                                                        </option>
+                                                    @endforeach
+                                                </select> 
+                                                @if ($errors->addCustomer->has('item_name'))
+                                                    <span class="help-block">
+                                                        <strong>
+                                                            {{ $errors->addCustomer->first('item_name') }}
+                                                        </strong>
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="{{$errors->addCustomer->has('item_qty') ? ' has-error' : ''}}">
+                                            <div class="col-md-2">              
+                                                <label>Quantity</label>
+                                                <input type="number" class="form-control" name="item_qty[]" id="item_qty" required>
+                                                @if ($errors->addCustomer->has('item_qty'))
+                                                    <span class="help-block">
+                                                        <strong>
+                                                            {{ $errors->addCustomer->first('item_qty') }}
+                                                        </strong>
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>   
+                                </div>
+                            </div>              
+                        </div>                        
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info btn-fill pull-left" id="add-form-customer">
+                            Add Item Form
+                        </button>
+
+                        <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-add">
+                            Add Item/s
+                        </button>
+
+                        <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic pull-right" style="margin-right: 2%">
+                            Cancel
+                        </button>              
+                    </div>  
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--REMOVE CUSTOMERS-->
+    <div class="modal fade" role="dialog" id="removeCustomer">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Remove Customer</h4>
+                </div>
+                              
+                <form method="POST" class="form-horizontal" id="removeCustomer_form">
+
+                    {{csrf_field()}}
+                    {{method_field('DELETE')}}
+
+                    <div class="modal-body">
+                        <div id="view-edit-content" class="row">
+                            <div class="col-md-12">                                     
+                                <div class="row form-group">                       
+                                    <div class=""> 
+                                        <div class="col-md-12">   
+                                            You are about to remove a customer from this term. Do you want to proceed?
+                                        </div>
+                                    </div>
+                                </div> 
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                      <center>
-                          <!--ADD New Term button-->
-                          <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Return</button></center>
-                    </div>
-                </div>
-            </div>
-        </div><!--End  div of modal-->
+                            <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">No
+                            </button>
 
-<!--Customer view Modal-->
-<div class="modal fade" role="dialog" id="viewC" >
+                            <button type="submit" class="btn btn-bg btn-success btn-fill">Yes
+                            </button>         
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--CONFIRM PAYMENT CUSTOMERS-->
+    <div class="modal fade" role="dialog" id="payCustomer">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Confirm Cutomer Payment</h4>
+                </div>
+                              
+                <form method="POST" class="form-horizontal" id="payCustomer_form">
+
+                    {{csrf_field()}}
+                    {{method_field('PUT')}}
+
+                    <div class="modal-body">
+                        <div id="view-edit-content" class="row">
+                            <div class="col-md-12">                                     
+                                <div class="row form-group">                       
+                                    <div class=""> 
+                                        <div class="col-md-12">   
+                                            You are about to confirm that this user has paid. Do you want to proceed?
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                            <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">No
+                            </button>
+
+                            <button type="submit" class="btn btn-bg btn-success btn-fill">Yes
+                            </button>         
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--PRINTING MODAL-->    
+    <div class="modal fade" role="dialog" id="printItems">
             <div class="modal-dialog">
               <!-- Modal content-->
               <div class="modal-content">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  <center><h4 class="modal-title">Customer Details</h4></center>
+                  <center><h4 class="modal-title">Log Details</h4></center>
                 </div>
                 <div class="modal-body">
                     <!--The details of the list. the span tags can also be put with classes and id for the querying.-->
                      <table class="table table-hover">
                         <tbody>
                             <tr>
-                                <td><p><b>ID:</b>  <span> 1 </span></p></td>
-                                <td></td>                       
+                                <td><p><b>Collector:</b>  <span> James B. Debunko </span></p></td>
+                                <td><p><b><span data-toggle="tooltip" data-placement="bottom" title="Indicates when the event was logged.">
+                                    Term date started:</span></b> <span> 01/12/18</span></p></td>                                                
                             </tr>
                             <tr>
                                 <td><p><b><span data-toggle="tooltip" data-placement="bottom" title="Indicates whether it was updated or added.">
-                                    Name:</span></b> <span> David V. Tupas</span></p></td>
-                                <td>
-                                <p><b><span data-toggle="tooltip" data-placement="bottom" title="Indicates when the event was logged.">
-                                    Date:</span></b> 02/12/17</p></td>
-                            </tr>
-                            <tr>
-
+                                    Total quantity:</span></b> <span> 22 </span></p></td>
                                 <td><p><b><span data-toggle="tooltip" data-placement="bottom" title="The one responsible for handling the items in the warehouse.">
-                                    Address:</span></b> <span> 44 Shirley Ave. West Chicago, IL 60185</span></p></td>
-                                               <td><p><b><span data-toggle="tooltip" data-placement="bottom" title="Indicates whether it is from the Terms, new supplies, or damages.">
-                                    Total Amount:</span></b> <span> 2,000.00 </span></p></td>
+                                    Total types of items:</span></b> <span>1</span></p></td>
                             </tr>
                         </tbody>
                     </table>
                 <!--This table contains the list of items-->
-                    <hr>
-                    <h4 class="title">Purhcased items</h4>
                     <table class="table table-hover table-striped">
                         <thead>
                             <th>ID</th>
                             <th>Item Name</th>
                             <th>Quantity</th>
-                            <th>Price</th>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>1</td>
                                 <td>Chair</td>
-                                <td>22</td> 
-                                <td>&#8369; 2,000.00</td>
+                                <td>22</td>                                                  
                             </tr>
                         </tbody>
                     </table>                                 
                 </div>
                 <div class="modal-footer">
                   <center>
+                      <button type="button" class="btn btn-bg btn-info btn-fill" data-dismiss="modal">Print</button>
                       <button type="button" class="btn btn-bg btn-fill" data-dismiss="modal">Back</button>
-                      <!--NOTE: This "Confirm payment" button must be hidden if the customer had paid-->
-                      <button type="button" class="btn edit-btn btn-bg btn-success btn-fill" data-dismiss="modal">Confirm payment</button>
+
                     </center>
                 </div>
               </div>
             </div>
-</div>
-
-<!--Customer Add Modal-->        
-<div class="modal fade" role="dialog" id="addC">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Add Customer Detials</h4>
-                    </div>               
-                    <div class="modal-body">
-                        <div id="view-edit-content" class="row">
-                            <div class="col-md-12"> 
-                                <form method="POST" class="form-horizontal" id="view-edit-profile">                                        
-
-                                        <div class="">
-                                    <div class="row form-group">
-                                        <div class="">
-                                                <div class="col-md-6">
-                                                    <label>Customer Name: </label>
-                                                    <!--I think this should be initialized for current date rather than adding this manualy? Just incase I'm putting this.-->
-                                                    <type="text" required name="Cname" id="T_address" class="form-control">
-
-                                                        <span class="help-block">
-                                                            <strong>  </strong>
-                                                        </span>
-
-                                                </div>
-                                        </div> 
-                                    </div> 
-                                            <div class="row">
-                                            <div class="">
-                                                <div class="col-md-12">  
-                                                    <label>Address:</label>
-                                                    <input type="text" required name="Caddress" id="T_address" class="form-control">
-
-                                                        <span class="help-block">
-
-                                                        </span>
-
-                                                </div>
-                                            </div> 
-                                            </div>
-                                        <div class="row">
-                                        <div class="">
-                                            <div class="col-md-12">  
-                                    <!--Note: the date is auto incirmented just like in the groccery stores' counters, and the amount is auto calculated 
-                                        by summing the list of item purchased. This is not logged, due to what was in the item terms that was totally given out 
-                                        and returned from the inventory only is logged. That is not inventory process but sales, so only inventoy processes are logged.
-                                    -->
-                                                <br><br>
-                                                <center><label>Items bought</label></center>
-                                                    <div id="un-form">
-                                                        <div class="row form-group" style="margin-top: 5%">
-                                                            <div class="col-md-4">              
-                                                                <label>Item Name</label>
-                                                                <select class="form-control item_name" name="supply_name[]" required>
-                                                                </select> 
-                                                            </div>
-                                                            <div class="col-md-2">              
-                                                                <label>Item Qty</label>
-                                                                 <input type="number" class="form-control" required name="inventory_quantity[]"> 
-                                                            </div>
-                                                        </div>                           
-                                                    </div>
-
-                                                    <span class="help-block">
-
-                                                    </span>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                        </div>
-
-                                </form>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                          <center>
-                              <!--ADD New Term button-->
-                              <button type="button" class="btn btn-info btn-fill pull-left" id="add-form">Add Item Form</button>
-                              <button type="button" class="btn btn-bg btn-success btn-fill">Add</button>
-                              <button type="button" class="btn btn-bg btn-fill" data-dismiss="modal">Cancle</button></center>
-                        </div>
-                    </div>
-                </div>
-</div>
-
-<!--Customer Edit Modal-->
-<div class="modal fade" role="dialog" id="editC">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Edit Customer Detials</h4>
-                    </div>               
-                    <div class="modal-body">
-                        <div id="view-edit-content" class="row">
-                            <div class="col-md-12"> 
-                                <form method="POST" class="form-horizontal" id="view-edit-profile">                                        
-
-                                        <div class="">
-                                    <div class="row form-group">
-                                        <div class="">
-                                                <div class="col-md-6">
-                                                    <label>Customer Name: </label>
-                                                    <!--I think this should be initialized for current date rather than adding this manualy? Just incase I'm putting this.-->
-                                                    <type="text" required name="Cname" id="T_address" class="form-control">
-
-                                                        <span class="help-block">
-                                                            <strong>  </strong>
-                                                        </span>
-
-                                                </div>
-                                        </div> 
-                                    </div> 
-                                            <div class="row">
-                                            <div class="">
-                                                <div class="col-md-12">  
-                                                    <label>Address:</label>
-                                                    <input type="text" required name="Caddress" id="T_address" class="form-control">
-
-                                                        <span class="help-block">
-
-                                                        </span>
-
-                                                </div>
-                                            </div> 
-                                            </div>
-                                        <div class="row">
-                                        <div class="">
-                                            <div class="col-md-12">  
-                                                <br><br>
-                                                <center><label>Items bought</label></center>
-                                                    <div id="un-form">
-                                                        <div class="row form-group" style="margin-top: 5%">
-                                                            <div class="col-md-4">              
-                                                                <label>Item Name</label>
-                                                                <select class="form-control item_name" name="supply_name[]" required>
-                                                                </select> 
-                                                            </div>
-                                                            <div class="col-md-2">              
-                                                                <label>Item Qty</label>
-                                                                 <input type="number" class="form-control" required name="inventory_quantity[]"> 
-                                                            </div>
-                                                        </div>                           
-                                                    </div>
-
-                                                    <span class="help-block">
-
-                                                    </span>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                        </div>
-
-                                </form>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                          <center>
-                              <!--ADD New Term button-->
-                              <button type="button" class="btn btn-info btn-fill pull-left" id="add-form">Add Item Form</button>
-                              <button type="button" class="btn btn-bg btn-success btn-fill">Add</button>
-                              <button type="button" class="btn btn-bg btn-fill" data-dismiss="modal">Cancle</button></center>
-                        </div>
-                    </div>
-                </div>
-</div>
-
-<!--Printing Modal-->    
-<div class="modal fade" role="dialog" id="print">
-        <div class="modal-dialog">
-          <!-- Modal content-->
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <center><h4 class="modal-title">Log Details</h4></center>
-            </div>
-            <div class="modal-body">
-                <!--The details of the list. the span tags can also be put with classes and id for the querying.-->
-                 <table class="table table-hover">
-                    <tbody>
-                        <tr>
-                            <td><p><b>Collector:</b>  <span> James B. Debunko </span></p></td>
-                            <td><p><b><span data-toggle="tooltip" data-placement="bottom" title="Indicates when the event was logged.">
-                                Term date started:</span></b> <span> 01/12/18</span></p></td>                                                
-                        </tr>
-                        <tr>
-                            <td><p><b><span data-toggle="tooltip" data-placement="bottom" title="Indicates whether it was updated or added.">
-                                Total quantity:</span></b> <span> 22 </span></p></td>
-                            <td><p><b><span data-toggle="tooltip" data-placement="bottom" title="The one responsible for handling the items in the warehouse.">
-                                Total types of items:</span></b> <span>1</span></p></td>
-                        </tr>
-                    </tbody>
-                </table>
-            <!--This table contains the list of items-->
-                <table class="table table-hover table-striped">
-                    <thead>
-                        <th>ID</th>
-                        <th>Item Name</th>
-                        <th>Quantity</th>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Chair</td>
-                            <td>22</td>                                                  
-                        </tr>
-                    </tbody>
-                </table>                                 
-            </div>
-            <div class="modal-footer">
-              <center>
-                  <button type="button" class="btn btn-bg btn-info btn-fill" data-dismiss="modal">Print</button>
-                  <button type="button" class="btn btn-bg btn-fill" data-dismiss="modal">Back</button>
-
-                </center>
-            </div>
-          </div>
-        </div>
-</div>
+    </div>
 
 </body>
 
@@ -1666,12 +1921,23 @@
             if ({!!count($errors->addExpense)!!} > 0)
                 $("#addExpense").modal();    
             
-            
             if({!!count($errors->editExpense)!!} > 0)
                 $("#expense-view-edit-{{ session()-> get( 'error_id' ) }}").click();
+
+            if ({!!count($errors->addItem)!!} > 0)
+                $("#addItem").modal(); 
+
+            if ({!!count($errors->editItem)!!} > 0)
+                $("#editItem").modal(); 
+
+            if ({!!count($errors->addCustomer)!!} > 0)
+                $("#addCustomer").modal(); 
+
+            if ({!!count($errors->editCustomer)!!} > 0)
+                $("#viewCustomer-{{ session()-> get( 'error_id' ) }}").click(); 
+
         });
     </script>
-
 
     <!-- TERM PEDDLERS -->
     <script>
@@ -1718,7 +1984,6 @@
 
             //FORM
             $("#removeExpense_form").attr("action", "/expenses/" +id);
-
         }); 
 
         //EDIT EXPENSE FROM TERM
@@ -1746,5 +2011,207 @@
             $("#editExpense_form").attr("action", "/expenses/" +id);
         }); 
     </script>
+
+    <!-- TERM ITEMS-->
+    <script>
+        $(document).ready(function(){ 
+            var options = $("#add_ti_item_name > option").clone();
+           
+            var i = 1;
+            // CREATE ADDITIONAL ITEM FORM
+            $('#add-form').click(function() {
+                i++;
+                $('#item-form').append(                                      
+                    "<div class='row form-group' id='ti-form-row-" +i +"'>"+   
+                        "<div class='col-md-8'>" +             
+                            "<select  class='form-control add_ti_item_name' id='ti-row-" +i +"' name='add_ti_item_name[]' required>" + 
+                            "</select>"+  
+                        "</div>"+
+
+                        "<div class='col-md-2'>"+              
+                            "<input type='number' class='form-control' name='add_ti_qty[]' id='add_ti_qty' required>"+
+                        "</div>"+
+
+                        "<div class='col-md-2'>"+ 
+                            "<button id='"+i +"' type='button' class='btn_remove btn btn-danger btn-fill'> - </button>"+
+                        "</div>"+
+                    "</div>"    
+                );
+
+                $('.add_ti_item_name').append(options);
+                $('#ti-row-'+i).val("");
+            });
+
+
+            // REMOVE ITEM FORM
+            $(document).on('click', '.btn_remove', function(){  
+               var button_id = $(this).attr("id");  
+               var removed = $("#ti-form-row-"+button_id).remove(); 
+               $("#add_ti_item_name option[value='" +removed +"']").append();
+            });
+
+            //EDIT ITEM FROM TERM
+            $('#edit_ti_item_name').on('change', function() {
+                $id = $('#edit_ti_item_name').val();
+                
+                $.ajax({
+                    url: "/getTermItem/" + $id,
+                    type: 'GET',             
+                    data: { 'id' : $id },
+                    success: function(response){
+                        // DEBUGGING
+                        console.log(response);
+
+                        // SET FORM INPUTS
+                        $("#edit_item_original").val(response.ti_original);
+                        $("#edit_item_returns").val(response.ti_returned);
+                        $("#edit_item_damages").val(response.ti_damaged);
+                    },
+                    error: function(data){
+                        console.log(data);
+                    }
+                }); 
+            });
+
+            //REMOVE ITEM FROM TERM
+            $(document).on("click", ".ri_btn", function () {
+                var id = $(this).data('id');
+
+                //FORM
+                $("#removeItem_form").attr("action", "/term_items/" +id);
+            }); 
+        });
+    </script>  
+
+    <!-- TERM CUSTOMERS -->
+    <script>
+        $(document).ready(function(){ 
+            var options = $("#item_name > option").clone();
+            
+            var i = 1;
+            // CREATE ADDITIONAL CUSTOMER ITEM FORM
+            $('#add-form-customer').click(function() {
+                i++;
+                $('#item-form-collector').append(                                      
+                    "<div class='row form-group' id='collector-form-row-" +i +"'>"+   
+                        "<div class='col-md-8'>" +             
+                            "<select  class='form-control item_name' id='collector-row-" +i +"' name='item_name[]' required>" + 
+                            "</select>"+  
+                        "</div>"+
+
+                        "<div class='col-md-2'>"+              
+                            "<input type='number' class='form-control' name='item_qty[]' id='item_qty' required>"+
+                        "</div>"+
+
+                        "<div class='col-md-2'>"+ 
+                            "<button id='"+i +"' type='button' class='btn_remove_collector btn btn-danger btn-fill'> - </button>"+
+                        "</div>"+
+                    "</div>"    
+                );
+
+                $('.item_name').append(options);
+                $('#collector-row-'+i).val("");
+            });
+
+            // REMOVE CUSTOMER ITEM FORM
+            $(document).on('click', '.btn_remove_collector', function(){  
+               var button_id = $(this).attr("id");  
+               var removed = $("#collector-form-row-"+button_id).remove(); 
+            });
+
+            //VIEW-EDIT CUSTOMER
+            $(document).on("click", ".viewCustomer_btn", function () {
+                var id = $(this).data('id');
+
+                $.ajax({
+                    url: "/getCustomerOrder",
+                    type: 'GET',             
+                    data: {
+                            'id' : id ,
+                            'term_id' : {{$term[0]->term_id}},
+                            },
+                    success: function(response){
+                        // DEBUGGING
+                        console.log(response);
+
+                        $('#purchased-items').empty();
+
+                        // SET FORM INPUTS
+                        $('#edit_fname').val(response[0].customer_fname);
+                        $('#edit_mname').val(response[0].customer_mname);
+                        $('#edit_lname').val(response[0].customer_lname);
+                        $('#edit_gender').val(response[0].customer_gender);
+                        $('#edit_cnum').val(response[0].customer_cnum);
+                        $('#edit_addr').val(response[0].customer_addr);
+
+                        var i = 0;
+                        for (var x = 0; x < response.length; x++){
+                            i++;
+                            $('#purchased-items').append(
+                                '<div class="row form-group">'+
+                                    '<div class="{{$errors->editCustomer->has("edit_item_name") ? " has-error" : ""}}">'+
+                                        '<div class="col-md-8">'+
+                                            '<select  class="form-control" id="edit_item_name_' +x +'"'  
+                                                +'name="edit_item_name[]" required>'+
+                                                '@foreach($term_items as $term_item)'+
+                                                    '<option value="{{$term_item->ti_id}}">'+ 
+                                                        '{{$term_item -> supplier_name}}: {{$term_item -> inventory_name}} &#8369; {{$term_item -> inventory_price + ($term_item -> inventory_price * 0.25)}}'+
+                                                    '</option>'+
+                                                '@endforeach'+
+                                            '</select>'+
+                                            '@if ($errors->editCustomer->has("edit_item_name"))'+
+                                                '<span class="help-block">'+
+                                                    '<strong>'+
+                                                        '{{ $errors->editCustomer->first("edit_item_name") }}'+
+                                                    '</strong>'+
+                                                '</span>'+
+                                            '@endif'+
+                                        '</div>'+
+                                    '</div>'+
+                                    '<div class="{{$errors->editCustomer->has("edit_item_qty") ? " has-error" : ""}}">'+
+                                        '<div class="col-md-2">'+
+                                            '<input type="number" class="form-control" name="edit_item_qty[]" id="edit_item_qty" required value="' +response[x].order_qty +'">'+
+                                            '@if ($errors->editCustomer->has("edit_item_qty"))'+
+                                                '<span class="help-block">'+
+                                                    '<strong>'+
+                                                        '{{ $errors->editCustomer->first("edit_item_qty") }}'+
+                                                    '</strong>'+
+                                                '</span>'+
+                                            '@endif'+
+                                        '</div>'+
+                                    '</div>'+
+                                '</div>'
+                            );
+
+                            $("#edit_item_name_" +x +" option[value='"+response[x].ti_id+"']").attr('selected', true);
+                        }
+
+                    },
+                    error: function(data){
+                        console.log(data);
+                    }
+                });
+
+                //FORM
+                $("#editCustomer_form").attr("action", "/customers/" +id);
+            });
+
+            //REMOVE CUSTOMER
+            $(document).on("click", ".removeCustomer_btn", function () {
+                var id = $(this).data('id');
+
+                //FORM
+                $("#removeCustomer_form").attr("action", "/customers/" +id);
+            }); 
+
+            //CONFIRM CUSTOMER PAYMENT
+            $(document).on("click", ".payCustomer_btn", function () {
+                var id = $(this).data('id');
+
+                //FORM
+                $("#payCustomer_form").attr("action", "/customers/" +id);
+            }); 
+        });
+    </script>  
 @endsection
 
