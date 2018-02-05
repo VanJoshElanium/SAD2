@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
 use App\Supply;
 use App\Inventory;
 use App\Supplier;
@@ -28,11 +29,11 @@ class SupplyController extends Controller
             $users = Inventory::search($request->input('titlesearch')) 
                 -> paginate(5);
         }else{
-            // $users = Supply::where('supply_status' , '=', 1)
+            // $users = Inventory::where('inventory_status' , '=', 1)
             //     -> sortable() 
             //     -> paginate(5);
         } 
-        return view('usrmgmt', compact('users', 'curr_usr'));
+        // return redirect('/supplies/' .$supply-> inventory_supplier_id);
     }
 
     /**
@@ -82,6 +83,7 @@ class SupplyController extends Controller
         }else{
             $supplies = Inventory::where([
                     ['inventory_supplier_id' , '=', $id], 
+                    ['inventory_status', '=', 1]
                 ])
                 -> sortable() 
                 -> paginate(5);
@@ -114,13 +116,13 @@ class SupplyController extends Controller
         //dd($request-> all()); //for debugging purposes
 
         $validator = Validator::make($request->all(), [
-            'supply_name' => 'required|string',
-            'supply_desc' => 'required|string',
-            'supply_price' => 'required|numeric'
+            'edit_supply_name' => 'required|string',
+            'edit_supply_desc' => 'required|string',
+            'edit_supply_price' => 'required|numeric'
         ]);
 
         if ($validator->fails()) {
-            return redirect('/supplies/' .$supply-> supply_supplier_id)
+            return redirect('/supplies/' .$supply-> inventory_supplier_id)
                 ->withErrors($validator, 'editSupply')
                 ->withInput($request->all())
                 ->with('error_id', $id);
@@ -146,11 +148,11 @@ class SupplyController extends Controller
         $supply -> inventory_status = 0;
         $supply -> save();
         //dd($supply); //for debugging purposes
-        return redirect('/supplies/' .$supply-> supply_supplier_id);
+        return redirect('/supplies/' .$supply-> inventory_supplier_id);
         //Session::flash('message', 'User has been successfully removed!');*/
     }
 
-     public function getSuppliedItem($id)
+    public function getSuppliedItem($id)
     {
         $supplydata = Inventory::find($id);
         //Session::flash('message', 'User has been successfully created!');

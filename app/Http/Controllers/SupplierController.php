@@ -7,9 +7,9 @@ use Validator;
 use App\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreSupplier;
+use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;  
 use Illuminate\Support\Facades\Auth;
 

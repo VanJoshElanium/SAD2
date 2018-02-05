@@ -33,10 +33,14 @@ class TermsController extends Controller
                                -> join('terms', 'term_id', '=', 'worker_term_id')
                                -> where([
                                     ['term_status' , '=', 1],
-                                    ['worker_type' , '=', 0],
-                                    ['end_date', '>', Carbon::now() -> toDateString()],
-                               ])
-                               -> orWhere('end_date', '=', null);
+                                    ['worker_type' , '=', 0]
+                                  ])
+                               -> where(function($q) {
+                                    $q->where('terms.finish_date', '=', null)
+                                        ->orWhere([
+                                            ['terms.finish_date', '>', Carbon::now() -> toDateString()]
+                                        ]);
+                                });
                         })
                     -> select('user_id', 'fname', 'mname', 'lname')
                     -> where([
@@ -44,11 +48,9 @@ class TermsController extends Controller
                             ['user_status' , '=', 1]
                         ])
                     -> get();
-                    // -> toSql();
-                    // dd($collectors);
 
         //ON-GOING TERMS
-        $terms = Term::join('workers', 'terms.term_id', '=', 'worker_term_id')
+        $og_terms = Term::join('workers', 'terms.term_id', '=', 'worker_term_id')
                 -> join('users', 'workers.worker_user_id', '=', 'users.user_id')
                 -> join('profiles', 'users.user_id', '=', 'profiles.profile_user_id')
                 -> select('terms.*', 'profiles.fname', 'profiles.mname', 'profiles.lname')
@@ -63,7 +65,23 @@ class TermsController extends Controller
                         ]);
                   })
                 -> paginate(5);
-        return view('terms', compact('curr_user', 'collectors', 'terms'));
+
+
+
+        //COMPLETED TERMS
+        $cd_terms = Term::join('workers', 'terms.term_id', '=', 'worker_term_id')
+                -> join('users', 'workers.worker_user_id', '=', 'users.user_id')
+                -> join('profiles', 'users.user_id', '=', 'profiles.profile_user_id')
+                -> select('terms.*', 'profiles.fname', 'profiles.mname', 'profiles.lname')
+                -> where([
+                        ['terms.term_status' , '=', 1],
+                        ['users.user_type',  '=', 2],
+                        ['terms.finish_date', '!=', null],
+                        ['terms.end_date', '!=', null]
+                  ])
+                -> paginate(5);
+
+        return view('terms', compact('curr_user', 'collectors', 'og_terms', 'cd_terms'));
     }
 
     /**
@@ -131,7 +149,41 @@ class TermsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $term = Term::find($id);
+        $now = Carbon::now() -> toDateString();
+
+        if($request -> update_type == "ed"){
+            $validator = Validator::make($request->all(), [
+                'ed' => 'required|date|before_or_equal:'.$now.'|after:'.$term-> start_date
+            ]);
+
+            if ($validator->fails()) {
+                return redirect('/terms')
+                    ->withErrors($validator, 'addEd')
+                    ->withInput($request->all());
+            }
+            else{
+                $term -> end_date = $request -> ed;
+                $term -> save();
+                return redirect('/terms');
+            }  
+        }
+        else{
+            $validator = Validator::make($request->all(), [
+                'fd' => 'required|date|before_or_equal:'.$now.'|after:'.$term-> end_date
+            ]);
+
+            if ($validator->fails()) {
+                return redirect('/terms')
+                    ->withErrors($validator, 'addFd')
+                    ->withInput($request->all());
+            }
+            else{
+                $term -> finish_date = $request -> fd;
+                $term -> save();
+                return redirect('/terms');
+            }
+        }            
     }
 
     /**

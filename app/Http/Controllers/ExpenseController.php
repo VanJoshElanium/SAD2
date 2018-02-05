@@ -3,16 +3,14 @@
 namespace App\Http\Controllers;
 
 use Validator;
-use App\Worker;
-use Illuminate\Http\Response;
+use App\Expense;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\StoreWorker;
-use App\Http\Controllers\Controller;  
 use Illuminate\Support\Facades\Auth;
 
-class WorkerController extends Controller
+class ExpenseController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -42,26 +40,32 @@ class WorkerController extends Controller
      */
     public function store(Request $request)
     {
+        $expenses = DB::Table('expenses')
+                    -> select ('expenses.expense_name')
+                    -> where ('expenses.expense_term_id', '=', $request -> term_id)
+                    -> get();
+        $length = count($expenses);
+
         $validator = Validator::make($request->all(), [
-            'add_position' => array(
-                            'unique:workers,worker_position,NULL,worker_id,worker_term_id,' .$request-> term_id
+            'add_exp_name' => array(
+                            'required',
+                            'unique:expenses,expense_name,NULL,expense_id,expense_term_id,' .$request-> term_id
                         ),
         ]);
 
         if ($validator->fails()) {
             return redirect('/termsprofile/' .$request-> term_id)
-                ->withErrors($validator, 'addPeddler')
+                ->withErrors($validator, 'addExpense')
                 ->withInput($request->all());
         }
         else{
-            $worker = Worker::create([
-                'worker_user_id' => $request-> peddler,
-                'worker_term_id' => $request-> term_id,
-                'worker_type' => $request-> position
-            ]);
-        } 
+            $expense = new Expense;
+            $expense -> expense_name = $request -> add_exp_name;
+            $expense -> expense_amt = $request-> add_exp_amt;
+            $expense -> expense_term_id = $request-> term_id;
+            $expense -> save();
+        }
         return redirect('/termsprofile/' .$request-> term_id);
-        
     }
 
     /**
@@ -83,7 +87,7 @@ class WorkerController extends Controller
      */
     public function edit($id)
     {
-        //
+
     }
 
     /**
@@ -94,25 +98,13 @@ class WorkerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {   
-        $validator = Validator::make($request->all(), [
-            'edit_position' => array(
-                            'unique:workers,worker_position,NULL,worker_id,worker_term_id,' .$request-> term_id
-                        ),
-        ]);
+    {
+        $expense = Expense::find($id);
+        $expense -> expense_name = $request -> edit_exp_name;
+        $expense -> expense_amt = $request-> edit_exp_amt;
+        $expense -> save();
 
-        if ($validator->fails()) {
-            return redirect('/termsprofile/' .$request-> term_id)
-                ->withErrors($validator, 'editPeddler')
-                ->withInput($request->all())
-                ->with('error_id', $id);
-        }
-        else{
-            $worker = Worker::find($id);
-            $worker -> worker_type = $request -> edit_position;
-            $worker -> save();
-            return redirect('termsprofile/' .$request -> term_id);
-        }
+        return redirect('/termsprofile/' .$request-> term_id);
     }
 
     /**
@@ -123,14 +115,15 @@ class WorkerController extends Controller
      */
     public function destroy($id)
     {
-        $worker = Worker::find($id);
-        $term_id = $worker -> worker_term_id;
-        $worker = Worker::destroy($id);
-        return redirect('termsprofile/' .$term_id);
+        $expense = Expense::find($id);
+        $term = $expense -> expense_term_id;
+
+        $expense = Expense::destroy($id);
+        return redirect('/termsprofile/' .$term);
     }
 
-    public function getWorker($id){
-        $workerdata = Worker::find($id);
-        return $workerdata;
+    public function getExpense($id){
+        $expensedata = Expense::find($id);
+        return $expensedata;
     }
 }

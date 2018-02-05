@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Supply;
+use App\Repair;
 use App\Stockin;
 use App\Supplier;
 use App\Inventory;
@@ -44,6 +45,15 @@ class InventoryController extends Controller
             $items = Inventory::search($request->input('titlesearch')) 
                 -> paginate(5);
         }else{
+            //DAMAGED ITEMS
+            $repairs = Repair::join('inventories', 'inventories.inventory_id', '=', 'repairs.repair_inventory_id')
+                -> join('suppliers', 'suppliers.supplier_id', '=', 'inventories.inventory_supplier_id')
+                -> select('inventories.*',  'repairs.*', 'suppliers.supplier_name', 'suppliers.supplier_id')
+                -> where([
+                        ['inventory_status' , '!=', 0]
+                    ])
+                -> sortable() 
+                -> paginate(5);
 
             //ACTIVE INVENTORY ITEMS
             $items = Inventory::join('suppliers', 'suppliers.supplier_id', '=', 'inventories.inventory_supplier_id')
@@ -55,7 +65,7 @@ class InventoryController extends Controller
                 -> sortable() 
                 -> paginate(5);
         } 
-        return view('inventory', compact('items', 'curr_usr', 'suppliers', 'workers'));
+        return view('inventory', compact('items', 'curr_usr', 'suppliers', 'workers', 'repairs'));
     }
 
     public function getItem($id)
@@ -77,8 +87,11 @@ class InventoryController extends Controller
         // $id = suppliers.supplier_id
         //GET SUPPLIERS SUPPLIED ITEMS
 
-        $supplies = Inventory::where('inventory_supplier_id', '=', $id)
-                    -> select('inventories.inventory_id', 'inventories.inventory_name', 'inventories.inventory_qty')
+        $supplies = Inventory::select('inventories.inventory_id', 'inventories.inventory_name', 'inventories.inventory_qty', 'inventories.inventory_price')
+                    -> where([
+                            ['inventory_supplier_id', '=', $id],
+                            ['inventory_qty', '=', 0]
+                        ])
                     -> get();
         //Session::flash('message', 'User has been successfully created!');
         return $supplies;
@@ -134,29 +147,44 @@ class InventoryController extends Controller
      */
     public function update(Request $request, $id)
     {   
-        if ($id == -999){
-
+        if ($id == -999) //STOCKING IN
+        {
             $input = Input::all();
-            //dd( $input['supply_name'][0]);
-            // dd($request);
-            for ($i=0; $i < count($input['inventory_quantity']); ++$i) {
-                $item = Inventory::find($input['supply_name'][$i]);
-                // $item -> inventory_user_id = $request->get('inventory_user_id');
-                // $item -> received_at = $request->get('received_at');
-                $item -> inventory_supplier_id = $input['supplier_name'];
-                // $item -> inventory_price = $input['inventory_price'][$i];
-                $item -> inventory_qty += $input['inventory_quantity'][$i];
-                $item -> inventory_status = 1;
-                $item -> save();
+            
+            $validator = Validator::make($request->all(), [
+                'supply_name.*' => 'distinct'
+            ]);
+            
+            if ($validator->fails()) 
+            {
+                return redirect('/inventory')
+                    ->withErrors($validator, 'addUn')
+                    ->withInput($request->all());
+                    // ->with('input_error_id', $error_id);
+            }
+            else
+            {
+                for ($i=0; $i < count($input['inventory_quantity']); ++$i) {
+                    $item = Inventory::find($input['supply_name'][$i]);
+                    // $item -> inventory_user_id = $request->get('inventory_user_id');
+                    // $item -> received_at = $request->get('received_at');
+                    $item -> inventory_supplier_id = $input['supplier_name'];
+                    // $item -> inventory_price = $input['inventory_price'][$i];
+                    $item -> inventory_qty += $input['inventory_quantity'][$i];
+                    $item -> inventory_status = 1;
+                    $item -> save();
 
-                $stockin = new Stockin;
-                $stockin -> si_date = $request->get('received_at');
-                $stockin -> si_inventory_id = $item -> inventory_id;
-                $stockin -> si_user_id = $request->get('inventory_user_id');
-                $stockin -> save();
-            } 
+                    $stockin = new Stockin;
+                    $stockin -> si_date = $request->get('received_at');
+                    $stockin-> si_qty = $input['inventory_quantity'][$i];
+                    $stockin -> si_inventory_id = $item -> inventory_id;
+                    $stockin -> si_user_id = $request->get('inventory_user_id');
+                    $stockin -> save();
+                }
+            }             
         }
-        else{
+        else //UPDATING
+        {
             $input = Input::all();
 
             $item = Inventory::find($id);     
@@ -166,6 +194,7 @@ class InventoryController extends Controller
 
             $stockin = StockIn::find($input['si_id']);
             $stockin -> si_user_id = $input['view_pic'];
+            $stockin-> si_qty += $input['view_inventory_quantity'];
             $stockin -> si_inventory_id = $input['item_id'];
             $stockin-> si_date = $input['view_received_at'];
             $stockin -> save();   
