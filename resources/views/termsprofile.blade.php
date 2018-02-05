@@ -679,7 +679,7 @@
                                                                             &#8369; {{$paid_customer -> total_payable}}
                                                                         </td>
                                                                         <td>
-                                                                        <button data-target="#viewC" id="" data-toggle="modal" data-id='' class="edit-btn btn-sm btn btn-info btn-fill">
+                                                                        <button data-target="#editCustomer" id="viewPCustomer-{{$paid_customer->customer_id}}" data-toggle="modal" data-id='{{$paid_customer->customer_id}}' class="viewCustomer_btn btn btn-primary btn-fill">
                                                                             View 
                                                                         </button>
                                                                         </td>
