@@ -67,12 +67,20 @@
 	//T-SALES
 	Route::resource('sales', 'SaleController');
 
-	//T-Items
+	//T-ITEMS
 	Route::resource('term_items', 'Term_ItemController');
+	Route::get('getTermItem/{id}', 'Term_ItemController@getTermItem');
 
+	//T-CUSTOMERS, ORDERS, CUSTOMER_ORDER
+	Route::resource('customers', 'CustomerController');
+	Route::resource('orders', 'OrderController');
+	Route::resource('customer_orders', 'Customer_OrderController');
+
+	Route::get('getCustomerOrder', 'CustomerController@getCustomerOrder');
+
+	
 	//LOGS 
 	Route::resource('logs', 'LogsController');
 	Route::get('/logs', 'LogsController@index')->name('logs');
-
 
 ?>
