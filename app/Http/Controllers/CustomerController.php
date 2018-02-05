@@ -149,7 +149,7 @@ class CustomerController extends Controller
     {
         $input = Input::all();
         
-        if ($request -> update_type !="confirm_payment"){
+        if ($request -> update_type != "confirm_payment"){
             for ($i=0; $i < count($input['edit_item_name']); ++$i) {
                 $ti_qty = Term_item::where('term_items.ti_id', '=', $input['edit_item_name'][$i])
                         -> select ('ti_original')
@@ -217,6 +217,7 @@ class CustomerController extends Controller
         }
         else{
             $customer_order = Customer_Order::find($id);
+            $customer_order -> co_collect_date = $input['collect_date'];
             $customer_order -> co_status = 1;
             $customer_order -> save();
         }
