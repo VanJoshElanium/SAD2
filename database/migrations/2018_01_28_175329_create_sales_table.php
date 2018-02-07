@@ -21,11 +21,6 @@ class CreateSalesTable extends Migration
             $table ->date('sales_date', '6');
             $table ->string('sales_remarks', '100');
 
-            $table ->foreign('ti_term_id')
-                    ->references('term_id')
-                    ->on('terms')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
 
             $table ->foreign('sale_term_id')
                     ->references('term_id')
