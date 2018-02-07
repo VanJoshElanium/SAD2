@@ -19,7 +19,7 @@ class CreateExpensesTable extends Migration
             
             $table ->string('expense_name', '50');
             // $table ->string('expense_desc', '100') -> nullable();
-            $table ->int('expense_amt');
+            $table ->integer('expense_amt');
 
             $table ->foreign('expense_term_id')
                     ->references('term_id')
