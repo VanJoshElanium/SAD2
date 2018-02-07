@@ -17,7 +17,7 @@ class CreateSalesTable extends Migration
             $table ->increments('sale_id');
             $table ->integer('sale_term_id') -> unsigned();
             
-            $table ->int('sales_amt');
+            $table ->integer('sales_amt');
             $table ->date('sales_date', '6');
             $table ->string('sales_remarks', '100');
 
