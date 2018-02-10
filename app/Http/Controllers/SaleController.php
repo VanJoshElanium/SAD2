@@ -46,7 +46,14 @@ class SaleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $sale = new Sale;
+        $sale -> sales_amt = $request -> add_amt_collected;
+        $sale -> sales_date = $request -> add_date_collected;
+        $sale -> sales_remarks = $request -> add_note_collected;
+        $sale -> sale_term_id = $request -> term_id;
+        $sale -> save();
+
+        return redirect('/termsprofile/' .$request-> term_id);
     }
 
     /**
@@ -80,7 +87,14 @@ class SaleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $sale = Sale::find($id);
+        $sale -> sales_amt = $request -> edit_amt_collected;
+        $sale -> sales_date = $request -> edit_date_collected;
+        $sale -> sales_remarks = $request -> edit_note_collected;
+        $sale -> sale_term_id = $request -> term_id;
+        $sale -> save();
+
+        return redirect('/termsprofile/' .$request-> term_id);
     }
 
     /**
@@ -91,6 +105,17 @@ class SaleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $collection = Sale::find($id);
+        $term = $collection -> sale_term_id;
+      
+        $collection = Sale::destroy($id);
+        return redirect('/termsprofile/' .$term);
+    }
+
+    public function getSale($id)
+    {
+        $saledata = Sale::find($id);
+        //Session::flash('message', 'User has been successfully created!');
+        return $saledata;
     }
 }

@@ -43,11 +43,11 @@ class WorkerController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'add_position' => array(
-                            'unique:workers,worker_position,NULL,worker_id,worker_term_id,' .$request-> term_id
+            'position' => array(
+                            'unique:workers,worker_type,null,null,worker_term_id,'.$request-> term_id
                         ),
         ]);
-
+        
         if ($validator->fails()) {
             return redirect('/termsprofile/' .$request-> term_id)
                 ->withErrors($validator, 'addPeddler')
@@ -97,7 +97,7 @@ class WorkerController extends Controller
     {   
         $validator = Validator::make($request->all(), [
             'edit_position' => array(
-                            'unique:workers,worker_position,NULL,worker_id,worker_term_id,' .$request-> term_id
+                            'unique:workers,worker_type,NULL,worker_id,worker_term_id,' .$request-> term_id
                         ),
         ]);
 

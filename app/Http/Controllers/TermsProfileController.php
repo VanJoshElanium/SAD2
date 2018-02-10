@@ -85,8 +85,14 @@ class TermsProfileController extends Controller
                                -> join('terms', 'term_id', '=', 'worker_term_id')
                                -> where([
                                     ['term_status' , '=', 1],
-                                    ['finish_date', '<=', Carbon::now() -> toDateString()],
+                                    ['terms.end_date', '=', null]
                                 ]);
+                              //  -> where(function($q) {
+                              //     $q->where('end_date', '<=', Carbon::now() -> toDateString())
+                              //       ->orWhere([
+                              //           ['terms.end_date', '=', null]
+                              //       ]);
+                              // });
                         })
                     -> select('user_id', 'fname', 'mname', 'lname')
                     -> where([
@@ -226,7 +232,16 @@ class TermsProfileController extends Controller
                     -> groupBy('co_id')
                     -> paginate(5);
 
-        return view('termsprofile', compact('curr_user', 'workers', 'term', 'a_peddlers', 'expenses', 'term_items', 'sales', 'total_expense', 'peddlers', 'total_items', 'total_damages', 'total_sales', 'total_returns', 'suppliers', 'a_items', 'unpaid_customers', 'paid_customers'));
+        $total_sale = 0;
+
+        $total_collected = DB::table('sales')
+                        -> where ('sales.sale_term_id', '=', $id)
+                        -> sum('sales_amt');
+
+
+
+
+        return view('termsprofile', compact('curr_user', 'workers', 'term', 'a_peddlers', 'expenses', 'term_items', 'sales', 'total_expense', 'peddlers', 'total_items', 'total_damages', 'total_sales', 'total_returns', 'suppliers', 'a_items', 'unpaid_customers', 'paid_customers', 'total_collected', 'total_sale'));
     }
 
     /**
@@ -260,6 +275,6 @@ class TermsProfileController extends Controller
      */
     public function destroy($id)
     {
-        //
+        
     }
 }

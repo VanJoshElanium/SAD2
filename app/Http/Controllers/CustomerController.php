@@ -102,6 +102,7 @@ class CustomerController extends Controller
                 $customer_order = new Customer_Order;
                 $customer_order -> co_term_id = $request -> term_id;
                 $customer_order -> co_customer_id = $customer -> customer_id;
+                $customer_order -> co_status = 0;
                 $customer_order -> save();
 
                 for ($i=0; $i < count($input['item_name']); ++$i) {
