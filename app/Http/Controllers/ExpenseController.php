@@ -49,7 +49,7 @@ class ExpenseController extends Controller
         $validator = Validator::make($request->all(), [
             'add_exp_name' => array(
                             'required',
-                            'unique:expenses,expense_name,NULL,expense_id,expense_term_id,' .$request-> term_id
+                            'unique:expenses,expense_name,null,null,expense_term_id,' .$request-> term_id
                         ),
         ]);
 

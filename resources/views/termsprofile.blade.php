@@ -344,7 +344,7 @@
                                                                     <td>
                                                                         @if($term_item->ti_returned != 0 && $term_item->ti_returned != 0)
                                                                             {{$term_item->ti_original -($term_item->ti_damaged + $term_item->ti_returned)}}
-                                                                        @else 0
+                                                                        @else {{$term_item->ti_original}}
                                                                         @endif
                                                                     </td>
                                                                     <td>
@@ -496,7 +496,7 @@
                                                 <div class="card">
                                                     <div class="header">
                                                         <div class="col-md-4">
-                                                            <h4 class="title">Collection List</h4>
+                                                            <h4 class="title">Collections</h4>
                                                         </div>
                                                         <span class="pull-right">
                                                             <button type="button" data-target="#addCollection" data-toggle="modal" class="btn btn-success btn-fill" id="add-btn">Add Collection</button>
@@ -505,25 +505,29 @@
                                                     <div class="content table-responsive table-full-width">
                                                         <table class="table table-hover table-striped">
                                                             <thead>
+                                                                <th>ID</th>
                                                                 <th>Date</th>
                                                                 <th>Amount</th>
-                                                                <th>Edit</th>
-                                                                <th><span data-toggle="tooltip" data-placement="bottom" title="View note contains the details in where a payment isn't cash.">
-                                                                    View Note</span></th>
                                                             </thead>
                                                             <tbody>
                                                                 @forelse($sales as $sale)
                                                                 <tr>
-                                                                    <td>{{$sale->sale_date}}</td> 
-                                                                    <td>&#8369; {{$sale->sale_amount}}</td>
-                                                                    <td>
-                                                                    <button type="button" data-target="#editCollection" data-toggle="modal" class="btn  btn-warning btn-fill" id="add-btn"> 
-                                                                        Edit Collection
-                                                                    </button>
+                                                                    <td> 
+                                                                        {{$sale->sale_id}}
                                                                     </td>
                                                                     <td>
-                                                                    <span data-toggle="tooltip" data-placement="bottom" title="View if there are any comments or payment changes.">
-                                                                        <button type="button" data-target="#viewNote" data-toggle="modal" class="btn  btn-info btn-fill" id="add-btn">View Note</button></span>
+                                                                        {{$sale->sales_date}}
+                                                                    </td> 
+                                                                    <td>
+                                                                        &#8369;{{$sale->sales_amt}}
+                                                                    </td>
+                                                                    <td>
+                                                                        <button type="button" data-target="#editCollection" data-id="{{$sale->sale_id}}" data-toggle="modal" class="viewCollection_btn btn  btn-primary btn-fill" id="viewCollection_btn">  View
+                                                                        </button>
+                                                                    </td>
+                                                                    <td>
+                                                                        <button type="button" data-target="#removeCollection" data-toggle="modal" data-id="{{$sale->sale_id}}" class="removeCollection_btn btn  btn-danger btn-fill" id="removeCollection_btn">  Remove
+                                                                        </button>
                                                                     </td>
                                                                 </tr>
                                                                 @empty
@@ -537,25 +541,46 @@
                                             <div class="col-md-4">
                                                 <div class="card">
                                                     <div class="header"><br><br>
-                                                        <h4 class="title">Total Expenses</h4>    
-                                                        <p class="category">&#8369; 1,000.00</p>
+
+                                                        <h4 class="title">Total Expenses</h4>
+                                                        <p class="category">
+                                                            &#8369;{{$total_expense}}
+                                                        </p>
+
                                                         <br><br>
 
-                                                        <h4 class="title">Total Sold Items</h4>    
-                                                        <p class="category">&#8369; 9,500.00</p>
+                                                        <h4 class="title">Total Sales</h4>    
+                                                        <p class="category">
+                                                            &#8369;
+                                                            @foreach($term_items as $term_item)
+                                                                @if($term_item->ti_returned != 0 && $term_item->ti_returned != 0)
+
+                                                                {{$total_sale += ($term_item->ti_original -($term_item->ti_damaged + $term_item->ti_returned) *
+                                                                ($term_item -> inventory_price + ($term_item -> inventory_price * 0.25)))}}
+
+                                                                @else {{$total_sale += ($term_item->ti_original * ($term_item -> inventory_price + ($term_item -> inventory_price * 0.25)))}}
+                                                            @endif
+                                                            @endforeach
+                                                        </p>
                                                         <br><br> 
 
-                                                        <h4 class="title">Total Revenue of Owner</h4>    
-                                                        <p class="category">&#8369; 2,375.00</p>
+                                                        <h4 class="title">Total Revenue</h4>
+                                                        <p class="category">
+                                                            &#8369;{{$total_sale * 0.25}}
+                                                        </p>
                                                         <br><br>
 
-                                                        <h4 class="title">Total Payment</h4>    
-                                                        <p class="category">&#8369; 10,500.00</p>
+                                                        <h4 class="title">Amount Collectable</h4>
+                                                        <p class="category">
+                                                            &#8369;{{$total_sale + $total_expense}}
+                                                        </p>
                                                         <br><br><br> 
 
                                                         <div class="modal-footer">
-                                                            <h4 class="title">Current Payment</h4>    
-                                                            <p class="category">&#8369; 250.00</p>
+                                                            <h4 class="title">Collected Amount</h4>    
+                                                            <p class="category">
+                                                                &#8369;{{$total_collected}}
+                                                            </p>
                                                             <br><br>
                                                         </div>
                                                         <hr>     
@@ -968,7 +993,7 @@
                                                     <option value="" selected> </option>
                                                     @foreach($a_items as $a_item)
                                                         <option value='{{$a_item -> inventory_id}}'> 
-                                                            {{$a_item -> supplier_name}}: {{$a_item -> inventory_name}} &#8369; {{$a_item -> inventory_price + ($a_item -> inventory_price * 0.25)}}
+                                                            {{$a_item -> supplier_name}}: {{$a_item -> inventory_name}} &#8369;{{$a_item -> inventory_price + ($a_item -> inventory_price * 0.25)}}
                                                         </option>
                                                     @endforeach
                                                 </select> 
@@ -1256,11 +1281,11 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                            <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">No
-                            </button>
+                        <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">No
+                        </button>
 
-                            <button type="submit" class="btn btn-bg btn-success btn-fill">Yes
-                            </button>         
+                        <button type="submit" class="btn btn-bg btn-success btn-fill">Yes
+                        </button>         
                     </div>
                 </form>
             </div>
@@ -1269,168 +1294,182 @@
 
     <!--ADD COLLECTION-->
     <div class="modal fade" role="dialog" id="addCollection">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Add Collection</h4>
-                    </div>
-                                        
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">
+                        <center>
+                            Add Collection
+                        </center>
+                    </h4>
+                </div>
+                
+                <form method="POST" class="form-horizontal" id="addCollection_form" action="/sales">
+                 {{csrf_field()}}
+
+                    <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">
+
                     <div class="modal-body">
                         <div id="view-edit-content" class="row">
                             <div class="col-md-12"> 
-                                <form method="POST" class="form-horizontal" id="view-edit-profile">                                        
-                                                 
-                                        <div class="">
-                                    <div class="row form-group">
-                                        <div class="">
-                                                <div class="col-md-6">
-                                                    <label>Date</label>
-                                                    <!--I think this should be initialized for current date rather than adding this manualy? Just incase I'm putting this.-->
-                                                    <input name="initialTerm_Date"  id="initT_Date" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'">
-                                                                                        
-                                                        <span class="help-block">
-                                                            <strong>  </strong>
-                                                        </span>
-                                                
-                                                </div>
-                                        </div> 
-                                    </div> 
-                                            <div class="row">
-                                            <div class="">
-                                                <div class="col-md-6">  
-                                                    <label>Collection amount:</label>
-                                                    <input type="text" required name="Term_address" id="T_address" class="form-control">
-
-                                                        <span class="help-block">
-
-                                                        </span>
-
-                                                </div>
-                                            </div> 
-                                            </div>
-                                        <div class="row">
-                                        <div class="">
-                                            <div class="col-md-12">  
-                                                <!--Note: Must not exceed with the existing quantity.-->
-                                                <label>Note:</label>
-                                                <textarea rows="8" required name="cnum" id="cnum2" class="form-control" value=""></textarea>
-                                                                         
-                                                    <span class="help-block">
-                                                        
-                                                    </span>
-                                    
-                                            </div>
+                                <div class="row form-group">
+                                    <div class="{{$errors->addCollection->has('add_amt_collected') ? ' has-error' : ''}}"> 
+                                        <div class="col-md-6">  
+                                            <label>Amount Collected</label>
+                                            <input type="number"  name="add_amt_collected" id="add_amt_collected" class="form-control" value="{{ old('add_amt_collected')}}" required>
+                                            @if ($errors->addCollection->has('add_amt_collected'))
+                                                <span class="help-block">
+                                                    <strong>{{ $errors->addCollection->first('add_amt_collected') }}</strong>
+                                                </span>
+                                            @endif
                                         </div>
                                     </div>
-                                        </div>
-                                    
-                                </form>
+                                    <div class="col-md-6">
+                                        <label> Date Collected </label>
+                                        <input type="date" class="form-control" name="add_date_collected" required value="{{Carbon\Carbon::now()->toDateString()}}">
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="{{$errors->addCollection->has('add_note_collected') ? ' has-error' : ''}}"> 
+                                        <div class="col-md-12"> 
+                                            <label>Note</label>
+                                            <textarea id="addr" class="form-control" required name="add_note_collected" rows='2' cols="30" value="{{ old('add_note_collected')}}"> </textarea>
+                                            @if ($errors->addCollection->has('add_note_collected'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{ $errors->addCollection->first('add_note_collected') }}
+                                                    </strong>
+                                                </span>
+                                            @endif                   
+                                        </div>      
+                                    </div> 
                                 </div>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                          <center>
-                              <!--ADD New Term button-->
-                              <button type="button" class="btn btn-bg btn-success btn-fill">Add</button>
-                              <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancle</button></center>
-                        </div>
+                        </div>                                  
                     </div>
-                </div>
-            </div><!--End  div of modal-->
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancel
+                        </button>
+
+                        <button type="submit" class="btn btn-bg btn-success btn-fill">Add Collection
+                        </button> 
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!--EDIT COLLECTION-->
     <div class="modal fade" role="dialog" id="editCollection">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Edit Collection</h4>
-                    </div>
-                                        
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">
+                        <center>
+                            Edit Collection
+                        </center>
+                    </h4>
+                </div>
+                
+                <form method="POST" class="form-horizontal" id="editCollection_form">
+                 {{csrf_field()}}
+                 {{method_field('PUT')}}
+
+                    <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">
+
                     <div class="modal-body">
                         <div id="view-edit-content" class="row">
                             <div class="col-md-12"> 
-                                <form method="POST" class="form-horizontal" id="view-edit-profile">                                        
-                                                 
-                                        <div class="">
-                                    <div class="row form-group">
-                                        <div class="">
-                                                <div class="col-md-6">
-                                                    <label>Date</label>
-                                                    <!--I think this should be initialized for current date rather than adding is manualy? Just incase I'm putting this.-->
-                                                    <input name="initialTerm_Date"  id="initT_Date" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'">
-                                                                                        
-                                                        <span class="help-block">
-                                                            <strong>  </strong>
-                                                        </span>
-                                                
-                                                </div>
-                                        </div> 
-                                    </div> 
-                                            <div class="row">
-                                            <div class="">
-                                                <div class="col-md-6">  
-                                                    <label>Collection amount:</label>
-                                                    <input type="text" required name="Term_address" id="T_address" class="form-control">
-
-                                                        <span class="help-block">
-
-                                                        </span>
-
-                                                </div>
-                                            </div> 
-                                            </div>
+                                <div class="row form-group">
+                                    <div class="{{$errors->editCollection->has('edit_amt_collected') ? ' has-error' : ''}}"> 
+                                        <div class="col-md-6">  
+                                            <label>Amount Collected</label>
+                                            <input type="number"  name="edit_amt_collected" id="edit_amt_collected" class="form-control" value="{{ old('edit_amt_collected')}}" required>
+                                            @if ($errors->editCollection->has('edit_amt_collected'))
+                                                <span class="help-block">
+                                                    <strong>{{ $errors->editCollection->first('edit_amt_collected') }}</strong>
+                                                </span>
+                                            @endif
                                         </div>
-                                    
-                                </form>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label> Date Collected </label>
+                                        <input type="date" class="form-control" name="edit_date_collected" required value="{{Carbon\Carbon::now()->toDateString()}}">
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="{{$errors->editCollection->has('edit_note_collected') ? ' has-error' : ''}}"> 
+                                        <div class="col-md-12"> 
+                                            <label>Note</label>
+                                            <textarea class="form-control" required id="edit_note_collected" name="edit_note_collected" rows='2' cols="30" value="{{ old('edit_note_collected')}}"> </textarea>
+                                            @if ($errors->editCollection->has('edit_note_collected'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{ $errors->editCollection->first('edit_note_collected') }}
+                                                    </strong>
+                                                </span>
+                                            @endif                   
+                                        </div>      
+                                    </div> 
                                 </div>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                          <center>
-                              <!--ADD New Term button-->
-                              <button type="button" class="btn btn-bg btn-success btn-fill">Save</button>
-                              <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancel</button></center>
-                        </div>
+                        </div>                                  
                     </div>
-                </div>
-            </div><!--End  div of modal-->
 
-    <!--VIEW NOTE OF THE ITEM LIST-->
-    <div class="modal fade" role="dialog" id="viewNote">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Item <span><!--This is where the name of the selectd item is placed.--> </span>Note</h4>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancel
+                        </button>
+
+                        <button type="submit" class="btn btn-bg btn-success btn-fill">Edit Collection
+                        </button> 
                     </div>
-                                        
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- REMOVE COLLECTION  -->
+    <div class="modal fade" role="dialog" id="removeCollection">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Remove Collection</h4>
+                </div>
+                              
+                <form method="POST" class="form-horizontal" id="removeCollection_form">
+
+                    {{csrf_field()}}
+                    {{method_field('DELETE')}}
+
                     <div class="modal-body">
                         <div id="view-edit-content" class="row">
-                            <div class="col-md-12"> 
-                                <form method="POST" class="form-horizontal" id="view-edit-profile">                                                          
-                                    <div class="">
-                                        <div class="row form-group">
-                                            <div class="col-md-12">
-                                            <p class="category">
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                                            </p><!--The note's contents are here-->
-                                            </div>
-                                        </div> 
+                            <div class="col-md-12">                                     
+                                <div class="row form-group">                       
+                                    <div class=""> 
+                                        <div class="col-md-12">   
+                                            You are about to remove a collection from this term. Do you want to proceed?
+                                        </div>
                                     </div>
-                                </form>
-                                </div>
+                                </div> 
                             </div>
                         </div>
-                        <div class="modal-footer">
-                          <center>
-                              <!--ADD New Term button-->
-                              <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Return</button></center>
-                        </div>
                     </div>
-                </div>
-            </div><!--End  div of modal-->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">No
+                        </button>
+
+                        <button type="submit" class="btn btn-bg btn-success btn-fill">Yes
+                        </button>         
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 
     <!--CUSTOMER VIEW/EDIT MODAL-->  
     <div class="modal fade" role="dialog" id="editCustomer">
@@ -1927,6 +1966,12 @@
             if({!!count($errors->editExpense)!!} > 0)
                 $("#expense-view-edit-{{ session()-> get( 'error_id' ) }}").click();
 
+            if ({!!count($errors->addPeddler)!!} > 0)
+                $("#addPeddler").modal(); 
+
+            // if ({!!count($errors->addItem)!!} > 0)
+            //     $("#addItem").modal(); 
+
             if ({!!count($errors->addItem)!!} > 0)
                 $("#addItem").modal(); 
 
@@ -2216,5 +2261,41 @@
             }); 
         });
     </script>  
+
+    <!-- TERM COLLECTIONS -->
+    <script>
+        //VIEW-EDIT CUSTOMER
+            $(document).on("click", ".viewCollection_btn", function () {
+                var id = $(this).data('id');
+          
+                $.ajax({
+                    url: "/getSale/" +id,
+                    type: 'GET',             
+                    data: {'id' : id },
+                    success: function(response){
+                        // DEBUGGING
+                        console.log(response);
+                        // SET FORM INPUTS
+                        $('#edit_date_collected').val(response.sales_date);
+                        $('#edit_amt_collected').val(response.sales_amt);
+                        $('#edit_note_collected').val(response.sales_remarks);
+                    },
+                    error: function(data){
+                        console.log(data);
+                    }
+                });
+
+                //FORM
+                $("#editCollection_form").attr("action", "/sales/" +id);
+            });
+
+        //REMOVE CUSTOMER
+            $(document).on("click", ".removeCollection_btn", function () {
+                var id = $(this).data('id');
+
+                //FORM
+                $("#removeCollection_form").attr("action", "/sales/" +id);
+            }); 
+    </script>
 @endsection
 

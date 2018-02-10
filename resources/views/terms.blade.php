@@ -399,8 +399,9 @@
                 </div>
                          
                 <form method="POST" class="form-horizontal"  id="ed_form">  
+                    {{ csrf_field() }} 
                     {{ method_field('PUT') }}
-                    {{ csrf_field() }}           
+                              
                     
                     <div class="modal-body">
                         <div id="view-edit-content" class="row">
@@ -448,8 +449,9 @@
                 </div>
                     
                 <form method="POST" class="form-horizontal" id="fd_form">      
-                    {{ method_field('PUT') }}
-                    {{ csrf_field() }}                
+                    
+                    {{ csrf_field() }} 
+                    {{ method_field('PUT') }}               
                     <div class="modal-body">
                         <div id="view-edit-content" class="row">
                             <div class="col-md-12">                                    

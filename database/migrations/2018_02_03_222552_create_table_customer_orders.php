@@ -19,7 +19,7 @@ class CreateTableCustomerOrders extends Migration
             $table ->integer('co_customer_id') -> unsigned();
             
             $table ->date('co_collect_date') -> nullable();
-            $table ->integer('co_status') -> default(1);
+            $table ->integer('co_status') -> default(0);
             
 
             $table ->foreign('co_term_id')

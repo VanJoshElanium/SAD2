@@ -56,14 +56,15 @@ class TermsController extends Controller
                 -> select('terms.*', 'profiles.fname', 'profiles.mname', 'profiles.lname')
                 -> where([
                         ['terms.term_status' , '=', 1],
-                        ['users.user_type',  '=', 2] //Collector
+                        ['users.user_type',  '=', 2], //Collector
+                        ['terms.finish_date', '=', null]
                     ])
-                ->where(function($q) {
-                      $q->where('terms.finish_date', '=', null)
-                        ->orWhere([
-                            ['terms.finish_date', '<', Carbon::now() -> toDateString()]
-                        ]);
-                  })
+                // -> where(function($q) {
+                //       $q->where('terms.finish_date', '=', null)
+                //         ->orWhere([
+                //             ['terms.finish_date', '<', Carbon::now() -> toDateString()]
+                //         ]);
+                //   })
                 -> paginate(5);
 
 
@@ -153,9 +154,14 @@ class TermsController extends Controller
         $now = Carbon::now() -> toDateString();
 
         if($request -> update_type == "ed"){
-            $validator = Validator::make($request->all(), [
-                'ed' => 'required|date|before_or_equal:'.$now.'|after:'.$term-> start_date
-            ]);
+            if ($term -> fd != null)
+                $validator = Validator::make($request->all(), [
+                    'ed' => 'required|date|before_or_equal:'.$now. '|before:' .$term -> fd .'|after:'.$term-> start_date
+                ]);
+            else
+                $validator = Validator::make($request->all(), [
+                    'ed' => 'required|date|before_or_equal:'.$now.'|after:'.$term-> start_date
+                ]);
 
             if ($validator->fails()) {
                 return redirect('/terms')

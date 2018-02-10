@@ -16,8 +16,8 @@ class Customer extends Model
     ];
 
     //RELATIONSHIPS
-    public function customer_order()
+    public function customer_orders()
     {
-        return $this->hasOne('App\Customer_Order', 'co_customer_id');
+        return $this->hasMany('App\Customer_Order', 'co_customer_id');
     }
 }
