@@ -66,6 +66,7 @@
 
 	//T-SALES
 	Route::resource('sales', 'SaleController');
+	Route::get('getSale/{id}', 'SaleController@getSale');
 
 	//T-ITEMS
 	Route::resource('term_items', 'Term_ItemController');
