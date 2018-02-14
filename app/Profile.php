@@ -10,8 +10,7 @@ class Profile extends Model
 {
     protected $primaryKey = 'profile_id';
 
-    use Searchable;
-    use Sortable;
+
     /* The attributes that are mass assignable. */
 
     protected $fillable = [

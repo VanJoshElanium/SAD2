@@ -11,7 +11,7 @@ class User extends Authenticatable
 {
     protected $primaryKey = 'user_id';
 
-    use Searchable, Sortable;
+   
 
     /* The attributes that are mass assignable. */
     protected $fillable = [

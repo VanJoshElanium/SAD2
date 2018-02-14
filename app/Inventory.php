@@ -9,8 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Inventory extends Model
 {
-    use Searchable;
-    use Sortable;
+
 
     protected $primaryKey = 'inventory_id';
 

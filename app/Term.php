@@ -18,10 +18,10 @@ class Term extends Model
         return $this->hasMany('App\Worker', 'worker_term_id');
     }
 
-    public function repairs()
-    {
-        return $this->hasMany('App\Repair', 'repair_term_id');
-    }  
+    // public function repairs()
+    // {
+    //     return $this->hasMany('App\Repair', 'repair_term_id');
+    // }  
 
     public function expenses()
     {
