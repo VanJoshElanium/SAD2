@@ -71,7 +71,7 @@
 	//T-ITEMS
 	Route::resource('term_items', 'Term_ItemController');
 	Route::get('getTermItem/{id}', 'Term_ItemController@getTermItem');
-	Route::post('printItems/{id}', 'Term_ItemController@printItems');
+	Route::post('/printItems/{id}', 'Term_ItemController@printItems');
 
 	//T-CUSTOMERS, ORDERS, CUSTOMER_ORDER
 	Route::resource('customers', 'CustomerController');
