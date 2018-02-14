@@ -41,6 +41,7 @@
 	Route::resource('inventory', 'InventoryController');
 	Route::get('getItem/{id}', 'InventoryController@getItem');
 	Route::get('getSupply/{id}', 'InventoryController@getSupply');
+	Route::get('getSupplyDamaged/{id}', 'InventoryController@getSupplyDamaged');
 	Route::get('/searchItems', ['as'=>'searchItems','uses'=>'InventoryController@index']);
 	Route::get('/inventory', 'InventoryController@index')->name('inventory');
 
@@ -54,7 +55,6 @@
 
 	//T-PROFILE
 	Route::resource('termsprofile', 'TermsProfileController');
-	Route::get('/termsprofile', 'TermsProfileController@index')->name('termsprofile');
 
 	//T-WORKERS
 	Route::resource('workers', 'WorkerController');
@@ -71,6 +71,7 @@
 	//T-ITEMS
 	Route::resource('term_items', 'Term_ItemController');
 	Route::get('getTermItem/{id}', 'Term_ItemController@getTermItem');
+	Route::post('printItems/{id}', 'Term_ItemController@printItems');
 
 	//T-CUSTOMERS, ORDERS, CUSTOMER_ORDER
 	Route::resource('customers', 'CustomerController');

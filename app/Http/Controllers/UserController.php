@@ -38,7 +38,6 @@ class UserController extends Controller
                 -> where([
                         ['users.user_status' , '=', 1]
                     ])
-                -> sortable() 
                 -> paginate(5);
                 // -> toSql();
         } 

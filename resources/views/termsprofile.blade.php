@@ -342,7 +342,7 @@
                                                                         {{$term_item->ti_returned}}
                                                                     </td>
                                                                     <td>
-                                                                        @if($term_item->ti_returned != 0 && $term_item->ti_returned != 0)
+                                                                        @if($term_item->ti_returned != 0 || $term_item->ti_damaged != 0)
                                                                             {{$term_item->ti_original -($term_item->ti_damaged + $term_item->ti_returned)}}
                                                                         @else {{$term_item->ti_original}}
                                                                         @endif
@@ -553,13 +553,8 @@
                                                         <p class="category">
                                                             &#8369;
                                                             @foreach($term_items as $term_item)
-                                                                @if($term_item->ti_returned != 0 && $term_item->ti_returned != 0)
-
-                                                                {{$total_sale += ($term_item->ti_original -($term_item->ti_damaged + $term_item->ti_returned) *
-                                                                ($term_item -> inventory_price + ($term_item -> inventory_price * 0.25)))}}
-
-                                                                @else {{$total_sale += ($term_item->ti_original * ($term_item -> inventory_price + ($term_item -> inventory_price * 0.25)))}}
-                                                            @endif
+                                                                {{$total_sale += ($term_item->ti_original -($term_item->ti_damaged + $term_item->ti_returned)) *
+                                                                ($term_item -> inventory_price + ($term_item -> inventory_price * 0.25))}}
                                                             @endforeach
                                                         </p>
                                                         <br><br> 
@@ -707,6 +702,11 @@
                                                                         <button data-target="#editCustomer" id="viewPCustomer-{{$paid_customer->customer_id}}" data-toggle="modal" data-id='{{$paid_customer->customer_id}}' class="viewCustomer_btn btn btn-primary btn-fill">
                                                                             View 
                                                                         </button>
+                                                                        </td>
+                                                                        <td>
+                                                                        <button data-target="#removeCustomer" data-toggle="modal" data-id='{{$paid_customer -> co_id}}' class="btn btn-danger btn-fill removeCustomer_btn">
+                                                                                Remove
+                                                                            </button>
                                                                         </td>
                                                                     </tr>
                                                                     @empty
@@ -983,6 +983,29 @@
                                             @endif
                                         </div>
                                     </div> 
+
+                                    <div class="{{ $errors->addItem->has('add_ti_worker') ? ' has-error' : '' }}"> 
+                                        <div class="col-md-6">   
+                                            <!--Acquires the list of workers within users table-->
+                                            <label class="sel1">Handler:</label>
+                                            <select class="form-control" name="add_ti_worker" required id="add_ti_worker">
+                                                <option value="" data-hidden="true" selected="selected">
+                                                </option>
+                                                @foreach($workers as $worker)
+                                                    <option value="{{$worker-> worker_id}}">
+                                                        {{$worker->fname}}&nbsp
+                                                        {{$worker->mname}}.
+                                                        {{$worker->lname}}
+                                                    </option>
+                                                @endforeach
+                                            </select>           
+                                            @if ($errors->addItem->has('add_ti_worker'))
+                                                <span class="help-block">
+                                                    <strong>{{ $errors->addItem->first('add_ti_worker') }}</strong>
+                                                </span>
+                                            @endif                   
+                                        </div>
+                                    </div>
                                 </div>
                                 <div id="item-form"> 
                                     <div class="row form-group">   
@@ -993,7 +1016,7 @@
                                                     <option value="" selected> </option>
                                                     @foreach($a_items as $a_item)
                                                         <option value='{{$a_item -> inventory_id}}'> 
-                                                            {{$a_item -> supplier_name}}: {{$a_item -> inventory_name}} &#8369;{{$a_item -> inventory_price + ($a_item -> inventory_price * 0.25)}}
+                                                            {{$a_item -> supplier_name}}: {{$a_item -> inventory_name}}, &#8369;{{$a_item -> inventory_price + ($a_item -> inventory_price * 0.25)}}, In-Stock : {{$a_item -> inventory_qty}}
                                                         </option>
                                                     @endforeach
                                                 </select> 
@@ -1101,7 +1124,7 @@
 
                                 <div class="row form-group">
                                     <div class="{{ $errors->editItem->has('edit_item_returns') ? ' has-error' : '' }}">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <label>Returned Qty</label>
                                             <input  class="form-control" type="number" id="edit_item_returns" name="edit_item_returns" required value="{{ old('edit_item_returns') }}">
                                             @if ($errors->editItem->has('edit_item_returns'))
@@ -1115,13 +1138,31 @@
                                     </div>
 
                                     <div class="{{ $errors->editItem->has('edit_item_damages') ? ' has-error' : '' }}">
-                                        <div class="col-md-6">  
+                                        <div class="col-md-4">  
                                             <label class="sel1">Damaged Qty</label>
                                             <input class="form-control" type="number" id="edit_item_damages" name="edit_item_damages" value="{{ old('edit_item_returns') }}">
                                             @if ($errors->editItem->has('edit_item_damages'))
                                                 <span class="help-block">
                                                     <strong>
                                                         {{$errors->dditItem->first('edit_item_damages')}}
+                                                    </strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="{{ $errors->editItem->has('edit_item_dtype') ? ' has-error' : '' }}">
+                                        <div class="col-md-4">  
+                                            <label class="sel1">Damaged Status</label>
+                                            <select class='form-control'  id="edit_item_dtype" name='edit_item_dtype' required value="{{old('edit_item_dtype')}}" disabled>
+                                                <option value='' selected="selected"> </option>
+                                                <option value='1'> Repairable </option>
+                                                <option value='0'> Unrepairable </option>
+                                            </select>
+                                            @if ($errors->editItem->has('edit_item_dtype'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{$errors->dditItem->first('edit_item_dtype')}}
                                                     </strong>
                                                 </span>
                                             @endif
@@ -1871,11 +1912,11 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                            <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancel
-                            </button>
+                        <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancel
+                        </button>
 
-                            <button type="submit" class="btn btn-bg btn-success btn-fill">Confirm
-                            </button>         
+                        <button type="submit" class="btn btn-bg btn-success btn-fill">Confirm
+                        </button>         
                     </div>
                 </form>
             </div>
@@ -1883,56 +1924,44 @@
     </div>
 
     <!--PRINTING MODAL-->    
-    <div class="modal fade" role="dialog" id="printItems">
-            <div class="modal-dialog">
-              <!-- Modal content-->
-              <div class="modal-content">
+    <div class="modal fade" role="dialog" id="printItems" >
+        <div class="modal-dialog">
+          <!-- Modal content-->
+            <div class="modal-content">
                 <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  <center><h4 class="modal-title">Log Details</h4></center>
-                </div>
-                <div class="modal-body">
-                    <!--The details of the list. the span tags can also be put with classes and id for the querying.-->
-                     <table class="table table-hover">
-                        <tbody>
-                            <tr>
-                                <td><p><b>Collector:</b>  <span> James B. Debunko </span></p></td>
-                                <td><p><b><span data-toggle="tooltip" data-placement="bottom" title="Indicates when the event was logged.">
-                                    Term date started:</span></b> <span> 01/12/18</span></p></td>                                                
-                            </tr>
-                            <tr>
-                                <td><p><b><span data-toggle="tooltip" data-placement="bottom" title="Indicates whether it was updated or added.">
-                                    Total quantity:</span></b> <span> 22 </span></p></td>
-                                <td><p><b><span data-toggle="tooltip" data-placement="bottom" title="The one responsible for handling the items in the warehouse.">
-                                    Total types of items:</span></b> <span>1</span></p></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                <!--This table contains the list of items-->
-                    <table class="table table-hover table-striped">
-                        <thead>
-                            <th>ID</th>
-                            <th>Item Name</th>
-                            <th>Quantity</th>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Chair</td>
-                                <td>22</td>                                                  
-                            </tr>
-                        </tbody>
-                    </table>                                 
-                </div>
-                <div class="modal-footer">
-                  <center>
-                      <button type="button" class="btn btn-bg btn-info btn-fill" data-dismiss="modal">Print</button>
-                      <button type="button" class="btn btn-bg btn-fill" data-dismiss="modal">Back</button>
-
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <center>
+                        <h4 class="modal-title"> List of Term Items</h4>
                     </center>
                 </div>
-              </div>
+
+                <form method="POST" action="printItems/{{$term[0]->term_id}}">
+                    {{csrf_field()}}
+                    <div class="modal-body">
+                        <div id="view-edit-content" class="row">
+                            <div class="col-md-12">                                     
+                                <div class="row form-group">                       
+                                    <div class=""> 
+                                        <div class="col-md-12">   
+                                            You are about to generate a pdf of all the items of this term. Do you want to proceed?
+                                        </div>
+                                    </div>
+                                </div> 
+                            </div> 
+                        </div>                       
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancel
+                        </button>
+
+                        <button type="submit" class="btn btn-bg btn-success btn-fill">
+                        Generate PDF
+                        </button> 
+                    </div>
+                </form>
             </div>
+        </div>
     </div>
 
 </body>
@@ -2099,6 +2128,16 @@
             });
 
             //EDIT ITEM FROM TERM
+            $("#edit_item_damages").on("change paste keyup", function() {
+                var value = $("#edit_item_damages").val();
+                if (value != 0 && value != null && value != " ")
+                    $("#edit_item_dtype").prop('disabled', false);
+                else {
+                    $("#edit_item_dtype").prop('disabled', true);
+                    $("#edit_item_dtype").val(null);
+                }
+            });
+
             $('#edit_ti_item_name').on('change', function() {
                 $id = $('#edit_ti_item_name').val();
                 

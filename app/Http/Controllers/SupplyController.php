@@ -85,7 +85,6 @@ class SupplyController extends Controller
                     ['inventory_supplier_id' , '=', $id], 
                     ['inventory_status', '=', 1]
                 ])
-                -> sortable() 
                 -> paginate(5);
             //dd($supplies); //debugging purposes
         } 

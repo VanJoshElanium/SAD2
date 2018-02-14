@@ -23,4 +23,9 @@ class Worker extends Model
     {
         return $this->belongsTo('App\User', 'worker_term_id', 'term_id');
     }
+
+    public function term_items()
+    {
+        return $this->hasMany('App\Term_items', 'ti_worker_id');
+    }
 }

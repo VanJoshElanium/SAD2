@@ -179,12 +179,12 @@
                                         <thead>
                                             <tr>
                                                 @if(count($users)>0)
-                                                <th>@sortablelink('user.id', 'ID')</th>
-                                                <th>@sortablelink('profile.fname', 'First Name')</th>
-                                                <th>@sortablelink('profile.mname', 'Middle Initial')</th>
-                                                <th>@sortablelink('profile.lname', 'Last Name')</th>
+                                                <th>ID</th>
+                                                <th>First Name</th>
+                                                <th>Middle Initial</th>
+                                                <th>Last Name<th>
                                                 <th>Contact Number</th>
-                                                <th>@sortablelink('user.user_type', 'Position')</th>
+                                                <th>Position</th>
                                                 @endif
                                             </tr>
                                         </thead>

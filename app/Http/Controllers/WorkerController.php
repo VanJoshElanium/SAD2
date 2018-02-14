@@ -44,7 +44,7 @@ class WorkerController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'position' => array(
-                            'unique:workers,worker_type,null,null,worker_term_id,'.$request-> term_id
+                            'unique:workers,worker_type,null,null,worker_term_id,'.$request-> term_id .',worker_type, 1'
                         ),
         ]);
         
