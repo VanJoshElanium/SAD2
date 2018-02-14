@@ -28,7 +28,7 @@ class SupplierController extends Controller
                 -> paginate(5);
         }else{
             $suppliers = Supplier::where('supplier_status' , '=', 1)
-                -> sortable() 
+                
                 -> paginate(5);
         } 
         return view('suppliers', compact('suppliers', 'curr_usr'));

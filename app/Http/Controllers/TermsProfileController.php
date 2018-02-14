@@ -29,7 +29,7 @@ class TermsProfileController extends Controller
      */
     public function index()
     {
-        return view('termsprofile');
+        
     }
 
     /**
@@ -198,7 +198,7 @@ class TermsProfileController extends Controller
                         ['terms.term_id', '=', $id]
                     ])
                     -> paginate(5);
-
+                    
         //TERM CUSTOMERS
         $unpaid_customers = Customer_Order::join('customers', 'customer_id', '=', 'co_customer_id')
                     -> join ('orders', 'order_co_id', '=', 'co_id')

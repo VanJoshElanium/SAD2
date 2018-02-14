@@ -53,7 +53,6 @@ class InventoryController extends Controller
                 -> where([
                         ['inventory_status' , '!=', 0]
                     ])
-                -> sortable() 
                 -> paginate(5);
 
             //ACTIVE INVENTORY ITEMS
@@ -63,7 +62,6 @@ class InventoryController extends Controller
                 -> where([
                         ['inventory_status' , '=', 1]
                     ])
-                -> sortable() 
                 -> paginate(5);
         } 
         return view('inventory', compact('items', 'curr_usr', 'suppliers', 'workers', 'repairs'));
@@ -92,6 +90,16 @@ class InventoryController extends Controller
                     -> where([
                             ['inventory_supplier_id', '=', $id],
                             ['inventory_qty', '=', 0]
+                        ])
+                    -> get();
+        //Session::flash('message', 'User has been successfully created!');
+        return $supplies;
+    }
+
+    public function getSupplyDamaged($id){
+        $supplies = Inventory::select('inventories.inventory_id', 'inventories.inventory_name', 'inventories.inventory_qty', 'inventories.inventory_price')
+                    -> where([
+                            ['inventory_supplier_id', '=', $id]
                         ])
                     -> get();
         //Session::flash('message', 'User has been successfully created!');
@@ -176,10 +184,10 @@ class InventoryController extends Controller
                     $item -> save();
 
                     $stockin = new Stockin;
-                    $stockin -> si_date = $request->get('received_at');
+                    // $stockin -> si_date = $request->get('received_at');
                     $stockin-> si_qty = $input['inventory_quantity'][$i];
                     $stockin -> si_inventory_id = $item -> inventory_id;
-                    $stockin -> si_user_id = $request->get('inventory_user_id');
+                    // $stockin -> si_user_id = $request->get('inventory_user_id');
                     $stockin -> save();
                 }
             }             
