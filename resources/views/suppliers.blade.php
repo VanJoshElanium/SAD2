@@ -170,9 +170,9 @@
                                         <thead>
                                             <tr>
                                                 @if(count($suppliers)>0)
-                                                <th>@sortablelink('supplier_id', 'ID')</th>
-                                                <th>@sortablelink('supplier_name', 'Name')</th>
-                                                <th>@sortablelink('supplier_addr', 'Address')</th>
+                                                <th>ID</th>
+                                                <th>Name</th>
+                                                <th>Address</th>
                                                 <th>E-Mail</th>
                                                 <th>Contact Number</th>
                                                 @endif

@@ -167,9 +167,9 @@
                                             <thead>
                                                 <tr>
                                                     @if(count($supplies)>0)
-                                                    <th>@sortablelink('supplier_id', 'ID')</th>
-                                                    <th>@sortablelink('supply_name', 'Name')</th>
-                                                    <th>@sortablelink('supply_price', 'Price')</th>
+                                                    <th>ID</th>
+                                                    <th>Name</th>
+                                                    <th>Price</th>
                                                     @endif
                                                 </tr>
                                             </thead>

@@ -196,11 +196,11 @@
                                                 <thead>
                                                     <tr>
                                                         @if(count($items)>0)
-                                                        <th>@sortablelink('inventory_id', 'ID')</th>
-                                                        <th>@sortablelink('supply_name', 'Item Name')</th>
-                                                        <th>@sortablelink('supplier_name', 'Supplier Name')</th>
-                                                        <th>@sortablelink('inventory_price', 'Price')</th>
-                                                        <th>@sortablelink('inventory_quantity', 'Quantity')</th>
+                                                        <th>ID</th>
+                                                        <th>Item Name</th>
+                                                        <th>Supplier Name</th>
+                                                        <th>Price</th>
+                                                        <th>Quantity</th>
                                                         <!-- <th>@sortablelink('received_at', 'Received At')</th> -->
                                                         @endif
                                                     </tr>
@@ -270,10 +270,10 @@
                                                 <thead>
                                                     <tr>
                                                         @if(count($items)>0)
-                                                        <th>@sortablelink('inventory_id', 'ID')</th>
-                                                        <th>@sortablelink('supply_name', 'Item Name')</th>
-                                                        <th>@sortablelink('supplier_name', 'Supplier Name')</th>
-                                                        <th>@sortablelink('inventory_quantity', 'Quantity')</th>
+                                                        <th>ID</th>
+                                                        <th>Item Name</th>
+                                                        <th>Supplier Name</th>
+                                                        <th>Quantity</th>
                                                         <!-- <th>@sortablelink('received_at', 'Received At')</th> -->
                                                         @endif
                                                     </tr>
@@ -448,7 +448,7 @@
 
                                 <div class="form-group">
                                     <div class="{{$errors->addRepair->has('dm_supplier_name') ? ' has-error' : ''}}"> 
-                                        <div class="col-md-4">    
+                                        <div class="col-md-8">    
                                             <label for="sel1">Supplier Name</label>
                                             <select class="form-control" id="dm_supplier_name" name="dm_supplier_name" required>
                                             <option value="" selected="selected"></option>
@@ -466,7 +466,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4">    
+                                    <!-- <div class="col-md-4">    
                                         <label for="sel1">Handler</label>
                                         <select class="form-control" name="inventory_user_id" required id="pic">
                                             <option value="" data-hidden="true" selected="selected">
@@ -491,7 +491,7 @@
                                                 </span>
                                             @endif
                                         </div>
-                                    </div>
+                                    </div> -->
 
                                 </div>
 
@@ -608,7 +608,7 @@
 
     <!-- VIEW/EDIT MODAL UNDAMAGED -->
     <div class="modal fade" role="dialog" id="editModal-un">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -718,139 +718,6 @@
         </div>
     </div>
 
-    <!-- ADD  MODAL DAMAGED -->
-    <div class="modal fade" role="dialog" id="addModal">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">New Damaged Item</h4>
-                </div>
-                                    
-                <div class="modal-body">
-                    <div class="row">
-                        <!-- USER ADD FORM -->
-                        <div class="col-lg-12"> 
-                            <form class="form-horizontal" method="POST" action="/repair">
-                                {{ csrf_field() }}
-
-                                <!-- SUPPLIER NAME & ADDR DETAILS--> 
-
-                                <div class="form-group">
-                                    <div class="{{$errors->editRepair->has('view_dm_supplier_name') ? ' has-error' : ''}}"> 
-                                        <div class="col-md-4">    
-                                            <label for="sel1">Supplier Name</label>
-                                            <select class="form-control" id="view_dm_supplier_name" name="view_dm_supplier_name" required>
-                                            <option value="" selected="selected"></option>
-                                            @foreach($suppliers as $supplier)
-                                                <option value="{{$supplier->supplier_id}}">
-                                                    {{$supplier->supplier_name}}
-                                                </option>
-                                            @endforeach
-                                            </select>         
-                                            @if ($errors->editRepair->has('view_dm_supplier_name'))
-                                                <span class="help-block">
-                                                    <strong>{{ $errors->editRepair->first('view_dm_supplier_name') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">    
-                                        <label for="sel1">Handler</label>
-                                        <select class="form-control" name="inventory_user_id" required id="pic">
-                                            <option value="" data-hidden="true" selected="selected">
-                                            </option>
-                                            @foreach($workers as $worker)
-                                                <option value="{{$worker->user_id}}">
-                                                    {{$worker->fname}} {{$worker->mname}}. {{$worker->lname}}
-                                                </option>
-                                            @endforeach
-                                        </select>         
-                                    </div>
-
-                                    <div class="{{$errors->editRepair->has('received_at') ? ' has-error' : ''}}">
-                                        <div class="col-md-4">    
-                                            <label>Date Received</label>
-                                            <input type="datetime-local" id="view_received_at" class="form-control"  name="received_at" required value="{{App\Inventory::currdate()}}"> 
-                                            @if ($errors->editRepair->has('view_received_at'))
-                                                <span class="help-block">
-                                                    <strong>
-                                                        {{ $errors->editRepair->first('view_received_at') }}
-                                                    </strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <div id="dm-form">                                
-                                    <div class="row form-group">   
-                                        <div class="{{$errors->editRepair->has('dm_item_name') ? ' has-error' : ''}}"> 
-                                            <div class="col-md-4">    
-                                                <label>Item Name</label>
-                                                <select class="form-control dm_item_name" name="view_dm_item_name" required>
-                                                </select>  
-                                                @if ($errors->editRepair->has('view_dm_item_name'))
-                                                    <span class="help-block">
-                                                        <strong>
-                                                            {{ $errors->editRepair->first('view_dm_item_name') }}
-                                                        </strong>
-                                                    </span>
-                                                @endif
-                                            </div>
-                                        </div>
-
-                                        <div class="{{$errors->editRepair->has('view_dm_state') ? ' has-error' : ''}}"> 
-                                            <div class='col-md-4'>  
-                                                <label>State</label>
-                                                    <select class='form-control'  name='view_dm_item_state' required>
-                                                        <option value='' selected="selected"> </option>
-                                                        <option value='1'> Repairable </option>
-                                                        <option value='0'> Unrepairable </option>
-                                                    </select>
-                                                @if ($errors->editRepair->has('view_dm_state'))
-                                                    <span class="help-block">
-                                                        <strong>{{ $errors->editRepair->first('view_dm_state') }}</strong>
-                                                    </span>
-                                                @endif
-                                            </div>
-                                        </div>
-
-                                        <div class="{{$errors->editRepair->has('view_dm_qty') ? ' has-error' : ''}}"> 
-                                            <div class="col-md-2">    
-                                                <label for="sel1">Quantity</label>
-                                                <input type="number" class="form-control" required name="view_dm_qty">      
-                                                @if ($errors->editRepair->has('view_dm_qty'))
-                                                    <span class="help-block">
-                                                        <strong>{{ $errors->editRepair->first('view_dm_qty') }}</strong>
-                                                    </span>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>    
-                                </div>
-                                
-                                <!-- SUBMIT BUTTON -->
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-add">
-                                        Edit
-                                    </button>
-
-                                    <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic pull-right" style="margin-right: 2%">
-                                        Cancel
-                                    </button>             
-                                    <div class="clearfix"></div>
-                                </div>
-                                    
-                            </form>                
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- ADD FIXED QTY MODAL DAMAGED -->
     <div class="modal fade" role="dialog" id="editModal-dm">
@@ -876,10 +743,19 @@
                             </div>
                         </div>
 
-                        <div class="row form-group">                        
-                            <div class="col-sm-12">    
-                                <label>Quantity Fixed</label>
-                                <input type="number" id="qty_fixed" class="form-control" name="qty_fixed">
+                        <div class="row form-group">
+                            <div class="{{$errors->editRepair->has('qty_fixed') ? ' has-error' : ''}}">                        
+                                <div class="col-sm-12">    
+                                    <label>Quantity Fixed</label>
+                                    <input type="number" id="qty_fixed" class="form-control" name="qty_fixed">
+                                    @if ($errors->has('qty_fixed'))
+                                        <span class="help-block">
+                                            <strong>
+                                                {{ $errors->editRepair->first('qty_fixed') }}
+                                            </strong>
+                                        </span>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -893,7 +769,7 @@
         </div>
     </div>
 
-    <!-- VIEW + EDIT MODAL DAMAGED -->
+    <!-- VIEW/EDIT MODAL DAMAGED -->
     <div class="modal fade" role="dialog" id="viewModal-dm">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -912,12 +788,12 @@
                             <div class="col-lg-12"> 
                                 <div class="form-group">
                                     
-                                    <div class="col-md-4">    
+                                    <div class="col-md-8">    
                                         <label for="sel1">Supplier Name</label>
                                         <input type="text" required name="edit_supplier_name" class="form-control" id="edit_supplier_name" disabled="disabled"> 
                                     </div>
 
-                                    <div class="col-md-4">    
+                                    <!-- <div class="col-md-4">    
                                         <label for="sel1">Handler</label>
                                         <select class="form-control" name="edit_handler" required id="pic" required>
                                             @foreach($workers as $worker)
@@ -940,7 +816,7 @@
                                                 </span>
                                             @endif
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                                
                                 <div class="row form-group">   
@@ -1105,7 +981,7 @@
 
                     var value = $('#dm_supplier_name').val();
                     $.ajax({
-                        url: "/getSupply/" +value,
+                        url: "/getSupplyDamaged/" +value,
                         type: "GET",
                         data: {'id' : value},
                         success: function(response){                      
@@ -1275,13 +1151,13 @@
                     // SET FORM INPUTS
                     $('#edit_supplier_name').val(response[0].supplier_name);
                     $('#edit_item_name').val(response[0].inventory_name);
-                    $("#edit_handler option[value='"+response[0].repair_user_id+"']").attr('selected', true);
+                    // $("#edit_handler option[value='"+response[0].repair_user_id+"']").attr('selected', true);
 
-                    //DATE TIME FORMATTING
-                    var to_erase = (response[0].repair_date).substr(response[0].repair_date.length - 3);
-                    var formatted_date = response[0].repair_date.replace(to_erase, '');
-                    formatted_date = formatted_date.replace(' ', 'T');
-                    $('#edit_received_at').val(formatted_date);
+                    // //DATE TIME FORMATTING
+                    // var to_erase = (response[0].repair_date).substr(response[0].repair_date.length - 3);
+                    // var formatted_date = response[0].repair_date.replace(to_erase, '');
+                    // formatted_date = formatted_date.replace(' ', 'T');
+                    // $('#edit_received_at').val(formatted_date);
                     $("#edit_item_state option[value='"+response[0].repair_status+"']").attr('selected', true);
 
                     $('#edit_item_dmqty').val(response[0].repair_qty);
