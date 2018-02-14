@@ -1935,7 +1935,7 @@
                     </center>
                 </div>
 
-                <form method="POST" action="printItems/{{$term[0]->term_id}}">
+                <form method="POST" action="/printItems/{{$term[0]->term_id}}">
                     {{csrf_field()}}
                     <div class="modal-body">
                         <div id="view-edit-content" class="row">
