@@ -118,17 +118,15 @@
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
                         </button>
                         <a class="navbar-brand" href="#">Inventory Management</a>
+                        <a class="btn btn-sm btn-info btn-fill" href="{{ URL::previous() }}">Back</a>
                    </div>
                     <div class="collapse navbar-collapse">
                         <ul class="nav navbar-nav navbar-right">
                             <li>
                                 <a href="/html/user.html">
-                                    {{$curr_usr->fname}} {{$curr_usr->mname}}. {{$curr_usr->lname}}  
+                                    {{$curr_usr->fname}} {{$curr_usr->mname}} {{$curr_usr->lname}}  
                                     <!-- Full Name of currently logged in user -->
                                 </a>
                             </li>
