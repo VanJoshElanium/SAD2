@@ -111,6 +111,7 @@
                             <span class="icon-bar"></span>
                         </button>
                         <a class="navbar-brand" href="#">Log Records</a>
+                        <a class="btn btn-sm btn-info btn-fill" href="{{ URL::previous() }}">Back</a>
                    </div>
                     <div class="collapse navbar-collapse">
                         <ul class="nav navbar-nav navbar-right">
