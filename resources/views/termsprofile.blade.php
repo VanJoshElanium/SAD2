@@ -57,34 +57,40 @@
                             <p>Dashboard</p>
                         </a>
                     </li>
-                    <li>
-                        <a href="/html/user.html">
-                            <i class="pe-7s-user"></i>
-                            <p>User Profile</p>
-                        </a>
-                    </li>
                     <li class="active">
-                        <a href="{{route('terms') }}">
+                        <a href="{{ route('terms') }}">
                             <i class="pe-7s-graph"></i>
-                            <p>Term Management</p>
+                            <p>Terms</p>
                         </a>
                     </li>
-                    <li >
+                    <li>
                         <a href="{{route('inventory') }}">
                             <i class="pe-7s-drawer"></i>
-                            <p>Inventory</p>
+                            <p>Inventories</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('stockins') }}">
+                            <i class="pe-7s-download"></i>
+                            <p>Stock Ins</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('stockouts') }}">
+                            <i class="pe-7s-upload"></i>
+                            <p>Stock Outs</p>
                         </a>
                     </li>
                     <li>
                         <a href="{{route('suppliers') }}">
                             <i class="pe-7s-box1"></i>
-                            <p>Supplier Management</p>
+                            <p>Suppliers</p>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('usrmgmt') }}">
                             <i class="pe-7s-users"></i>
-                            <p>User Management</p>
+                            <p>Users</p>
                         </a>
                     </li>
                     <li>
@@ -136,7 +142,7 @@
                     <div class="col-md-12">
                         <div class="card box">        
                             <!-- NAVIGATION TABS -->
-                            <ul class="nav nav-tabs" role="tablist">
+                            <ul class="nav nav-tabs" role="tablist" id="myTab">
                                 <li role="presentation" class="active">
                                     <a href="#tl_members" aria-controls="home" role="tab" data-toggle="tab">
                                         <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the details of the people that are managing the term.">
@@ -153,7 +159,8 @@
                                     </a>
                                 </li>
                                 
-                                <li role="presentation"><a href="#tl_expenses" aria-controls="profile" role="tab" data-toggle="tab">
+                                <li role="presentation">
+                                    <a href="#tl_expenses" aria-controls="profile" role="tab" data-toggle="tab">
                                     <!-- <a> -->
                                         <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the expneses used for the term.">      Expenses
                                         </span>
@@ -225,7 +232,7 @@
                                                                     
                                                                     <td>
                                                                         <span data-toggle="tooltip" data-placement="bottom" title="Edit the position of the peddler."> 
-                                                                            <button type="button" data-target="#editPeddler" data-id='{{$worker->worker_id}}' data-toggle="modal" class="ep_btn btn  btn-primary btn-fill" id="ep_btn"> 
+                                                                            <button type="button" data-target="#editPeddler" data-id='{{$worker->worker_id}}' data-toggle="modal" class="ep_btn btn  btn-primary btn-fill" id="ep-{{$worker->worker_id}}"> 
                                                                             Edit
                                                                             </button>
                                                                         </span>
@@ -537,46 +544,67 @@
                                                         </table>
                                                     </div>
                                                 </div>
+                                                <div style="margin-left: 1%"> 
+                                                    {{$sales->links()}} 
+                                                </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="card">
-                                                    <div class="header"><br><br>
-
-                                                        <h4 class="title">Total Expenses</h4>
+                                                    <div class="header">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <button type="button" data-target="#printSales" data-toggle="modal" class="btn pull-right btn-basic btn-fill"> 
+                                                                        Print Sales
+                                                                    </button> 
+                                                        </div>
+                                                    </div>
+                                                    <!-- Total expense -->
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                          <h4 class="title">&#8369;{{$total_expense}}</h4>
                                                         <p class="category">
-                                                            &#8369;{{$total_expense}}
-                                                        </p>
-
-                                                        <br><br>
-
-                                                        <h4 class="title">Total Sales</h4>    
-                                                        <p class="category">
-                                                            &#8369;
+                                                            Total Expenses
+                                                        </p>  
+                                                        </div>
+                                                    </div><br><br>
+                                                    <!-- Total sale-->
+                                                    <div class="row">
+                                                        <div class="col-md-12">
                                                             @foreach($term_items as $term_item)
-                                                                {{$total_sale += ($term_item->ti_original -($term_item->ti_damaged + $term_item->ti_returned)) *
-                                                                ($term_item -> inventory_price + ($term_item -> inventory_price * 0.25))}}
+                                                                <?php $total_sale += 
+                                                                ($term_item->ti_original -($term_item->ti_damaged + $term_item->ti_returned)) *
+                                                                ($term_item -> inventory_price + ($term_item -> inventory_price * 0.25)) ?>
                                                             @endforeach
-                                                        </p>
-                                                        <br><br> 
-
-                                                        <h4 class="title">Total Revenue</h4>
+                                                        <h4 class="title">&#8369; {{$total_sale}}</h4>    
+                                                            
                                                         <p class="category">
-                                                            &#8369;{{$total_sale * 0.25}}
-                                                        </p>
-                                                        <br><br>
-
-                                                        <h4 class="title">Amount Collectable</h4>
+                                                            Total Sales</p>
+                                                        </div>
+                                                    </div><br><br>
+                                                    <!-- Total revenue -->
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <h4 class="title">&#8369;{{$total_sale * 0.25}}</h4>
                                                         <p class="category">
-                                                            &#8369;{{$total_sale + $total_expense}}
+                                                            Total Revenue
                                                         </p>
-                                                        <br><br><br> 
-
+                                                        </div>
+                                                    </div><br><br>
+                                                    <!-- Collectable amount -->
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <h4 class="title"> &#8369;{{$total_sale + $total_expense}}</h4>
+                                                        <p class="category">
+                                                           Amount Collectable
+                                                        </p>
+                                                        </div>
+                                                    </div><br><br>
+                                                        <!-- Collected amount -->
                                                         <div class="modal-footer">
-                                                            <h4 class="title">Collected Amount</h4>    
+                                                            <h4 class="title">&#8369;{{$total_collected}}</h4>    
                                                             <p class="category">
-                                                                &#8369;{{$total_collected}}
+                                                                Collected Amount
                                                             </p>
-                                                            <br><br>
                                                         </div>
                                                         <hr>     
                                                     </div>
@@ -635,7 +663,7 @@
                                                                             &#8369;{{$unpaid_customer -> total_payable}}
                                                                         </td>
                                                                         <td>
-                                                                            <button data-target="#editCustomer" data-toggle="modal" id="viewCustomer-{{$unpaid_customer -> co_id}}" data-id='{{$unpaid_customer -> co_id}}' class="viewCustomer_btn btn btn-primary btn-fill">
+                                                                            <button data-target="#editCustomer" data-toggle="modal" id="viewCustomer-{{$unpaid_customer -> co_id}}"  data-id='{{$unpaid_customer -> co_id}}' class="viewCustomer_btn btn btn-primary btn-fill">
                                                                                 View
                                                                             </button>
                                                                         </td>
@@ -681,7 +709,6 @@
                                                                     <th>Name</th>
                                                                     <th>Date Paid</th>
                                                                     <th>Total Paid</th>
-                                                                    <th>View</th>
                                                                 </thead>
                                                                 <tbody>
                                                                 @forelse($paid_customers as $paid_customer)
@@ -991,11 +1018,11 @@
                                             <select class="form-control" name="add_ti_worker" required id="add_ti_worker">
                                                 <option value="" data-hidden="true" selected="selected">
                                                 </option>
-                                                @foreach($workers as $worker)
-                                                    <option value="{{$worker-> worker_id}}">
-                                                        {{$worker->fname}}&nbsp
-                                                        {{$worker->mname}}.
-                                                        {{$worker->lname}}
+                                                @foreach($peddlers as $peddler)
+                                                    <option value="{{$peddler-> user_id}}">
+                                                        {{$peddler->fname}}&nbsp
+                                                        {{$peddler->mname}}.
+                                                        {{$peddler->lname}}
                                                     </option>
                                                 @endforeach
                                             </select>           
@@ -1106,7 +1133,47 @@
                                             @endif
                                         </div>
                                     </div>
+                                </div>
 
+                                <div class="row form-group">
+                                    <div class="{{ $errors->editItem->has('edit_item_rhandler') ? ' has-error' : '' }}"> 
+                                        <div class="col-md-6">   
+                                            <!--Acquires the list of workers within users table-->
+                                            <label class="sel1">Handler:</label>
+                                            <select class="form-control" name="edit_item_handler" required id="edit_item_rhandler">
+                                                <option value="" data-hidden="true" selected="selected" >
+                                                </option>
+                                                @foreach($peddlers as $peddler)
+                                                    <option value="{{$peddler->user_id}}">
+                                                        {{$peddler->fname}}&nbsp
+                                                        {{$peddler->mname}}.
+                                                        {{$peddler->lname}}
+                                                    </option>
+                                                @endforeach
+                                            </select>           
+                                            @if ($errors->editItem->has('edit_item_rhandler'))
+                                                <span class="help-block">
+                                                    <strong>{{ $errors->editItem->first('edit_item_rhandler') }}</strong>
+                                                </span>
+                                            @endif                   
+                                        </div>
+                                    </div>
+
+                                    <div class="{{ $errors->editItem->has('edit_item_date') ? ' has-error' : '' }}">
+                                        <div class="col-md-6">
+                                            <label>Date</label>
+                                            <input type="datetime-local" id="edit_item_date" class="form-control"  name="edit_item_date" required value="{{App\Inventory::currdate()}}"> 
+                                                                                
+                                            @if ($errors->editItem->has('edit_item_date'))
+                                                <span class="help-block">
+                                                    <strong>{{ $errors->editItem->first('edit_item_date') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div> 
+                                </div><br><br><br>
+
+                                 <div class="row form-group">
                                     <div class="{{ $errors->editItem->has('edit_item_original') ? ' has-error' : '' }}">
                                         <div class="col-md-4">
                                             <label>Original Qty</label>
@@ -1120,9 +1187,6 @@
                                             @endif
                                         </div>
                                     </div>
-                                </div> 
-
-                                <div class="row form-group">
                                     <div class="{{ $errors->editItem->has('edit_item_returns') ? ' has-error' : '' }}">
                                         <div class="col-md-4">
                                             <label>Returned Qty</label>
@@ -1135,40 +1199,37 @@
                                                 </span>
                                             @endif
                                         </div>
-                                    </div>
-
-                                    <div class="{{ $errors->editItem->has('edit_item_damages') ? ' has-error' : '' }}">
-                                        <div class="col-md-4">  
-                                            <label class="sel1">Damaged Qty</label>
-                                            <input class="form-control" type="number" id="edit_item_damages" name="edit_item_damages" value="{{ old('edit_item_returns') }}">
-                                            @if ($errors->editItem->has('edit_item_damages'))
-                                                <span class="help-block">
-                                                    <strong>
-                                                        {{$errors->dditItem->first('edit_item_damages')}}
-                                                    </strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                    <div class="{{ $errors->editItem->has('edit_item_dtype') ? ' has-error' : '' }}">
-                                        <div class="col-md-4">  
-                                            <label class="sel1">Damaged Status</label>
-                                            <select class='form-control'  id="edit_item_dtype" name='edit_item_dtype' required value="{{old('edit_item_dtype')}}" disabled>
-                                                <option value='' selected="selected"> </option>
-                                                <option value='1'> Repairable </option>
-                                                <option value='0'> Unrepairable </option>
-                                            </select>
-                                            @if ($errors->editItem->has('edit_item_dtype'))
-                                                <span class="help-block">
-                                                    <strong>
-                                                        {{$errors->dditItem->first('edit_item_dtype')}}
-                                                    </strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </div>
+                                    </div>                            
                                 </div>
+
+                                <div class="row form-group">
+                                    <div class="{{ $errors->editItem->has('edit_item_udamages') ? ' has-error' : '' }}">
+                                        <div class="col-md-4">  
+                                            <label class="sel1">Unrepairable Qty</label>
+                                            <input class="form-control" type="number" id="edit_item_damages" name="edit_item_udamages" value="{{ old('edit_item_udamages') }}">
+                                            @if ($errors->editItem->has('edit_item_udamages'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{$errors->editItem->first('edit_item_udamages')}}
+                                                    </strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="{{ $errors->editItem->has('edit_item_rdamages') ? ' has-error' : '' }}">
+                                        <div class="col-md-4">  
+                                            <label class="sel1">Repairable Qty</label>
+                                            <input class="form-control" type="number" id="edit_item_rdamages" name="edit_item_rdamages" value="{{ old('edit_item_rdamages') }}">
+                                            @if ($errors->editItem->has('edit_item_rdamages'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{$errors->editItem->first('edit_item_rdamages')}}
+                                                    </strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>                      
                             </div>
                         </div>
                     </div>
@@ -1275,7 +1336,7 @@
                                         <input type="number" required name="edit_exp_amt" id="edit_exp_amt" class="form-control" required>
                                         @if ($errors->editExpense->has('edit_exp_amt'))
                                             <span class="help-block">
-                                                <strong>{{ $errors->editExpense->first('exit_exp_amt') }}</strong>
+                                                <strong>{{ $errors->editExpense->first('edit_exp_amt') }}</strong>
                                             </span>
                                         @endif
                                     </div>
@@ -1577,7 +1638,7 @@
                                 </div> 
                                     
                                 <div class="row form-group">
-                                    <div class="{{ $errors->editCustomer->has('edit_edit_cnum') ? ' has-error' : '' }}">
+                                    <div class="{{ $errors->editCustomer->has('edit_cnum') ? ' has-error' : '' }}">
                                         <div class="col-md-8">  
                                             <label>Contact Number</label>
                                             <input type="number" required name="edit_cnum" id="edit_cnum" class="form-control" >
@@ -1923,7 +1984,7 @@
         </div>
     </div>
 
-    <!--PRINTING MODAL-->    
+    <!--PRINTING ITEMS MODAL-->    
     <div class="modal fade" role="dialog" id="printItems" >
         <div class="modal-dialog">
           <!-- Modal content-->
@@ -1964,6 +2025,47 @@
         </div>
     </div>
 
+    <!--PRINTING ITEMS MODAL-->    
+    <div class="modal fade" role="dialog" id="printSales" >
+        <div class="modal-dialog">
+          <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <center>
+                        <h4 class="modal-title"> Sales Report</h4>
+                    </center>
+                </div>
+
+                <form method="POST" action="/printSales/{{$term[0]->term_id}}">
+                    {{csrf_field()}}
+                    <div class="modal-body">
+                        <div id="view-edit-content" class="row">
+                            <div class="col-md-12">                                     
+                                <div class="row form-group">                       
+                                    <div class=""> 
+                                        <div class="col-md-12">   
+                                            You are about to generate a pdf of all the sales of this term. Do you want to proceed?
+                                        </div>
+                                    </div>
+                                </div> 
+                            </div> 
+                        </div>                       
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancel
+                        </button>
+
+                        <button type="submit" class="btn btn-bg btn-success btn-fill">
+                        Generate PDF
+                        </button> 
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </body>
 
     <!--   Core JS Files   -->
@@ -1979,13 +2081,6 @@
     <!-- Light Bootstrap Table DEMO methods, don't include it in your project! -->
     <script src="/js/demo.js"></script>
 
-    <script type="text/javascript">
-        $('#myTabs a').click(function (e) {
-          e.preventDefault()
-          $(this).tab('show')
-        })
-    </script>
-
     <!-- VALIDATION ERRORS -->
     <script>
         document.addEventListener("DOMContentLoaded", function(event) {
@@ -1997,6 +2092,9 @@
 
             if ({!!count($errors->addPeddler)!!} > 0)
                 $("#addPeddler").modal(); 
+
+            if({!!count($errors->editPeddler)!!} > 0)
+                $("#ep-{{ session()-> get( 'error_id' ) }}").click();
 
             // if ({!!count($errors->addItem)!!} > 0)
             //     $("#addItem").modal(); 
@@ -2127,17 +2225,6 @@
                $("#add_ti_item_name option[value='" +removed +"']").append();
             });
 
-            //EDIT ITEM FROM TERM
-            $("#edit_item_damages").on("change paste keyup", function() {
-                var value = $("#edit_item_damages").val();
-                if (value != 0 && value != null && value != " ")
-                    $("#edit_item_dtype").prop('disabled', false);
-                else {
-                    $("#edit_item_dtype").prop('disabled', true);
-                    $("#edit_item_dtype").val(null);
-                }
-            });
-
             $('#edit_ti_item_name').on('change', function() {
                 $id = $('#edit_ti_item_name').val();
                 
@@ -2153,6 +2240,9 @@
                         $("#edit_item_original").val(response.ti_original);
                         $("#edit_item_returns").val(response.ti_returned);
                         $("#edit_item_damages").val(response.ti_damaged);
+
+                        // /
+                    
                     },
                     error: function(data){
                         console.log(data);
@@ -2335,6 +2425,25 @@
                 //FORM
                 $("#removeCollection_form").attr("action", "/sales/" +id);
             }); 
+    </script>
+
+    <script>
+        $(document).ready(function(){ 
+            $('a[data-toggle="tab"]').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+
+            $('a[data-toggle="tab"]').on("shown.bs.tab", function (e) {
+                var id = $(e.target).attr("href");
+                localStorage.setItem('selectedTab', id)
+            });
+
+            var selectedTab = localStorage.getItem('selectedTab');
+            if (selectedTab != null) {
+                $('a[data-toggle="tab"][href="' + selectedTab + '"]').tab('show');
+            }
+        });
     </script>
 @endsection
 
