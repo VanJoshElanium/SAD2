@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
 use App\Term;
 use App\User;
 use Validator;
@@ -276,5 +277,68 @@ class TermsProfileController extends Controller
     public function destroy($id)
     {
         
+    }
+
+    public function printSales($id){
+      $term_items = Term::join('term_items', 'terms.term_id', '=', 'term_items.ti_term_id')
+                    -> join ('workers', 'worker_term_id', '=', 'term_id')
+                    -> join ('profiles as handler', 'handler.profile_user_id', '=', 'ti_user_id')
+                    -> join('profiles as worker', 'worker.profile_user_id', '=', 'worker_user_id')
+                    -> join('inventories', 'inventories.inventory_id', '=', 'term_items.ti_inventory_id')
+                    -> join('suppliers', 'suppliers.supplier_id', '=', 'inventories.inventory_supplier_id')
+                    -> select ('terms.*', 'term_items.*', 'inventories.inventory_name', 'inventories.inventory_price', 'suppliers.supplier_name', 'suppliers.supplier_id', 'worker.fname as cfname', 'worker.mname as cmname', 'worker.lname as clname', 'handler.fname as hfname', 'handler.mname as hmname', 'handler.lname as hlname')
+                    -> where ([
+                        ['terms.term_id', '=', $id],
+                        ['worker_term_id', '=', $id]
+                    ])
+                    -> groupBy('ti_id')
+                    -> get();
+
+      $workers = Term::join('workers', 'terms.term_id', '=', 'worker_term_id')
+            -> join('users', 'workers.worker_user_id', '=', 'users.user_id')
+            -> join('profiles', 'users.user_id', '=', 'profiles.profile_user_id')
+            -> select('terms.*', 'workers.*', 'profiles.*')
+            -> where([
+                    ['terms.term_id', '=', $id],
+                    ['workers.worker_term_id', '=', $id],
+                    ['terms.term_status', '=', 1],
+                    ['workers.worker_type', '!=', 0]
+                ])
+            -> get();
+
+      //TERM EXPENSES
+      $expenses = Term::join('expenses', 'terms.term_id', '=', 'expense_term_id')
+                -> select('terms.term_id', 'terms.term_status', 'expenses.*')
+                -> where([
+                    ['terms.term_status', '=', '1'],
+                    ['terms.term_id', '=', $id]
+                ])
+                -> get();
+
+      $total_expense = DB::table('expenses')
+                    -> where ('expenses.expense_term_id', '=', $id)
+                    -> sum('expense_amt');
+
+      $total_items = DB::table('term_items')
+                    -> where ('term_items.ti_term_id', '=', $id)
+                    -> count('ti_id');
+
+      $total_quantity = DB::table('term_items')
+                    -> where ('term_items.ti_term_id', '=', $id)
+                    -> sum('ti_original');
+
+      $total_damages = DB::table('term_items')
+                    -> where ('term_items.ti_term_id', '=', $id)
+                    -> sum('ti_damaged');
+
+      $total_returns = DB::table('term_items')
+                    -> where ('term_items.ti_term_id', '=', $id)
+                    -> sum('ti_returned');
+
+      $total_sales = ($total_quantity - ($total_damages + $total_returns));
+
+      $pdf = PDF::loadView('termsales', compact('term_items', 'expenses', 'total_expense', 'total_sales', 'total_items', 'total_quantity', 'total_damages', 'total_returns', 'workers'));
+
+      return $pdf->download('termsales.pdf');
     }
 }

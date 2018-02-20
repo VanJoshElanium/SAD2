@@ -55,7 +55,7 @@ class Term_ItemController extends Controller
         
         for ($i=0; $i < count($input['add_ti_item_name']); ++$i) {
 
-            $item_qty = Inventory::where('inventories.inventory_id', '=', $request -> add_ti_item_name)
+            $item_qty = Inventory::where('inventories.inventory_id', '=', $input['add_ti_item_name'][$i])
                     -> select ('inventory_qty')
                     -> get();
 
@@ -73,7 +73,7 @@ class Term_ItemController extends Controller
             else{
                 $term_item = new Term_Item;
                 $term_item -> ti_date = $request -> add_ti_date;
-                $term_item -> ti_worker_id = $request -> add_ti_worker;
+                $term_item -> ti_user_id = $request -> add_ti_worker;
                 $term_item -> ti_inventory_id = $input['add_ti_item_name'][$i];
                 $term_item -> ti_original = $input['add_ti_qty'][$i];
                 $term_item -> ti_damaged = 0;
@@ -122,6 +122,7 @@ class Term_ItemController extends Controller
      */
     public function update(Request $request, $id)
     {
+        dd($request);
         $term_item = Term_Item::find($request-> edit_ti_item_name);
 
         $inven_qty = Term_Item::where('term_items.ti_id', '=', $request -> edit_ti_item_name)
@@ -246,13 +247,19 @@ class Term_ItemController extends Controller
 
     public function printItems($id){
         $term_items = Term::join('term_items', 'terms.term_id', '=', 'term_items.ti_term_id')
+                    -> join ('workers', 'worker_term_id', '=', 'term_id')
+                    -> join ('profiles as handler', 'handler.profile_user_id', '=', 'ti_user_id')
+                    -> join('profiles as worker', 'worker.profile_user_id', '=', 'worker_user_id')
                     -> join('inventories', 'inventories.inventory_id', '=', 'term_items.ti_inventory_id')
                     -> join('suppliers', 'suppliers.supplier_id', '=', 'inventories.inventory_supplier_id')
-                    -> select ('terms.term_id', 'term_items.*', 'inventories.inventory_name', 'inventories.inventory_price', 'suppliers.supplier_name', 'suppliers.supplier_id')
+                    -> select ('terms.*', 'term_items.*', 'inventories.inventory_name', 'inventories.inventory_price', 'suppliers.supplier_name', 'suppliers.supplier_id', 'worker.fname as cfname', 'worker.mname as cmname', 'worker.lname as clname', 'handler.fname as hfname', 'handler.mname as hmname', 'handler.lname as hlname')
                     -> where ([
-                        ['terms.term_id', '=', $id]
+                        ['terms.term_id', '=', $id],
+                        ['worker_term_id', '=', $id]
                     ])
+                    -> groupBy('ti_id')
                     -> get();
+        // dd($term_items);
         $pdf = PDF::loadView('termitems', compact('term_items'));
         return $pdf->download('termitems.pdf');
     }

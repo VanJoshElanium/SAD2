@@ -184,10 +184,10 @@ class InventoryController extends Controller
                     $item -> save();
 
                     $stockin = new Stockin;
-                    // $stockin -> si_date = $request->get('received_at');
+                    $stockin -> si_date = $request->get('received_at');
                     $stockin-> si_qty = $input['inventory_quantity'][$i];
                     $stockin -> si_inventory_id = $item -> inventory_id;
-                    // $stockin -> si_user_id = $request->get('inventory_user_id');
+                    $stockin -> si_user_id = $request->get('inventory_user_id');
                     $stockin -> save();
                 }
             }             
@@ -198,12 +198,12 @@ class InventoryController extends Controller
 
             $item = Inventory::find($id);     
             $item -> inventory_supplier_id = $input['supplier_id'];
-            $item -> inventory_qty += $input['view_inventory_quantity'];
+            $item -> inventory_qty = $input['view_inventory_quantity'];
             $item -> save();
 
             $stockin = StockIn::find($input['si_id']);
             $stockin -> si_user_id = $input['view_pic'];
-            $stockin-> si_qty += $input['view_inventory_quantity'];
+            $stockin-> si_qty = $input['view_inventory_quantity'];
             $stockin -> si_inventory_id = $input['item_id'];
             $stockin-> si_date = $input['view_received_at'];
             $stockin -> save();   

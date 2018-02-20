@@ -40,12 +40,6 @@ class ExpenseController extends Controller
      */
     public function store(Request $request)
     {
-        $expenses = DB::Table('expenses')
-                    -> select ('expenses.expense_name')
-                    -> where ('expenses.expense_term_id', '=', $request -> term_id)
-                    -> get();
-        $length = count($expenses);
-
         $validator = Validator::make($request->all(), [
             'add_exp_name' => array(
                             'required',
@@ -98,13 +92,28 @@ class ExpenseController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        $expense = Expense::find($id);
-        $expense -> expense_name = $request -> edit_exp_name;
-        $expense -> expense_amt = $request-> edit_exp_amt;
-        $expense -> save();
+    {   
+        $validator = Validator::make($request->all(), [
+            'edit_exp_name' => array(
+                            'required',
+                            'unique:expenses,expense_name,' .$id .',expense_id,expense_term_id,' .$request-> term_id
+                        ),
+        ]);
 
-        return redirect('/termsprofile/' .$request-> term_id);
+        if ($validator->fails()) {
+            return redirect('/termsprofile/' .$request-> term_id)
+                ->withErrors($validator, 'editExpense')
+                ->withInput($request->all())
+                ->with('error_id', $id);
+        }
+        else{
+            $expense = Expense::find($id);
+            $expense -> expense_name = $request -> edit_exp_name;
+            $expense -> expense_amt = $request-> edit_exp_amt;
+            $expense -> save();
+
+            return redirect('/termsprofile/' .$request-> term_id);
+        }
     }
 
     /**
