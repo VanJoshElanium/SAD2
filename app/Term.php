@@ -3,15 +3,30 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Term extends Model
 {
+    use LogsActivity;
+
     protected $primaryKey = 'term_id';
 
     /* The attributes that are mass assignable. */
     protected $fillable = [
          'start_date', 'end_date', 'finish_date', 'term_status', 'location'
     ];
+
+
+    protected static $logAttributes = [
+         'start_date', 'end_date', 'finish_date', 'term_status', 'location'
+    ]; 
+
+    protected static $logOnlyDirty = true;
+
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return ucfirst($eventName) . " term details";
+    }
 
     /* RELATIONSHIPS */
     public function workers(){
@@ -26,6 +41,16 @@ class Term extends Model
     public function expenses()
     {
         return $this->hasMany('App\Expense', 'expense_term_id');
+    } 
+
+    public function stockins()
+    {
+        return $this->hasMany('App\Stockin', 'si_term_id');
+    } 
+
+    public function repairs()
+    {
+        return $this->hasMany('App\Repair', 'repair_term_id');
     } 
 
     public function sales()
