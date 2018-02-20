@@ -19,7 +19,7 @@ class CreateSalesTable extends Migration
             
             $table ->integer('sales_amt');
             $table ->date('sales_date', '6');
-            $table ->string('sales_remarks', '100');
+            $table ->string('sales_remarks', '100') -> nullable)();
 
 
             $table ->foreign('sale_term_id')
