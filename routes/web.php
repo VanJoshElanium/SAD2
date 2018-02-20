@@ -67,6 +67,7 @@
 	//T-SALES
 	Route::resource('sales', 'SaleController');
 	Route::get('getSale/{id}', 'SaleController@getSale');
+	Route::post('/printSales/{id}', 'TermsProfileController@printSales');
 
 	//T-ITEMS
 	Route::resource('term_items', 'Term_ItemController');
@@ -83,6 +84,18 @@
 	
 	//LOGS 
 	Route::resource('logs', 'LogsController');
-	Route::get('/logs', 'LogsController@index')->name('logs');
+	Route::get('/logs', 'LogController@index')->name('logs');
+	Route::get('getLog/{id}', 'LogController@getLog');
+
+	//STOCKS
+	Route::resource('stockouts', 'StockOutController');
+	Route::resource('stockins', 'StockInController');
+
+	Route::get('/stockouts', 'StockOutController@index')->name('stockouts');
+	Route::get('/stockins', 'StockInController@index')->name('stockins');
+
+	Route::get('getSI', 'StockInController@getSI');
+	Route::get('getSO', 'StockOutController@getSO');
+	
 
 ?>
