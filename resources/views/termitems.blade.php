@@ -12,7 +12,7 @@
         }
 
         table {
-            width: 60%;
+            width: 75%;
             margin: 0 auto;
         }
 
@@ -33,9 +33,9 @@
 			<table>
                 <tr>
                     <th>ID</th>
-                    <th>Item Name</th>
-                    <th>Supplier Name</th>
-                    <th>Original Qty</th>
+                    <th>Item</th>
+                    <th>Supplier</th>
+                    <th>Quantity</th>
                     <th>Price</th>
                 </tr>
                 @foreach($term_items as $term_item)
