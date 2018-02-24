@@ -110,7 +110,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="#">Log Records</a>
+                        <a class="navbar-brand" href="#"><img src="{{URL::asset('images/log-records.png')}}" alt=""/></a>
                    </div>
                     <div class="collapse navbar-collapse">
                         <ul class="nav navbar-nav navbar-right">

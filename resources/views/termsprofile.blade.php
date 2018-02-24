@@ -109,7 +109,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="#">Term Profile</a>
+                        <a class="navbar-brand" href="#"><img src="{{URL::asset('images/term-management.png')}}" alt=""/></a>
                    </div>
                     <div class="collapse navbar-collapse">
                         <ul class="nav navbar-nav navbar-right">

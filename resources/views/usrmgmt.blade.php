@@ -116,7 +116,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="#">User Management</a>
+                        <a class="navbar-brand" href="#"><img src="{{URL::asset('images/user-management.png')}}" alt=""/></a>
                    </div>
                     <div class="collapse navbar-collapse">
                         <ul class="nav navbar-nav navbar-right">
@@ -179,12 +179,12 @@
                                         <thead>
                                             <tr>
                                                 @if(count($users)>0)
-                                                <th>ID</th>
-                                                <th>First Name</th>
-                                                <th>Middle Initial</th>
-                                                <th>Last Name<th>
+                                                <th>@sortablelink('user.id', 'ID')</th>
+                                                <th>@sortablelink('profile.fname', 'First Name')</th>
+                                                <th>@sortablelink('profile.mname', 'Middle Initial')</th>
+                                                <th>@sortablelink('profile.lname', 'Last Name')</th>
                                                 <th>Contact Number</th>
-                                                <th>Position</th>
+                                                <th>@sortablelink('user.user_type', 'Position')</th>
                                                 @endif
                                             </tr>
                                         </thead>
@@ -206,6 +206,7 @@
                                                         <button data-target="#profileModal" data-toggle="modal" data-id='{{$user->id}}' class="del-btn btn btn-danger btn-fill">
                                                             Remove
                                                         </button>
+                                                        
                                                     </td>
                                                 </tr>
                                             @empty
@@ -614,10 +615,9 @@
                     <form method="POST" class="form-horizontal" id="delete-profile">
                         {{csrf_field()}}
                         <input type="hidden" name="_method" value="DELETE">
-                        <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic">
-                            No
+                        <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic">No
                         </button>
-                        <button type="submit" id="form-button-delete" class="btn btn-success btn-fill pull-right">    Yes 
+                        <button type="submit" id="form-button-delete" class="btn btn-success btn-fill pull-right">Yes
                         </button>
                     </form>
                 </div>
