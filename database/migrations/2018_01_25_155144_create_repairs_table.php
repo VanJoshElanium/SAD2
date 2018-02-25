@@ -22,7 +22,7 @@ class CreateRepairsTable extends Migration
             
             $table ->foreign('repair_inventory_id')
                     ->references('inventory_id')
-                    ->on('inventory')
+                    ->on('inventories')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
 
