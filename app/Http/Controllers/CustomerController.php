@@ -81,6 +81,17 @@ class CustomerController extends Controller
                     'item_qty.' .$i  => 'numeric|min:1|max:' .$ti_qty[0] -> ti_original,
                 ]);
         } 
+            $attributeNames = array(
+                    'item_name.*' => "item name"
+                    'fname' => "first name",
+                    'mname' => 'middle initial',
+                    'lname' => 'last name',
+                    'cnum' => 'contact number',
+                    'addr' => 'address',
+                    'item_qty' => 'quantity'
+                );
+            $validator->setAttributeNames($attributeNames);
+
             if ($validator->fails()) 
             {
                 return redirect('/termsprofile/' .$request-> term_id)
@@ -112,9 +123,9 @@ class CustomerController extends Controller
                     $order -> order_co_id = $customer_order -> co_id;
                     $order -> save();
                 }
-            }
 
-        return redirect('/termsprofile/' .$request-> term_id);
+                return redirect('/termsprofile/' .$request-> term_id) -> with('store-customer-success','Customer was successfully added to term!');
+            }      
     }
 
     /**
@@ -179,6 +190,16 @@ class CustomerController extends Controller
                         'edit_item_qty.' .$i  => 'numeric|min:1|max:' .$ti_qty[0] -> ti_original,
                     ]);
 
+                    $attributeNames = array(
+                        'edit_item_name.*' => 'item name'
+                        'edit_fname' => "first name",
+                        'edit_mname' => 'middle initial',
+                        'edit_lname' => 'last name',
+                        'edit_cnum' => 'contact number',
+                        'edit_addr' => 'address',
+                        'edit_item_qty.*' => 'quantity'
+                    );
+
                 if ($validator->fails()) 
                     {
                         return redirect('/termsprofile/' .$request-> term_id)
@@ -220,10 +241,11 @@ class CustomerController extends Controller
             $customer_order = Customer_Order::find($id);
             $customer_order -> co_collect_date = $input['collect_date'];
             $customer_order -> co_status = 1;
-            $customer_order -> save();
+            $customer_order -> save();        
         }
 
-        return redirect('/termsprofile/' .$request-> term_id);
+        return redirect('/termsprofile/' .$request-> term_id) -> with('destroy-customer-success','Customer was successfully edited!');
+        
     }
 
     /**
@@ -240,7 +262,7 @@ class CustomerController extends Controller
         $customer_order -> orders() -> delete ();
         $customer_order -> delete();
         // $customer = Customer_Order::destroy($id);
-        return redirect('/termsprofile/' .$term);
+        return redirect('/termsprofile/' .$term) -> with('destroy-customer-success','Customer was successfully removed from term!');
     }
 
     public function getCustomerOrder(Request $request){
