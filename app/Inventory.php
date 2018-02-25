@@ -6,16 +6,29 @@ use Carbon\Carbon;
 use Laravel\Scout\Searchable;
 use Kyslik\ColumnSortable\Sortable;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Inventory extends Model
 {
 
+    use LogsActivity;
 
     protected $primaryKey = 'inventory_id';
 
     protected $fillable = [
-        'inventory_quantity', 'inventory_price', 'inventory_status', 'inventory_damaged', 'received_at', 'inventory_user_id',
+        'inventory_qty', 'inventory_price', 'inventory_status', 'inventory_name', 'inventory_supplier_id', 'inventory_desc',
     ];
+
+    protected static $logAttributes = [
+        'inventory_qty', 'inventory_price', 'inventory_status', 'inventory_name', 'inventory_supplier_id', 'inventory_desc',
+    ];
+
+    protected static $logOnlyDirty = true;
+
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return ucfirst($eventName) . " undamaged inventory item";
+    }
 
     public $sortable = ['inventory_quantity', 'inventory_id', 'inventory_price', 'received_at'];
 

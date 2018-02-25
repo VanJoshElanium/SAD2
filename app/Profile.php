@@ -5,21 +5,36 @@ namespace App;
 use Laravel\Scout\Searchable;
 use Kyslik\ColumnSortable\Sortable;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Profile extends Model
 {
+    use LogsActivity; 
+    
     protected $primaryKey = 'profile_id';
-
+    protected static $recordEvents = ['updated'];
 
     /* The attributes that are mass assignable. */
-
     protected $fillable = [
         'fname', 'mname', 'lname', 'gender', 'bday', 'cnum',
     ];
 
+    protected static $logAttributes = [
+        'fname', 'mname', 'lname', 'gender', 'bday', 'cnum',
+    ];
+    
+    protected static $logOnlyDirty = true;
+
+    
     public $sortable = [
     	'fname', 'mname', 'lname'
     ];
+
+    /* ACTIVITY LOGGING*/
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return ucfirst($eventName) . " user";
+    }
 
     /* RELATIONSHIPS */
     public function user()
