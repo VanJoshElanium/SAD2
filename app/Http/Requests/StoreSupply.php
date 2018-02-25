@@ -16,6 +16,13 @@ class StoreSupply extends FormRequest
         return true;
     }
 
+    public function attributes(){
+        return [
+            'supply_name' => 'item name',
+            'supply_desc' => 'description',
+            'supply_price' => 'price'
+        ];
+    }
     /**
      * Get the validation rules that apply to the request.
      *
@@ -24,9 +31,9 @@ class StoreSupply extends FormRequest
     public function rules()
     {
         return [
-            'supply_name' => 'required|string|unique:inventories,inventory_name',
+            'supply_name' => 'required|string|unique:inventories,inventory_name,null,null,inventory_status,1',
             'supply_desc' => 'required|string',
-            'supply_price' => 'required|numeric',
+            'supply_price' => 'required|numeric|min:1',
         ];
     }
 }

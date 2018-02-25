@@ -89,7 +89,7 @@ class InventoryController extends Controller
         $supplies = Inventory::select('inventories.inventory_id', 'inventories.inventory_name', 'inventories.inventory_qty', 'inventories.inventory_price')
                     -> where([
                             ['inventory_supplier_id', '=', $id],
-                            ['inventory_qty', '=', 0]
+                            // ['inventory_qty', '=', 0]
                         ])
                     -> get();
         //Session::flash('message', 'User has been successfully created!');
@@ -164,6 +164,11 @@ class InventoryController extends Controller
                 'supply_name.*' => 'distinct'
             ]);
             
+            $attributeNames = array(
+                   'supply_name.*' => "item name",
+                );
+           $validator->setAttributeNames($attributeNames);
+
             if ($validator->fails()) 
             {
                 return redirect('/inventory')
@@ -184,10 +189,10 @@ class InventoryController extends Controller
                     $item -> save();
 
                     $stockin = new Stockin;
-                    // $stockin -> si_date = $request->get('received_at');
+                    $stockin -> si_date = $request->get('received_at');
                     $stockin-> si_qty = $input['inventory_quantity'][$i];
                     $stockin -> si_inventory_id = $item -> inventory_id;
-                    // $stockin -> si_user_id = $request->get('inventory_user_id');
+                    $stockin -> si_user_id = $request->get('inventory_user_id');
                     $stockin -> save();
                 }
             }             
@@ -196,17 +201,39 @@ class InventoryController extends Controller
         {
             $input = Input::all();
 
-            $item = Inventory::find($id);     
-            $item -> inventory_supplier_id = $input['supplier_id'];
-            $item -> inventory_qty += $input['view_inventory_quantity'];
-            $item -> save();
 
-            $stockin = StockIn::find($input['si_id']);
-            $stockin -> si_user_id = $input['view_pic'];
-            $stockin-> si_qty += $input['view_inventory_quantity'];
-            $stockin -> si_inventory_id = $input['item_id'];
-            $stockin-> si_date = $input['view_received_at'];
-            $stockin -> save();   
+            $validator = Validator::make($request->all(), [
+                'view_inventory_quantity' => 'nullable'
+            ]);
+            
+            $attributeNames = array(
+                   'view_inventory_quantity.*' => "quantity",
+                );
+           $validator->setAttributeNames($attributeNames);
+
+            if ($validator->fails()) 
+            {
+                return redirect('/inventory')
+                    ->withErrors($validator, 'addUn')
+                    ->withInput($request->all());
+                    // ->with('input_error_id', $error_id);
+            }
+            else{   
+                $item = Inventory::find($id);     
+                $item -> inventory_supplier_id = $input['supplier_id'];
+
+                if (!empty($input['view_inventory_quantity']))
+                    $item -> inventory_qty = $input['view_inventory_quantity'];
+                
+                $item -> save();
+
+                $stockin = StockIn::find($input['si_id']);
+                $stockin -> si_user_id = $input['view_pic'];
+                $stockin-> si_qty = $input['view_inventory_quantity'];
+                $stockin -> si_inventory_id = $input['item_id'];
+                $stockin-> si_date = $input['view_received_at'];
+                $stockin -> save();   
+            }
         }
         return redirect('/inventory');
     }

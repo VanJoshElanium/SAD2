@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
 use App\Term;
 use App\User;
 use Validator;
@@ -62,6 +63,7 @@ class TermsProfileController extends Controller
     public function show($id)
     {
         $curr_usr = Auth::user();
+        $term = Term::find($id);
 
         //BASIC TERM DETAILS: LOC, COLLECTOR, DATES
         $term = Term::join('workers', 'terms.term_id', '=', 'worker_term_id')
@@ -75,24 +77,51 @@ class TermsProfileController extends Controller
                         ['workers.worker_type', '=', 0]
                     ])
                 -> get();
-       
-        //AVAILABLE PEDDLERS (FOR ADDING PEDDLERS FORM)
-        $a_peddlers = DB::table('profiles as T1')
+
+        // AVAILABLE COLLECTORS (FOR EDITING TERM DETAILS FORM)
+        $collectors = DB::table('profiles as T1')
                     -> join('users as T2', 'T2.user_id', '=', 'T1.profile_user_id')
-                    -> whereNotIn('user_id', function($query){
+                    -> whereNotIn('user_id', function($query) use($id, $term){
                         $query -> select('worker_user_id')
                                -> from('workers')
                                -> join('terms', 'term_id', '=', 'worker_term_id')
                                -> where([
+                                    ['term_id', '!=', $id],
                                     ['term_status' , '=', 1],
-                                    ['terms.end_date', '=', null]
-                                ]);
-                              //  -> where(function($q) {
-                              //     $q->where('end_date', '<=', Carbon::now() -> toDateString())
-                              //       ->orWhere([
-                              //           ['terms.end_date', '=', null]
-                              //       ]);
-                              // });
+                                    ['worker_type' , '=', 0],
+                                  ])
+                               -> where(function($q) use($term){
+                                    $q->where('terms.finish_date', '=', null)
+                                        ->orWhere([
+                                            ['terms.finish_date', '>', $term[0] -> start_date]
+                                        ]);
+                                });
+                        })
+                    -> select('user_id', 'fname', 'mname', 'lname')
+                    -> where([
+                            ['user_type' , '=', 2],
+                            ['user_status' , '=', 1]
+                        ])
+                    -> get();
+       
+        //AVAILABLE PEDDLERS (FOR ADDING PEDDLERS FORM)
+        $a_peddlers = DB::table('profiles as T1')
+                    -> join('users as T2', 'T2.user_id', '=', 'T1.profile_user_id')
+                    -> whereNotIn('user_id', function($query) use($term){
+                        $query -> select('worker_user_id')
+                               -> from('workers')
+                               -> join('terms', 'term_id', '=', 'worker_term_id')
+                               -> where([
+                                    ['term_status' , '=', 1]
+                                ])
+                               -> where(function($q) use ($term) {
+                                   $q->where([
+                                        ['end_date', '>=', $term[0]->start_date]
+                                      ])
+                                     ->orWhere([
+                                         ['terms.end_date', '=', null]
+                                     ]);
+                               });
                         })
                     -> select('user_id', 'fname', 'mname', 'lname')
                     -> where([
@@ -241,7 +270,7 @@ class TermsProfileController extends Controller
 
 
 
-        return view('termsprofile', compact('curr_user', 'workers', 'term', 'a_peddlers', 'expenses', 'term_items', 'sales', 'total_expense', 'peddlers', 'total_items', 'total_damages', 'total_sales', 'total_returns', 'suppliers', 'a_items', 'unpaid_customers', 'paid_customers', 'total_collected', 'total_sale'));
+        return view('termsprofile', compact('curr_user', 'workers', 'term', 'a_peddlers', 'expenses', 'term_items', 'sales', 'total_expense', 'peddlers', 'total_items', 'total_damages', 'total_sales', 'total_returns', 'suppliers', 'a_items', 'unpaid_customers', 'paid_customers', 'total_collected', 'total_sale', 'collectors'));
     }
 
     /**
@@ -263,8 +292,81 @@ class TermsProfileController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        //
+    { 
+        $now = Carbon::now() -> toDateString();
+
+        $term = Term::find($id);
+        $term_collector = Term::find($id)
+                          -> join('workers', 'worker_term_id', '=', 'term_id')
+                          -> select ('worker_user_id', 'worker_id')
+                          -> where ([
+                              ['term_id', '=', $id],
+                              ['worker_term_id', '=', $id],
+                              ['worker_type', '=', 0],
+                            ])
+                          -> get();
+
+        if ($request -> et_finishdate != null && $request -> et_enddate != null){
+          $validator = Validator::make($request->all(), [
+              'et_collector' => 'required|string',
+              'et_startdate' => 'required|date|unique:terms,start_date,' .$term -> term_id .',term_id,location,' .$request-> et_location .'|before:' .$request -> et_enddate .',' .$request-> et_finishdate,
+              'et_location' => 'required|string|unique:terms,location,' .$term -> term_id .',term_id,start_date,' .$request-> et_startdate,
+              'et_enddate' => 'nullable|date|before_or_equal:'.$now .'|before:' .$request->et_finishdate .'|after:'.$request -> et_startdate,
+              'et_finishdate' =>'nullable|date|before_or_equal:'.$now .'|after:' .$request -> et_enddate .',' .$request-> et_startdate,
+          ]);
+        }
+        elseif ($request -> et_enddate == null && $request -> et_finishdate == null){
+          $validator = Validator::make($request->all(), [
+              'et_collector' => 'required|string',
+              'et_startdate' => 'required|date|unique:terms,start_date,' .$term -> term_id .',term_id,location,' .$request-> et_location .'|before_or_equal:' .$now,
+              'et_location' => 'required|string|unique:terms,location,' .$term -> term_id .',term_id,start_date,' .$request-> et_startdate,
+              'et_enddate' => 'nullable|date|before_or_equal:' .$now .'|after:' .$request-> et_startdate,
+              'et_finishdate' =>'nullable|date|before_or_equal:' .$now .'|after:' .$request -> et_enddate .',' .$request-> et_startdate, 
+          ]);
+        }
+        else{
+          $validator = Validator::make($request->all(), [
+              'et_collector' => 'required|string',
+              'et_startdate' => 'required|date|unique:terms,start_date,' .$term -> term_id .',term_id,location,' .$request-> et_location .'|before_or_equal:' .$now .'|before:' .$request -> et_enddate,
+              'et_location' => 'required|string|unique:terms,location,' .$term -> term_id .',term_id,start_date,' .$request-> et_startdate,
+              'et_enddate' => 'nullable|date|before_or_equal:' .$now .'|after:' .$request-> et_startdate,
+              'et_finishdate' =>'nullable|date|before_or_equal:' .$now .'|after:' .$request -> et_enddate .',' .$request-> et_startdate, 
+          ]);
+        }
+
+        $attributeNames = array(
+                   'et_collector' => 'collector',
+                   'et_location' => 'location',
+                   'et_startdate' => 'starting date',
+                   'et_enddate' => 'peddling end',
+                   'et_finishdate' => 'peddling end',
+                );
+            $validator->setAttributeNames($attributeNames);
+
+        if ($validator->fails()){
+          return redirect('/termsprofile/'.$id)
+                ->withErrors($validator, 'editTerm')
+                ->with('error_id', $id)
+                ->withInput($request->all());
+        }
+        else{  
+          $term -> location = $request -> et_location;
+          $term -> start_date = $request -> et_startdate;
+          $term -> end_date = $request -> et_enddate;
+          $term -> finish_date = $request -> et_finishdate;
+          $term -> save();
+
+          if ($term_collector[0] -> worker_user_id != $request -> et_collector){
+            $new_collector = new Worker;
+            $new_collector -> worker_term_id = $id;
+            $new_collector -> worker_user_id = $request -> et_collector;
+            $new_collector -> worker_type = 0; //collector
+            $new_collector -> save();
+
+            $old_collector = Worker::destroy($term_collector[0] -> worker_id);
+          }
+          return redirect('termsprofile/' .$id) -> with('update-term-success','Term was successfully edited!');
+        }
     }
 
     /**
@@ -277,4 +379,82 @@ class TermsProfileController extends Controller
     {
         
     }
+
+    public function printSales($id){
+      $term_items = Term::join('term_items', 'terms.term_id', '=', 'term_items.ti_term_id')
+                    -> join ('workers', 'worker_term_id', '=', 'term_id')
+                    -> join ('profiles as handler', 'handler.profile_user_id', '=', 'ti_user_id')
+                    -> join('profiles as worker', 'worker.profile_user_id', '=', 'worker_user_id')
+                    -> join('inventories', 'inventories.inventory_id', '=', 'term_items.ti_inventory_id')
+                    -> join('suppliers', 'suppliers.supplier_id', '=', 'inventories.inventory_supplier_id')
+                    -> select ('terms.*', 'term_items.*', 'inventories.inventory_name', 'inventories.inventory_price', 'suppliers.supplier_name', 'suppliers.supplier_id', 'worker.fname as cfname', 'worker.mname as cmname', 'worker.lname as clname', 'handler.fname as hfname', 'handler.mname as hmname', 'handler.lname as hlname')
+                    -> where ([
+                        ['terms.term_id', '=', $id],
+                        ['worker_term_id', '=', $id]
+                    ])
+                    -> groupBy('ti_id')
+                    -> get();
+
+      $workers = Term::join('workers', 'terms.term_id', '=', 'worker_term_id')
+            -> join('users', 'workers.worker_user_id', '=', 'users.user_id')
+            -> join('profiles', 'users.user_id', '=', 'profiles.profile_user_id')
+            -> select('terms.*', 'workers.*', 'profiles.*')
+            -> where([
+                    ['terms.term_id', '=', $id],
+                    ['workers.worker_term_id', '=', $id],
+                    ['terms.term_status', '=', 1],
+                    ['workers.worker_type', '!=', 0]
+                ])
+            -> get();
+
+      //TERM EXPENSES
+      $expenses = Term::join('expenses', 'terms.term_id', '=', 'expense_term_id')
+                -> select('terms.term_id', 'terms.term_status', 'expenses.*')
+                -> where([
+                    ['terms.term_status', '=', '1'],
+                    ['terms.term_id', '=', $id]
+                ])
+                -> get();
+
+      $total_expense = DB::table('expenses')
+                    -> where ('expenses.expense_term_id', '=', $id)
+                    -> sum('expense_amt');
+
+      $total_items = DB::table('term_items')
+                    -> where ('term_items.ti_term_id', '=', $id)
+                    -> count('ti_id');
+
+      $total_quantity = DB::table('term_items')
+                    -> where ('term_items.ti_term_id', '=', $id)
+                    -> sum('ti_original');
+
+      $total_damages = DB::table('term_items')
+                    -> where ('term_items.ti_term_id', '=', $id)
+                    -> sum('ti_damaged');
+
+      $total_returns = DB::table('term_items')
+                    -> where ('term_items.ti_term_id', '=', $id)
+                    -> sum('ti_returned');
+
+      $total_sales = ($total_quantity - ($total_damages + $total_returns));
+
+      $pdf = PDF::loadView('termsales', compact('term_items', 'expenses', 'total_expense', 'total_sales', 'total_items', 'total_quantity', 'total_damages', 'total_returns', 'workers'));
+
+      return $pdf->download('termsales.pdf');
+    }
+
+    public function getTermDetails($id){
+      $termdata = Term::find($id)
+                  -> join('workers', 'worker_term_id', '=', 'term_id')
+                  -> join('profiles', 'profile_user_id', '=', 'worker_user_id')
+                  -> select ('terms.*', 'profiles.fname', 'profiles.mname', 'profiles.lname', 'workers.worker_user_id')
+                  -> where ([
+                      ['term_id', '=', $id],
+                      ['worker_term_id', '=', $id],
+                      ['worker_type', '=', 0], //collector
+                    ])
+                  -> get();
+      return $termdata;
+    }
+
 }

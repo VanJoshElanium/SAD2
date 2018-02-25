@@ -50,12 +50,12 @@ class Term_ItemController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
-        $input = Input::all();
         
+        $input = Input::all();
+
         for ($i=0; $i < count($input['add_ti_item_name']); ++$i) {
 
-            $item_qty = Inventory::where('inventories.inventory_id', '=', $request -> add_ti_item_name)
+            $item_qty = Inventory::where('inventories.inventory_id', '=', $input['add_ti_item_name'][$i])
                     -> select ('inventory_qty')
                     -> get();
 
@@ -73,7 +73,7 @@ class Term_ItemController extends Controller
             else{
                 $term_item = new Term_Item;
                 $term_item -> ti_date = $request -> add_ti_date;
-                $term_item -> ti_worker_id = $request -> add_ti_worker;
+                $term_item -> ti_user_id = $request -> add_ti_worker;
                 $term_item -> ti_inventory_id = $input['add_ti_item_name'][$i];
                 $term_item -> ti_original = $input['add_ti_qty'][$i];
                 $term_item -> ti_damaged = 0;
@@ -86,9 +86,11 @@ class Term_ItemController extends Controller
                 $inventory_item -> inventory_qty -= $term_item -> ti_original;
                 $inventory_item -> save();
             }   
-        }
-    
-        return redirect('/termsprofile/' .$request-> term_id);
+        } 
+
+        if (count($input['add_ti_item_name']) > 1)
+            return redirect('/termsprofile/' .$request-> term_id) -> with('store-item-success','Items were successfully added to term!');
+        else return redirect('/termsprofile/' .$request-> term_id) -> with('store-item-success','Item was successfully added to term!');
     }
 
     /**
@@ -122,6 +124,7 @@ class Term_ItemController extends Controller
      */
     public function update(Request $request, $id)
     {
+        dd($request);
         $term_item = Term_Item::find($request-> edit_ti_item_name);
 
         $inven_qty = Term_Item::where('term_items.ti_id', '=', $request -> edit_ti_item_name)
@@ -197,9 +200,9 @@ class Term_ItemController extends Controller
 
                     $repair -> save();
                 }
-            ///////////////////////////////
+             return redirect('/termsprofile/' .$request-> term_id) -> with('update-item-success','Item was successfully edited!');
         }
-        return redirect('/termsprofile/' .$request-> term_id);
+       
     }
 
     /**
@@ -210,7 +213,10 @@ class Term_ItemController extends Controller
      */
     public function destroy($id)
     {
+
         $term_item = Term_Item::find($id);
+        $term = $term_item -> ti_term_id;
+  
         $inventory_item = Inventory::find($term_item -> ti_inventory_id);
 
         //DAMAGED INVENTORY
@@ -235,24 +241,49 @@ class Term_ItemController extends Controller
 
             $term_item = Term_Item::destroy($id);
 
-        return redirect('/termsprofile/' .$term_item -> ti_term_id);
+        return redirect('/termsprofile/' .$term) -> with('destroy-item-success','Item was successfully removed from term!');
     }
 
     public function getTermItem($id)
-    {
+    { 
         $tidata = Term_Item::find($id);
+
+        if ($tidata -> ti_damaged > 0)
+            $tidata = Term_Item::join('repairs', 'repair_term_id', '=', 'ti_term_id')
+                        -> select ('repairs.*', 'term_item.*', (DB::table('SUM(repair_qty) as u_qty') -> where ([['repair_term_id', '=', '$tidata -> ti_term_id'], ['repair_inventory_id', '=', 'ti_inventory_id'], ['repair_status', '=', '0']])), (DB::raw('SUM(repair_qty) as r_qty')) -> where ([['repair_term_id', '=', '$tidata -> ti_term_id'], ['repair_inventory_id', '=', 'ti_inventory_id'], ['repair_status', '=', '1']]))
+                        -> where([
+                            ['ti_id', '=', $id],
+                            ['repair_term_id', '=', $tidata -> ti_term_id],
+                        ])
+                        -> get();
+
+        if ($tidata -> ti_returned > 0)
+            $tidata = Term_Item::join('stockins', 'si_term_id', '=', 'ti_term_id')
+                        -> select ('stockins.*', 'term_items.*')
+                        -> where([
+                            ['ti_id', '=', $id],
+                            ['si_term_id', '=', $tidata -> ti_term_id],
+                        ])
+                        -> get();
+
         return $tidata;
     }
 
     public function printItems($id){
         $term_items = Term::join('term_items', 'terms.term_id', '=', 'term_items.ti_term_id')
+                    -> join ('workers', 'worker_term_id', '=', 'term_id')
+                    -> join ('profiles as handler', 'handler.profile_user_id', '=', 'ti_user_id')
+                    -> join('profiles as worker', 'worker.profile_user_id', '=', 'worker_user_id')
                     -> join('inventories', 'inventories.inventory_id', '=', 'term_items.ti_inventory_id')
                     -> join('suppliers', 'suppliers.supplier_id', '=', 'inventories.inventory_supplier_id')
-                    -> select ('terms.term_id', 'term_items.*', 'inventories.inventory_name', 'inventories.inventory_price', 'suppliers.supplier_name', 'suppliers.supplier_id')
+                    -> select ('terms.*', 'term_items.*', 'inventories.inventory_name', 'inventories.inventory_price', 'suppliers.supplier_name', 'suppliers.supplier_id', 'worker.fname as cfname', 'worker.mname as cmname', 'worker.lname as clname', 'handler.fname as hfname', 'handler.mname as hmname', 'handler.lname as hlname')
                     -> where ([
-                        ['terms.term_id', '=', $id]
+                        ['terms.term_id', '=', $id],
+                        ['worker_term_id', '=', $id]
                     ])
+                    -> groupBy('ti_id')
                     -> get();
+        // dd($term_items);
         $pdf = PDF::loadView('termitems', compact('term_items'));
         return $pdf->download('termitems.pdf');
     }

@@ -49,5 +49,6 @@ HOW TO LARAVEL W/ SAD-BOIZ
 
 
 Extra package:
-Charts = http://lavacharts.com/#chart-line
+Charts  = http://lavacharts.com/#chart-line
+        = https://www.youtube.com/watch?v=IEhZTcpbknA        ----> Another chart. Has a youtube guide.
 

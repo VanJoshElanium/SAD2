@@ -17,6 +17,7 @@ class CreateTermItemsTable extends Migration
             $table ->increments('ti_id');
             $table ->integer('ti_term_id') -> unsigned();
             $table ->integer('ti_inventory_id') -> unsigned();
+            $table ->integer('ti_user_id') -> unsigned();
             
             $table ->dateTime('ti_date');
             $table ->integer('ti_original');
@@ -26,6 +27,12 @@ class CreateTermItemsTable extends Migration
             $table ->foreign('ti_term_id')
                     ->references('term_id')
                     ->on('terms')
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
+
+            $table ->foreign('ti_user_id')
+                    ->references('user_id')
+                    ->on('users')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
 
