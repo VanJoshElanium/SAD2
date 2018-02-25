@@ -21,6 +21,8 @@
     <!-- Bootstrap core CSS 3.3.7    -->
     <link href="/css/bootstrap.min.css">
 
+    <script src="/js/jquery.3.2.1.min.js" type="text/javascript"></script>
+    
     <!-- Animation library for notifications   -->
     <link href="/css/animate.min.css" rel="stylesheet"/>
 
@@ -65,36 +67,42 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/html/user.html">
-                            <i class="pe-7s-user"></i>
-                            <p>User Profile</p>
-                        </a>
-                    </li>
-                    <li>
                         <a href="{{ route('terms') }}">
                             <i class="pe-7s-graph"></i>
-                            <p>Term Management</p>
+                            <p>Terms</p>
                         </a>
                     </li>
                     <li>
                         <a href="{{route('inventory') }}">
                             <i class="pe-7s-drawer"></i>
-                            <p>Inventory Management</p>
+                            <p>Inventories</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('stockins') }}">
+                            <i class="pe-7s-download"></i>
+                            <p>Stock Ins</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('stockouts') }}">
+                            <i class="pe-7s-upload"></i>
+                            <p>Stock Outs</p>
                         </a>
                     </li>
                     <li>
                         <a href="{{route('suppliers') }}">
                             <i class="pe-7s-box1"></i>
-                            <p>Supplier Management</p>
+                            <p>Suppliers</p>
                         </a>
                     </li>
                     <li class="active">
                         <a href="{{ route('usrmgmt') }}">
                             <i class="pe-7s-users"></i>
-                            <p>User Management</p>
+                            <p>Users</p>
                         </a>
                     </li>
-                    <li>
+                    <li  >
                         <a href="{{ route('logs') }}">
                             <i class="pe-7s-note2"></i>
                             <p>Logs</p>
@@ -116,7 +124,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="#"><img src="{{URL::asset('images/user-management.png')}}" alt=""/></a>
+                        <a class="navbar-brand" href="#">User Management</a>
                    </div>
                     <div class="collapse navbar-collapse">
                         <ul class="nav navbar-nav navbar-right">
@@ -179,18 +187,18 @@
                                         <thead>
                                             <tr>
                                                 @if(count($users)>0)
-                                                <th>@sortablelink('user.id', 'ID')</th>
-                                                <th>@sortablelink('profile.fname', 'First Name')</th>
-                                                <th>@sortablelink('profile.mname', 'Middle Initial')</th>
-                                                <th>@sortablelink('profile.lname', 'Last Name')</th>
-                                                <th>Contact Number</th>
-                                                <th>@sortablelink('user.user_type', 'Position')</th>
+                                                    <th>ID</th>
+                                                    <th>First Name</th>
+                                                    <th>Middle Initial</th>
+                                                    <th>Last Name</th>
+                                                    <th>Contact Number</th>
+                                                    <th>Position</th>
                                                 @endif
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @forelse($users as $user)
-                                                <tr onclick="readOnly()" data-target="profileModal" data-toggle="modal" class="view-edit-modal" data-id='{{$user->id}}'>    
+                                                <tr data-target="profileModal" data-toggle="modal" class="view-edit-modal" data-id='{{$user->id}}'>    
                                                     <td>{{$user->user_id}}</td>
                                                     <td>{{$user->fname}}</td>
                                                     <td>{{$user->mname}}</td>
@@ -203,10 +211,9 @@
                                                         </button>
                                                     </td>
                                                     <td>
-                                                        <button data-target="#profileModal" data-toggle="modal" data-id='{{$user->id}}' class="del-btn btn btn-danger btn-fill">
+                                                        <button data-target="#removeModal" data-toggle="modal" data-id='{{$user->id}}' class="del-btn btn btn-danger btn-fill">
                                                             Remove
                                                         </button>
-                                                        
                                                     </td>
                                                 </tr>
                                             @empty
@@ -428,19 +435,16 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">User Profile</h4>
+                    <center> <h4 class="modal-title">User Profile</h4> </center>
                 </div>
-                                    
-                <div class="modal-body">
-                    <div id="view-edit-content" class="row">
-                        <!-- USER Edit FORM -->
-                        <div class="col-md-12"> 
-                            <form method="POST" class="form-horizontal" id="view-edit-profile">      
-                                
+                 
+                <form method="POST" class="form-horizontal" id="view-edit-profile">                
+                    <div class="modal-body">
+                        <div id="view-edit-content" class="row">
+                            <!-- USER Edit FORM -->
+                            <div class="col-md-12"> 
                                 {{ method_field('PUT') }}
                                 {{ csrf_field() }}
-                                
-
                                 <!-- USER NAME DETAILS-->                                    
                                 <div class="row form-group">                       
                                     <div class="{{$errors->editUser->has('profile_fname') ? ' has-error' : ''}}"> 
@@ -573,9 +577,9 @@
 
                                                     <option  value="1"  @if (old('profile_user_type') == 1) selected="selected" @endif>Owner</option>
 
-                                                    <option  value="2"  @if (old('profile_profile_user_type') == 2) selected="selected" @endif>Collector</option>
+                                                    <option  value="2"  @if (old('profile_user_type') == 2) selected="selected" @endif>Collector</option>
 
-                                                    <option value="3"  @if (old('profile_profile_profile_user_type') == 3) selected="selected" @endif>Worker</option>
+                                                    <option value="3"  @if (old('profile_user_type') == 3) selected="selected" @endif>Worker</option>
                                                 </select>
                                                 @if ($errors->editUser->has('profile_user_type'))
                                                     <span class="help-block">
@@ -584,43 +588,27 @@
                                             </div>                                    
                                         </div>
                                     </div>
-                                    <div class="col-md-12" style="margin-top: 4%">
-                                        <!-- SUBMIT BUTTON -->
-                                        <a id="change-pass-btn" class="change-pass" data-dismiss="modal" data-target="#passwordModal" data-toggle="modal"> 
-                                            Change Password 
-                                        </a>
-
-                                        <button type="submit" class="pull-right btn btn-success btn-fill" id="form-button-edit" >
-                                            Edit
-                                        </button>
-
-                                        <button data-dismiss="modal" type="submit" class= "pull-right btn btn-default" style="margin-right: 3%" >
-                                            Cancel
-                                        </button>
-                                        <div class="clearfix"></div>
-                                    </div>
-                                </div>         
-                                </div>      
-                            </form>                    
+                                </div>                             
+                            </div>
                         </div>
                     </div>
+                    <div class="modal-footer">
+                            <!-- SUBMIT BUTTON -->
+                            <a id="change-pass-btn" class="change-pass pull-left" data-dismiss="modal" data-target="#passwordModal" data-toggle="modal"> 
+                                Change Password 
+                            </a>
 
-                    <!-- DELETE PROFILE MODAL -->
-                    <div id="delete-content">
-                        <p> You are about to remove a user. Do you want to proceed?</p>
+                            <button type="submit" class="pull-right btn btn-success btn-fill" id="form-button-edit" >
+                                Edit
+                            </button>
+
+                            <button data-dismiss="modal" type="submit" class= "pull-right btn btn-default" style="margin-right: 3%" >
+                                Cancel
+                            </button>
+                            <div class="clearfix"></div>
+                        </div>
                     </div>
-                </div>
-
-                <div class="modal-footer" id="delete-modal-footer">
-                    <form method="POST" class="form-horizontal" id="delete-profile">
-                        {{csrf_field()}}
-                        <input type="hidden" name="_method" value="DELETE">
-                        <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic">No
-                        </button>
-                        <button type="submit" id="form-button-delete" class="btn btn-success btn-fill pull-right">Yes
-                        </button>
-                    </form>
-                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -693,17 +681,90 @@
             </div>
         </div>
     </div>
+
+    <!-- REMOVE MODAL -->
+    <div class="modal fade" role="dialog" id="removeModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Remove User</h4>
+                </div>
+                     
+                <form method="POST" class="form-horizontal" id="removeUser_form">  
+                    {{csrf_field()}}
+                    <input type="hidden" name="_method" value="DELETE">
+
+                    <div class="modal-body">
+                        <div id="view-edit-content" class="row">
+                            <div class="col-md-12"> 
+                                <div class="row form-group">                       
+                                    <div class=""> 
+                                        <div class="col-md-12">   
+                                            You are about to remove a user. Do you want to proceed?
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                            <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancel</button>
+                          <!--ADD New Term button-->
+                          <button type="submit" class="btn btn-bg btn-success btn-fill">Remove</button>   
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUCCESS MESSAGES -->
+        @if(session('store-success'))
+            <script> 
+                jQuery(document).ready(function($){
+                    $.notify( "{{session()-> get('store-success' )}}", "success");
+                    {{session()->forget('store-success')}}
+                });
+            </script>
+        @endif
+
+        @if(session('update-success'))
+            <script> 
+                jQuery(document).ready(function($){
+                    $.notify( "{{session()-> get('update-success' )}}", "success");
+                    {{session()->forget('update-success')}}
+                });
+            </script>
+        @endif
+
+        @if(session('destroy-success'))
+            <script> 
+                jQuery(document).ready(function($){
+                    $.notify( "{{session()-> get('destroy-success' )}}", "success");
+                    {{session()->forget('destroy-success')}}
+                });
+            </script>
+        @endif
+
+        @if(session('password-success'))
+            <script> 
+                jQuery(document).ready(function($){
+                    $.notify( "{{session()-> get('password-success' )}}", "success");
+                    {{session()->forget('password-success')}}
+                });
+            </script>
+        @endif
 </body>
 
     <!--   Core JS Files   -->
-    <script src="/js/jquery.3.2.1.min.js" type="text/javascript"></script>
     <script src="/js/bootstrap.min.js" type="text/javascript"></script>
 
     <!--  Charts Plugin -->
     <script src="/js/chartist.min.js"></script>
 
     <!--  Notifications Plugin    -->
-    <script src="/js/bootstrap-notify.js"></script>
+    <script src="/js/notify.js"></script>
 
     <!--  Google Maps Plugin    -->
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
@@ -721,12 +782,26 @@
                 $("#addModal").modal();    
             
             
-            if({!!count($errors->editUser)!!} > 0)
-                $("#view-edit-{{ session()-> get( 'error_id' ) }}").click();
-                // do it heeree, callback JS
+            if({!!count($errors->editUser)!!} > 0){
+                $("#view-edit-{{ session()-> get( 'error_id' ) }}").on('click', function (e) {
+                    
+                    e.preventDefault();
+                    $('#profile_fname').val("{{old('profile_fname')}}");
+                    $('#profile_mname').val("{{old('profile_mname')}}"); 
+                    $('#profile_lname').val("{{old('profile_lname')}}");
+                    $('#profile_cnum').val("{{old('profile_cnum')}}");
+                    $('#profile_bday').val("{{old('profile_bday')}}");
+                    $('#profile_username').val("{{old('profile_username')}}");
 
+                    var id = $(this).data('id');
+                    $("#view-edit-profile").attr("action", "/create_users/" +id);
+                });      
+                $("#view-edit-{{ session()-> get( 'error_id' ) }}").click();
+            }
+            
             if ({!!count($errors->editPass)!!} > 0)
-                $("#passwordModal").modal();   
+                $("#passwordModal").modal();  
+                
         });
 
     </script>
@@ -774,9 +849,7 @@
                     $('#profile_mname').val(response[0].mname); 
                     $('#profile_lname').val(response[0].lname);
 
-                    if (response[0].gender == "Male")
-                        $('#profile_gender').val('0');
-                    else $('#profile_gender').val('1'); //Female
+                    $('#profile_gender').val(response[0].gender); 
 
                     $('#profile_cnum').val(response[0].cnum);
                     $('#profile_bday').val(response[0].bday);
@@ -790,13 +863,6 @@
                     else if (response[0].user_type == "Collector")
                         $('#profile_user_type').val('2'); 
                     else $('#profile_user_type').val('3'); //Worker
-
-                    // MODAL
-                    $("#profileModal").modal('show'); 
-                    $("#view-edit-content").show();
-                    $("#delete-content").hide();
-                    $("#delete-modal-footer").hide();
-                    $("#password-grp").hide();
                 },
                 error: function(data){
                     console.log(data);
@@ -809,10 +875,6 @@
             //MODAL
             document.getElementById('profile_user_type').disabled = false; 
             document.getElementById('profile_gender').disabled = false;
-            $('.form-control').prop('readonly', false);
-            $("#delete-content").hide();
-            $("#delete-modal-footer").hide();
-            $('#form-button-edit').show(); 
         });
 
         //DELETE USER
@@ -820,13 +882,7 @@
             var id = $(this).data('id');
 
             //FORM
-            $("#delete-profile").attr("action", "/create_users/" +id);
-
-            //MODAL
-            $(".modal-title").html = "Delete User";
-            $("#view-edit-content").hide();
-            $("#delete-content").show();
-            $("#delete-modal-footer").show();
+            $("#removeUser_form").attr("action", "/create_users/" +id);
         }); 
 
         //CHANGE PASSWORD

@@ -15,6 +15,9 @@
     <!-- Bootstrap core CSS     -->
     <link href="/css/bootstrap.min.css" rel="stylesheet" />
 
+
+    <script src="/js/jquery.3.2.1.min.js" type="text/javascript"></script>
+
     <!-- Animation library for notifications   -->
     <link href="/css/animate.min.css" rel="stylesheet"/>
 
@@ -39,7 +42,6 @@
 </head>
 
 <body>
-
     <div class="wrapper">
         <!-- SIDEBAR -->
         <div class="sidebar" data-color="none" data-image="/images/lol.png">
@@ -57,34 +59,40 @@
                             <p>Dashboard</p>
                         </a>
                     </li>
-                    <li>
-                        <a href="/html/user.html">
-                            <i class="pe-7s-user"></i>
-                            <p>User Profile</p>
-                        </a>
-                    </li>
                     <li class="active">
-                        <a href="{{route('terms') }}">
+                        <a href="{{ route('terms') }}">
                             <i class="pe-7s-graph"></i>
-                            <p>Term Management</p>
+                            <p>Terms</p>
                         </a>
                     </li>
-                    <li >
+                    <li>
                         <a href="{{route('inventory') }}">
                             <i class="pe-7s-drawer"></i>
-                            <p>Inventory</p>
+                            <p>Inventories</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('stockins') }}">
+                            <i class="pe-7s-download"></i>
+                            <p>Stock Ins</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('stockouts') }}">
+                            <i class="pe-7s-upload"></i>
+                            <p>Stock Outs</p>
                         </a>
                     </li>
                     <li>
                         <a href="{{route('suppliers') }}">
                             <i class="pe-7s-box1"></i>
-                            <p>Supplier Management</p>
+                            <p>Suppliers</p>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('usrmgmt') }}">
                             <i class="pe-7s-users"></i>
-                            <p>User Management</p>
+                            <p>Users</p>
                         </a>
                     </li>
                     <li>
@@ -98,7 +106,6 @@
         </div>
 
         <div class="main-panel bgd">
-
             <!-- NAVBAR -->
             <nav class="navbar navbar-default navbar-fixed">
                 <div class="container-fluid">
@@ -109,7 +116,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="#"><img src="{{URL::asset('images/term-management.png')}}" alt=""/></a>
+                        <a class="navbar-brand" href="#">Term Profile</a>
                    </div>
                     <div class="collapse navbar-collapse">
                         <ul class="nav navbar-nav navbar-right">
@@ -136,7 +143,7 @@
                     <div class="col-md-12">
                         <div class="card box">        
                             <!-- NAVIGATION TABS -->
-                            <ul class="nav nav-tabs" role="tablist">
+                            <ul class="nav nav-tabs" role="tablist" id="myTab">
                                 <li role="presentation" class="active">
                                     <a href="#tl_members" aria-controls="home" role="tab" data-toggle="tab">
                                         <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the details of the people that are managing the term.">
@@ -153,7 +160,8 @@
                                     </a>
                                 </li>
                                 
-                                <li role="presentation"><a href="#tl_expenses" aria-controls="profile" role="tab" data-toggle="tab">
+                                <li role="presentation">
+                                    <a href="#tl_expenses" aria-controls="profile" role="tab" data-toggle="tab">
                                     <!-- <a> -->
                                         <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the expneses used for the term.">      Expenses
                                         </span>
@@ -199,10 +207,12 @@
                                                     <div class="content table-responsive table-full-width">
                                                         <table class="table table-hover table-striped">
                                                             <thead>
+                                                                @if(count($workers) > 0)
                                                                 <th>Name</th>
                                                                 <th>Position</th>
                                                                 <!--<th>Edit</th>
                                                                 <th>Remove</th> -->
+                                                                @endif
                                                             </thead>
                                                             <tbody>  
                                                                 @forelse($workers as $worker)
@@ -216,7 +226,7 @@
                                                                     @if ($worker->worker_type == 0)
                                                                             
                                                                         @elseif ($worker->worker_type == 1)
-                                                                            <td> Leader </td>
+                                                                            <td> Team Leader </td>
                                                                         @elseif ($worker->worker_type == 2)
                                                                             <td> Permament Staff </td>
                                                                         @else
@@ -225,7 +235,7 @@
                                                                     
                                                                     <td>
                                                                         <span data-toggle="tooltip" data-placement="bottom" title="Edit the position of the peddler."> 
-                                                                            <button type="button" data-target="#editPeddler" data-id='{{$worker->worker_id}}' data-toggle="modal" class="ep_btn btn  btn-primary btn-fill" id="ep_btn"> 
+                                                                            <button type="button" data-target="#editPeddler" data-id='{{$worker->worker_id}}' data-toggle="modal" class="ep_btn btn  btn-primary btn-fill" id="ep-{{$worker->worker_id}}"> 
                                                                             Edit
                                                                             </button>
                                                                         </span>
@@ -251,23 +261,60 @@
                                             <div class="col-md-4">
                                                 <div class="card">
                                                     <div class="header">
-                                                        <center>
-                                                                <h4 class="title">
-                                                                    {{$term[0]->fname}} {{$term[0]->mname}}. {{$term[0]->lname}}
-                                                                </h4>
-                                                                <p class="category">
-                                                                    Collector
-                                                                </p>
-                                                                <br>
-                                                                <hr>
-                                                                <h4 class="title">
-                                                                    {{$term[0]->location}}
-                                                                </h4>
-                                                                <p class="category">
-                                                                    Term Location
-                                                                </p>
-                                                                <hr>    
-                                                        </center>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <button type="button" id="editTermDetails_btn" data-target="#editTerm" data-toggle="modal" class="btn pull-right btn-basic btn-fill" data-id="{{$term[0]->term_id}}" style="margin-bottom: 3%"> 
+                                                                    Edit Details
+                                                                </button> 
+                                                            </div>
+                                                        </div>
+                                                            <h4 class="title">
+                                                                {{$term[0]->fname}} {{$term[0]->mname}}. {{$term[0]->lname}}
+                                                            </h4>
+                                                            <p class="category">
+                                                                Collector
+                                                            </p>
+                                                            <br>
+                                                            <hr>
+                                                            <h4 class="title">
+                                                                {{$term[0]->location}}
+                                                            </h4>
+                                                            <p class="category">
+                                                                Term Location
+                                                            </p>
+                                                            <br>
+                                                            <hr>  
+                                                            <h4 class="title">
+                                                                {{$term[0]->start_date}}
+                                                            </h4>
+                                                            <p class="category">
+                                                                Peddling Start
+                                                            </p>
+                                                            <br>
+                                                            <hr> 
+                                                            <h4 class="title">
+                                                                @if($term[0]->end_date == NULL)
+                                                                    N/A
+                                                                @else 
+                                                                    {{$term[0]->end_date}}
+                                                                @endif
+                                                            </h4>
+                                                            <p class="category">
+                                                                Peddling End
+                                                            </p>
+                                                            <br>
+                                                            <hr>
+                                                            <h4 class="title">
+                                                                @if($term[0]->finish_date == NULL)
+                                                                    N/A
+                                                                @else 
+                                                                    {{$term[0]->finish_date}}
+                                                                @endif
+                                                            </h4>
+                                                            <p class="category">
+                                                                Collecting End
+                                                            </p>
+                                                            <hr> 
                                                     </div>
                                                 </div>
                                             </div>         
@@ -289,7 +336,7 @@
                                                             <span class="pull-right">
                                                                   
                                                                 <button type="button" data-target="#addItem" data-toggle="modal" class="btn btn-success btn-fill"> 
-                                                                    Add Item
+                                                                    Add Item/s
                                                                 </button>
                                                                 <button type="button" data-target="#editItem" data-toggle="modal" class="btn btn-info btn-fill" > 
                                                                     Edit Item
@@ -303,6 +350,7 @@
                                                     <div class="content table-responsive table-full-width">
                                                         <table class="table table-hover table-striped" cellspacing="0" width="100%">
                                                             <thead>
+                                                                @if(count($term_items) > 0)
                                                                 <th>ID</th>
                                                                 <th>Item Name</th>
                                                                 <th>Supplier Name</th>
@@ -315,6 +363,7 @@
                                                                 <th>Damaged</th>
                                                                 <th>Returned</th>
                                                                 <th>Sold</th>
+                                                                @endif
                                                             </thead>
                                                             <tbody>
                                                                 @forelse($term_items as $term_item)
@@ -427,9 +476,11 @@
                                                     <div class="content table-responsive table-full-width">
                                                         <table class="table table-hover table-striped">
                                                             <thead>
+                                                                @if(count($expenses) > 0)
                                                                 <th> ID </th>
                                                                 <th>Expense</th>
                                                                 <th>Amount</th>
+                                                                @endif
                                                             </thead>
                                                             <tbody>
                                                                 @forelse ($expenses as $expense)
@@ -505,9 +556,11 @@
                                                     <div class="content table-responsive table-full-width">
                                                         <table class="table table-hover table-striped">
                                                             <thead>
+                                                            @if(count($sales) > 0)
                                                                 <th>ID</th>
                                                                 <th>Date</th>
                                                                 <th>Amount</th>
+                                                                @endif
                                                             </thead>
                                                             <tbody>
                                                                 @forelse($sales as $sale)
@@ -537,46 +590,67 @@
                                                         </table>
                                                     </div>
                                                 </div>
+                                                <div style="margin-left: 1%"> 
+                                                    {{$sales->links()}} 
+                                                </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="card">
-                                                    <div class="header"><br><br>
-
-                                                        <h4 class="title">Total Expenses</h4>
+                                                    <div class="header">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <button type="button" data-target="#printSales" data-toggle="modal" class="btn pull-right btn-basic btn-fill"> 
+                                                                        Print Sales
+                                                                    </button> 
+                                                        </div>
+                                                    </div>
+                                                    <!-- Total expense -->
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                          <h4 class="title">&#8369;{{$total_expense}}</h4>
                                                         <p class="category">
-                                                            &#8369;{{$total_expense}}
-                                                        </p>
-
-                                                        <br><br>
-
-                                                        <h4 class="title">Total Sales</h4>    
-                                                        <p class="category">
-                                                            &#8369;
+                                                            Total Expenses
+                                                        </p>  
+                                                        </div>
+                                                    </div><br><br>
+                                                    <!-- Total sale-->
+                                                    <div class="row">
+                                                        <div class="col-md-12">
                                                             @foreach($term_items as $term_item)
-                                                                {{$total_sale += ($term_item->ti_original -($term_item->ti_damaged + $term_item->ti_returned)) *
-                                                                ($term_item -> inventory_price + ($term_item -> inventory_price * 0.25))}}
+                                                                <?php $total_sale += 
+                                                                ($term_item->ti_original -($term_item->ti_damaged + $term_item->ti_returned)) *
+                                                                ($term_item -> inventory_price + ($term_item -> inventory_price * 0.25)) ?>
                                                             @endforeach
-                                                        </p>
-                                                        <br><br> 
-
-                                                        <h4 class="title">Total Revenue</h4>
+                                                        <h4 class="title">&#8369; {{$total_sale}}</h4>    
+                                                            
                                                         <p class="category">
-                                                            &#8369;{{$total_sale * 0.25}}
-                                                        </p>
-                                                        <br><br>
-
-                                                        <h4 class="title">Amount Collectable</h4>
+                                                            Total Sales</p>
+                                                        </div>
+                                                    </div><br><br>
+                                                    <!-- Total revenue -->
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <h4 class="title">&#8369;{{$total_sale * 0.25}}</h4>
                                                         <p class="category">
-                                                            &#8369;{{$total_sale + $total_expense}}
+                                                            Total Revenue
                                                         </p>
-                                                        <br><br><br> 
-
+                                                        </div>
+                                                    </div><br><br>
+                                                    <!-- Collectable amount -->
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <h4 class="title"> &#8369;{{$total_sale + $total_expense +($total_sale * 0.25)}}</h4>
+                                                        <p class="category">
+                                                           Amount Collectable
+                                                        </p>
+                                                        </div>
+                                                    </div><br><br>
+                                                        <!-- Collected amount -->
                                                         <div class="modal-footer">
-                                                            <h4 class="title">Collected Amount</h4>    
+                                                            <h4 class="title">&#8369;{{$total_collected}}</h4>    
                                                             <p class="category">
-                                                                &#8369;{{$total_collected}}
+                                                                Collected Amount
                                                             </p>
-                                                            <br><br>
                                                         </div>
                                                         <hr>     
                                                     </div>
@@ -612,12 +686,14 @@
                                                         <div class="content table-responsive table-full-width">
                                                             <table class="table table-hover table-striped">
                                                                 <thead>
+                                                                @if(count($unpaid_customers) > 0)
                                                                     <th>No.</th>
                                                                     <th>Name</th>
                                                                     <th>Contact Number</th>
                                                                     <th>Total Payable</th>
                                                                     <!-- <th>Edit</th>
                                                                     <th>View</th> -->
+                                                                @endif
                                                                 </thead>
                                                                 <tbody>
                                                                 @forelse ($unpaid_customers as $unpaid_customer)
@@ -635,7 +711,7 @@
                                                                             &#8369;{{$unpaid_customer -> total_payable}}
                                                                         </td>
                                                                         <td>
-                                                                            <button data-target="#editCustomer" data-toggle="modal" id="viewCustomer-{{$unpaid_customer -> co_id}}" data-id='{{$unpaid_customer -> co_id}}' class="viewCustomer_btn btn btn-primary btn-fill">
+                                                                            <button data-target="#editCustomer" data-toggle="modal" id="viewCustomer-{{$unpaid_customer -> co_id}}"  data-id='{{$unpaid_customer -> co_id}}' class="viewCustomer_btn btn btn-primary btn-fill">
                                                                                 View
                                                                             </button>
                                                                         </td>
@@ -677,11 +753,12 @@
                                                         <div class="content table-responsive table-full-width">
                                                             <table class="table table-hover table-striped">
                                                                 <thead>
+                                                                    @if(count($paid_customers) >0)
                                                                     <th>No.</th>
                                                                     <th>Name</th>
                                                                     <th>Date Paid</th>
                                                                     <th>Total Paid</th>
-                                                                    <th>View</th>
+                                                                    @endif
                                                                 </thead>
                                                                 <tbody>
                                                                 @forelse($paid_customers as $paid_customer)
@@ -730,6 +807,123 @@
     </div>
 
     <!--MODALS-->
+
+    <!-- EDIT TERM DETAILS -->
+    <div class="modal fade" role="dialog" id="editTerm">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <center> <h4 class="modal-title"> Edit Term Details</h4> </center>
+                </div>
+                
+                <form id="editTermDetails_form" method="POST" class="form-horizontal">
+                    {{ csrf_field() }}
+                    {{ method_field('PUT') }}
+                    <div class="modal-body">
+                        <div id="view-edit-content" class="row">
+                        <!-- Term edit form-->
+                            <div class="col-md-12"> 
+                                <!-- Term Collector -->
+                                <div class="row form-group">                       
+                                    <div class="{{ $errors->editTerm->has('et_collector') ? ' has-error' : '' }}"> 
+                                        <div class="col-md-8">    
+                                            <label class="sel1">Collector Name</label>
+                                                  <select class="form-control" required id="et_collector" name="et_collector">
+                                                    @foreach($collectors as $collector)
+                                                        <option value='{{$collector->user_id}}' 
+                                                            >
+                                                            {{$collector->fname}}&nbsp
+                                                            {{$collector->mname}}.
+                                                            {{$collector->lname}}
+                                                        </option>
+                                                    @endforeach
+                                                  </select>
+                                            
+                                                @if ($errors->editTerm->has('et_collector'))
+                                                    <span class="help-block">
+                                                        <strong>{{ $errors->editTerm->first('et_collector') }}</strong>
+                                                    </span>
+                                                @endif     
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Term Location -->
+                                <div class="row form-group">
+                                    <div class="{{ $errors->editTerm->has('et_location') ? ' has-error' : '' }}">
+                                        <div class="col-md-8">  
+                                            <label>Location</label>
+                                            <textarea rows='2' id="et_location" class="form-control"  name="et_location" required value="{{ old('et_location') }}"></textarea>
+
+                                                @if ($errors->editTerm->has('et_location'))
+                                                    <span class="help-block">
+                                                        <strong>{{ $errors->editTerm->first('et_location') }}</strong>
+                                                    </span>
+                                                @endif
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Peddling Start-->
+                                <div class="row form-group">
+                                    <div class="{{ $errors->editTerm->has('et_startdate') ? ' has-error' : '' }}">
+                                        <div class="col-md-6">
+                                            <label>Peddling Start</label>
+                                            <input name="et_startdate"  id="et_startdate" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'" value="{{ old('et_startdate') }}">
+                                                                                
+                                            @if ($errors->editTerm->has('et_startdate'))
+                                                <span class="help-block">
+                                                    <strong>{{ $errors->editTerm->first('et_startdate') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div> 
+                                </div>
+                                <!-- Peddling End-->
+                                <div class="row form-group">
+                                    <div class="{{ $errors->editTerm->has('et_enddate') ? ' has-error' : '' }}">
+                                        <div class="col-md-6">
+                                            <label>Peddling End</label>
+                                            <input name="et_enddate"  id="et_enddate" class="form-control" type="text" onfocus="(this.type='date')"  onblur="if(!this.value)this.type='text'" value="{{ old('et_enddate') }}">
+                                                                                
+                                            @if ($errors->editTerm->has('et_enddate'))
+                                                <span class="help-block">
+                                                    <strong>{{ $errors->editTerm->first('et_enddate') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div> 
+                                </div>
+                                <!-- Collecting End-->
+                                <div class="row form-group">
+                                    <div class="{{ $errors->editTerm->has('et_finishdate') ? ' has-error' : '' }}">
+                                        <div class="col-md-6">
+                                            <label>Collecting End</label>
+                                            <input name="et_finishdate"  id="et_finishdate" class="form-control" type="text" onfocus="(this.type='date')"  onblur="if(!this.value)this.type='text'" value="{{ old('et_finishdate') }}">
+                                                                                
+                                            @if ($errors->editTerm->has('et_finishdate'))
+                                                <span class="help-block">
+                                                    <strong>{{ $errors->editTerm->first('et_finishdate') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic">
+                            Cancel
+                        </button>
+
+                        <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-add">
+                            Save
+                        </button>      
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!--ADD PEDDLER-->
     <div class="modal fade" role="dialog" id="addPeddler">
@@ -863,23 +1057,10 @@
                                 <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">                         
                                 <div class="row form-group">                       
                                     <div class="{{ $errors->editPeddler->has('edit_peddler') ? ' has-error' : '' }}"> 
-                                        <div class="col-md-8">   
-                                            <!--Acquires the list of workers within users table-->
+                                        <div class="col-md-8">  
+                                            <input type="hidden" id="edit_peddler" id="edit_peddler">
                                             <label class="sel1">Peddler Name:</label>
-                                            <select class="form-control" name="edit_peddler" required id="edit_peddler" disabled="disabled" required>
-                                                @foreach($peddlers as $peddler)
-                                                    <option value="{{$peddler->user_id}}">
-                                                        {{$peddler->fname}}&nbsp
-                                                        {{$peddler->mname}}.
-                                                        {{$peddler->lname}}
-                                                    </option>
-                                                @endforeach
-                                            </select>           
-                                            @if ($errors->editPeddler->has('edit_peddler'))
-                                                <span class="help-block">
-                                                    <strong>{{ $errors->editPeddler->first('edit_peddler') }}</strong>
-                                                </span>
-                                            @endif                   
+                                            <input type="text" id="peddler_name" name="peddler_name" class="form-control">                  
                                         </div>
                                     </div>
                                                         
@@ -974,7 +1155,7 @@
                                     <div class="{{ $errors->addItem->has('add_ti_date') ? ' has-error' : '' }}">
                                         <div class="col-md-6">
                                             <label>Stock Out</label>
-                                            <input type="datetime-local" id="add_ti_date" class="form-control"  name="add_ti_date" required value="{{App\Inventory::currdate()}}"> 
+                                            <input type="datetime-local" id="add_ti_date" class="form-control" max="{{Carbon\Carbon::now()->toDateString()}}" name="add_ti_date" required value="{{App\Inventory::currdate()}}"> 
                                                                                 
                                             @if ($errors->addItem->has('add_ti_date'))
                                                 <span class="help-block">
@@ -991,11 +1172,11 @@
                                             <select class="form-control" name="add_ti_worker" required id="add_ti_worker">
                                                 <option value="" data-hidden="true" selected="selected">
                                                 </option>
-                                                @foreach($workers as $worker)
-                                                    <option value="{{$worker-> worker_id}}">
-                                                        {{$worker->fname}}&nbsp
-                                                        {{$worker->mname}}.
-                                                        {{$worker->lname}}
+                                                @foreach($peddlers as $peddler)
+                                                    <option value="{{$peddler-> user_id}}">
+                                                        {{$peddler->fname}}&nbsp
+                                                        {{$peddler->mname}}.
+                                                        {{$peddler->lname}}
                                                     </option>
                                                 @endforeach
                                             </select>           
@@ -1007,7 +1188,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="item-form"> 
+                                
                                     <div class="row form-group">   
                                         <div class="{{$errors->addItem->has('add_ti_item_name') ? ' has-error' : ''}}"> 
                                             <div class="col-md-8">              
@@ -1027,13 +1208,13 @@
                                                         </strong>
                                                     </span>
                                                 @endif
-                                                <input type="hidden" name="input-item-name" value="1">
+
                                             </div>
                                         </div>
                                         <div class="{{$errors->addItem->has('add_ti_qty') ? ' has-error' : ''}}">
                                             <div class="col-md-2">              
                                                 <label>Quantity</label>
-                                                <input type="number" class="form-control" name="add_ti_qty[]" id="add_ti_qty" required>
+                                                <input type="number" class="form-control" name="add_ti_qty[]" min="1" id="add_ti_qty" required>
                                                 @if ($errors->addItem->has('add_ti_qty'))
                                                     <span class="help-block">
                                                         <strong>
@@ -1041,15 +1222,17 @@
                                                         </strong>
                                                     </span>
                                                 @endif
-                                                <input type="hidden" name="input-item-qty" value="1">
+                                                
                                             </div>
                                         </div>
-                                    </div>   
-                                </div>
+                                    </div>
+                                    <div id="item-form">    
+                                    </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
+
                         <button type="button" class="btn btn-info btn-fill pull-left" id="add-form">
                             Add Item Form
                         </button>
@@ -1106,7 +1289,47 @@
                                             @endif
                                         </div>
                                     </div>
+                                </div>
 
+                                <div class="row form-group">
+                                    <div class="{{ $errors->editItem->has('edit_item_rhandler') ? ' has-error' : '' }}"> 
+                                        <div class="col-md-6">   
+                                            <!--Acquires the list of workers within users table-->
+                                            <label class="sel1">Handler:</label>
+                                            <select class="form-control" name="edit_item_handler" required id="edit_item_rhandler">
+                                                <option value="" data-hidden="true" selected="selected" >
+                                                </option>
+                                                @foreach($peddlers as $peddler)
+                                                    <option value="{{$peddler->user_id}}">
+                                                        {{$peddler->fname}}&nbsp
+                                                        {{$peddler->mname}}.
+                                                        {{$peddler->lname}}
+                                                    </option>
+                                                @endforeach
+                                            </select>           
+                                            @if ($errors->editItem->has('edit_item_rhandler'))
+                                                <span class="help-block">
+                                                    <strong>{{ $errors->editItem->first('edit_item_rhandler') }}</strong>
+                                                </span>
+                                            @endif                   
+                                        </div>
+                                    </div>
+
+                                    <div class="{{ $errors->editItem->has('edit_item_date') ? ' has-error' : '' }}">
+                                        <div class="col-md-6">
+                                            <label>Date</label>
+                                            <input type="datetime-local" id="edit_item_date" class="form-control"  name="edit_item_date" required value="{{App\Inventory::currdate()}}"> 
+                                                                                
+                                            @if ($errors->editItem->has('edit_item_date'))
+                                                <span class="help-block">
+                                                    <strong>{{ $errors->editItem->first('edit_item_date') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div> 
+                                </div><br><br><br>
+
+                                 <div class="row form-group">
                                     <div class="{{ $errors->editItem->has('edit_item_original') ? ' has-error' : '' }}">
                                         <div class="col-md-4">
                                             <label>Original Qty</label>
@@ -1120,9 +1343,6 @@
                                             @endif
                                         </div>
                                     </div>
-                                </div> 
-
-                                <div class="row form-group">
                                     <div class="{{ $errors->editItem->has('edit_item_returns') ? ' has-error' : '' }}">
                                         <div class="col-md-4">
                                             <label>Returned Qty</label>
@@ -1135,40 +1355,37 @@
                                                 </span>
                                             @endif
                                         </div>
-                                    </div>
-
-                                    <div class="{{ $errors->editItem->has('edit_item_damages') ? ' has-error' : '' }}">
-                                        <div class="col-md-4">  
-                                            <label class="sel1">Damaged Qty</label>
-                                            <input class="form-control" type="number" id="edit_item_damages" name="edit_item_damages" value="{{ old('edit_item_returns') }}">
-                                            @if ($errors->editItem->has('edit_item_damages'))
-                                                <span class="help-block">
-                                                    <strong>
-                                                        {{$errors->dditItem->first('edit_item_damages')}}
-                                                    </strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                    <div class="{{ $errors->editItem->has('edit_item_dtype') ? ' has-error' : '' }}">
-                                        <div class="col-md-4">  
-                                            <label class="sel1">Damaged Status</label>
-                                            <select class='form-control'  id="edit_item_dtype" name='edit_item_dtype' required value="{{old('edit_item_dtype')}}" disabled>
-                                                <option value='' selected="selected"> </option>
-                                                <option value='1'> Repairable </option>
-                                                <option value='0'> Unrepairable </option>
-                                            </select>
-                                            @if ($errors->editItem->has('edit_item_dtype'))
-                                                <span class="help-block">
-                                                    <strong>
-                                                        {{$errors->dditItem->first('edit_item_dtype')}}
-                                                    </strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </div>
+                                    </div>                            
                                 </div>
+
+                                <div class="row form-group">
+                                    <div class="{{ $errors->editItem->has('edit_item_udamages') ? ' has-error' : '' }}">
+                                        <div class="col-md-4">  
+                                            <label class="sel1">Unrepairable Qty</label>
+                                            <input class="form-control" type="number" id="edit_item_damages" name="edit_item_udamages" value="{{ old('edit_item_udamages') }}">
+                                            @if ($errors->editItem->has('edit_item_udamages'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{$errors->editItem->first('edit_item_udamages')}}
+                                                    </strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="{{ $errors->editItem->has('edit_item_rdamages') ? ' has-error' : '' }}">
+                                        <div class="col-md-4">  
+                                            <label class="sel1">Repairable Qty</label>
+                                            <input class="form-control" type="number" id="edit_item_rdamages" name="edit_item_rdamages" value="{{ old('edit_item_rdamages') }}">
+                                            @if ($errors->editItem->has('edit_item_rdamages'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{$errors->editItem->first('edit_item_rdamages')}}
+                                                    </strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>                      
                             </div>
                         </div>
                     </div>
@@ -1215,7 +1432,7 @@
                                 <div class="{{$errors->addExpense->has('add_exp_amt') ? ' has-error' : ''}}"> 
                                     <div class="col-md-4">  
                                         <label>Expense Amount</label>
-                                        <input type="number"  name="add_exp_amt" id="add_exp_amt" class="form-control" required>
+                                        <input type="number"  name="add_exp_amt" id="add_exp_amt" class="form-control" min="1" required>
                                         @if ($errors->addExpense->has('add_exp_amt'))
                                             <span class="help-block">
                                                 <strong>{{ $errors->addExpense->first('add_exp_amt') }}</strong>
@@ -1272,10 +1489,10 @@
                                 <div class="{{$errors->editExpense->has('edit_exp_amt') ? ' has-error' : ''}}"> 
                                     <div class="col-md-4">  
                                         <label>Expense Amount</label>
-                                        <input type="number" required name="edit_exp_amt" id="edit_exp_amt" class="form-control" required>
+                                        <input type="number" required name="edit_exp_amt" id="edit_exp_amt" min="1" class="form-control" required>
                                         @if ($errors->editExpense->has('edit_exp_amt'))
                                             <span class="help-block">
-                                                <strong>{{ $errors->editExpense->first('exit_exp_amt') }}</strong>
+                                                <strong>{{ $errors->editExpense->first('edit_exp_amt') }}</strong>
                                             </span>
                                         @endif
                                     </div>
@@ -1358,7 +1575,7 @@
                                     <div class="{{$errors->addCollection->has('add_amt_collected') ? ' has-error' : ''}}"> 
                                         <div class="col-md-6">  
                                             <label>Amount Collected</label>
-                                            <input type="number"  name="add_amt_collected" id="add_amt_collected" class="form-control" value="{{ old('add_amt_collected')}}" required>
+                                            <input type="number"  name="add_amt_collected" id="add_amt_collected" class="form-control" value="{{ old('add_amt_collected')}}" required min="1">
                                             @if ($errors->addCollection->has('add_amt_collected'))
                                                 <span class="help-block">
                                                     <strong>{{ $errors->addCollection->first('add_amt_collected') }}</strong>
@@ -1368,7 +1585,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label> Date Collected </label>
-                                        <input type="date" class="form-control" name="add_date_collected" required value="{{Carbon\Carbon::now()->toDateString()}}">
+                                        <input type="date" class="form-control" name="add_date_collected" max="{{Carbon\Carbon::now()->toDateString()}}" required value="{{Carbon\Carbon::now()->toDateString()}}">
                                     </div>
                                 </div>
                                 <div class="row form-group">
@@ -1428,7 +1645,7 @@
                                     <div class="{{$errors->editCollection->has('edit_amt_collected') ? ' has-error' : ''}}"> 
                                         <div class="col-md-6">  
                                             <label>Amount Collected</label>
-                                            <input type="number"  name="edit_amt_collected" id="edit_amt_collected" class="form-control" value="{{ old('edit_amt_collected')}}" required>
+                                            <input type="number"  name="edit_amt_collected" id="edit_amt_collected" class="form-control" value="{{ old('edit_amt_collected')}}" min="1" required>
                                             @if ($errors->editCollection->has('edit_amt_collected'))
                                                 <span class="help-block">
                                                     <strong>{{ $errors->editCollection->first('edit_amt_collected') }}</strong>
@@ -1438,14 +1655,14 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label> Date Collected </label>
-                                        <input type="date" class="form-control" name="edit_date_collected" required value="{{Carbon\Carbon::now()->toDateString()}}">
+                                        <input type="date" class="form-control" name="edit_date_collected" max="{{Carbon\Carbon::now()->toDateString()}}" required value="{{Carbon\Carbon::now()->toDateString()}}">
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <div class="{{$errors->editCollection->has('edit_note_collected') ? ' has-error' : ''}}"> 
                                         <div class="col-md-12"> 
                                             <label>Note</label>
-                                            <textarea class="form-control" required id="edit_note_collected" name="edit_note_collected" rows='2' cols="30" value="{{ old('edit_note_collected')}}"> </textarea>
+                                            <textarea class="form-control"  id="edit_note_collected" name="edit_note_collected" rows='2' cols="30" value="{{ old('edit_note_collected')}}"> </textarea>
                                             @if ($errors->editCollection->has('edit_note_collected'))
                                                 <span class="help-block">
                                                     <strong>
@@ -1510,7 +1727,6 @@
             </div>
         </div>
     </div>
-
 
     <!--CUSTOMER VIEW/EDIT MODAL-->  
     <div class="modal fade" role="dialog" id="editCustomer">
@@ -1577,7 +1793,7 @@
                                 </div> 
                                     
                                 <div class="row form-group">
-                                    <div class="{{ $errors->editCustomer->has('edit_edit_cnum') ? ' has-error' : '' }}">
+                                    <div class="{{ $errors->editCustomer->has('edit_cnum') ? ' has-error' : '' }}">
                                         <div class="col-md-8">  
                                             <label>Contact Number</label>
                                             <input type="number" required name="edit_cnum" id="edit_cnum" class="form-control" >
@@ -1809,7 +2025,7 @@
                                         <div class="{{$errors->addCustomer->has('item_qty') ? ' has-error' : ''}}">
                                             <div class="col-md-2">              
                                                 <label>Quantity</label>
-                                                <input type="number" class="form-control" name="item_qty[]" id="item_qty" required>
+                                                <input type="number" class="form-control" name="item_qty[]" min="1" id="item_qty" required>
                                                 @if ($errors->addCustomer->has('item_qty'))
                                                     <span class="help-block">
                                                         <strong>
@@ -1831,7 +2047,7 @@
                         </button>
 
                         <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-add">
-                            Add Item/s
+                            Add Customer
                         </button>
 
                         <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic pull-right" style="margin-right: 2%">
@@ -1905,7 +2121,7 @@
                                 <div class="row form-group">
                                     <div class="col-md-6">
                                         <label> Date Paid </label>
-                                        <input type="date" class="form-control" name="collect_date" required value="{{Carbon\Carbon::now()->toDateString()}}">
+                                        <input type="date" class="form-control" max="{{Carbon\Carbon::now()->toDateString()}}" name="collect_date" required value="{{Carbon\Carbon::now()->toDateString()}}">
                                     </div>
                                 </div>
                             </div>
@@ -1923,7 +2139,7 @@
         </div>
     </div>
 
-    <!--PRINTING MODAL-->    
+    <!--PRINTING ITEMS MODAL-->    
     <div class="modal fade" role="dialog" id="printItems" >
         <div class="modal-dialog">
           <!-- Modal content-->
@@ -1964,95 +2180,370 @@
         </div>
     </div>
 
+    <!--PRINTING SALES MODAL-->    
+    <div class="modal fade" role="dialog" id="printSales" >
+        <div class="modal-dialog">
+          <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <center>
+                        <h4 class="modal-title"> Sales Report</h4>
+                    </center>
+                </div>
+
+                <form method="POST" action="/printSales/{{$term[0]->term_id}}">
+                    {{csrf_field()}}
+                    <div class="modal-body">
+                        <div id="view-edit-content" class="row">
+                            <div class="col-md-12">                                     
+                                <div class="row form-group">                       
+                                    <div class=""> 
+                                        <div class="col-md-12">   
+                                            You are about to generate a pdf of all the sales of this term. Do you want to proceed?
+                                        </div>
+                                    </div>
+                                </div> 
+                            </div> 
+                        </div>                       
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancel
+                        </button>
+
+                        <button type="submit" class="btn btn-bg btn-success btn-fill">
+                        Generate PDF
+                        </button> 
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUCCESS MESSAGES -->
+    
+        <!-- DETAILS -->
+            @if(session('update-term-success'))
+                <script> 
+                    jQuery(document).ready(function($){
+                        $.notify( "{{session()-> get('update-term-success' )}}", "success");
+                        {{session()->forget('update-term-success')}}
+                    });
+                </script>
+            @endif
+        <!-- END OF DETAILS -->
+
+        <!-- PEDDLERS -->
+            @if(session('store-peddler-success'))
+                <script> 
+                    jQuery(document).ready(function($){
+                        $.notify( "{{session()-> get('store-peddler-success' )}}", "success");
+                        {{session()->forget('store-peddler-success')}}
+                    });
+                </script>
+            @endif
+            @if(session('update-peddler-success'))
+                <script> 
+                    jQuery(document).ready(function($){
+                        $.notify( "{{session()-> get('update-peddler-success' )}}", "success");
+                        {{session()->forget('update-peddler-success')}}
+                    });
+                </script>
+            @endif
+            @if(session('destroy-peddler-success'))
+                <script> 
+                    jQuery(document).ready(function($){
+                        $.notify( "{{session()-> get('destroy-peddler-success' )}}", "success");
+                        {{session()->forget('destroy-peddler-succses')}}
+                    });
+                </script>
+            @endif
+        <!-- END OF PEDDLERS -->
+
+        <!-- ITEMS -->
+            @if(session('store-item-success'))
+                <script> 
+                    jQuery(document).ready(function($){
+                        $.notify( "{{session()-> get('store-item-success' )}}", "success");
+                        {{session()->forget('store-item-success')}}
+                    });
+                </script>
+            @endif
+            @if(session('update-item-success'))
+                <script> 
+                    jQuery(document).ready(function($){
+                        $.notify( "{{session()-> get('update-item-success' )}}", "success");
+                        {{session()->forget('update-item-success')}}
+                    });
+                </script>
+            @endif
+            @if(session('destroy-item-success'))
+                <script> 
+                    jQuery(document).ready(function($){
+                        $.notify( "{{session()-> get('destroy-item-success' )}}", "success");
+                        {{session()->forget('destroy-item-success')}}
+                    });
+                </script>
+            @endif
+        <!-- END OF ITEMS -->
+
+        <!-- EXPENSES -->
+            @if(session('store-expense-success'))
+                <script> 
+                    jQuery(document).ready(function($){
+                        $.notify( "{{session()-> get('store-expense-success' )}}", "success");
+                        {{session()->forget('store-expense-success')}}
+                    });
+                </script>
+            @endif
+            @if(session('update-expense-success'))
+                <script> 
+                    jQuery(document).ready(function($){
+                        $.notify( "{{session()-> get('update-expense-success' )}}", "success");
+                        {{session()->forget('update-expense-success')}}
+                    });
+                </script>
+            @endif
+            @if(session('destroy-expense-success'))
+                <script> 
+                    jQuery(document).ready(function($){
+                        $.notify( "{{session()-> get('destroy-expense-success' )}}", "success");
+                        {{session()->forget('destroy-expense-success')}}
+                    });
+                </script>
+            @endif
+        <!-- END OF EXPENSES -->
+        
+        <!-- COLLECTIONS -->
+            @if(session('store-collection-success'))
+                <script> 
+                    jQuery(document).ready(function($){
+                        $.notify( "{{session()-> get('store-collection-success' )}}", "success");
+                        {{session()->forget('store-collection-success')}}
+                    });
+                </script>
+            @endif
+            @if(session('update-collection-success'))
+                <script> 
+                    jQuery(document).ready(function($){
+                        $.notify( "{{session()-> get('update-collection-success' )}}", "success");
+                        {{session()->forget('update-collection-success')}}
+                    });
+                </script>
+            @endif
+            @if(session('destroy-collection-success'))
+                <script> 
+                    jQuery(document).ready(function($){
+                        $.notify( "{{session()-> get('destroy-collection-success' )}}", "success");
+                        {{session()->forget('destroy-collection-success')}}
+                    });
+                </script>
+            @endif
+        <!-- END OF COLLECIONTS -->
+
+        <!-- CUSTOMERS -->
+            @if(session('store-customer-success'))
+                <script> 
+                    jQuery(document).ready(function($){
+                        $.notify( "{{session()-> get('store-customer-success' )}}", "success");
+                        {{session()->forget('store-customer-success')}}
+                    });
+                </script>
+            @endif
+            @if(session('update-customer-success'))
+                <script> 
+                    jQuery(document).ready(function($){
+                        $.notify( "{{session()-> get('update-customer-success' )}}", "success");
+                        {{session()->forget('update-customer-success')}}
+                    });
+                </script>
+            @endif
+            @if(session('destroy-customer-success'))
+                <script> 
+                    jQuery(document).ready(function($){
+                        $.notify( "{{session()-> get('destroy-customer-success' )}}", "success");
+                        {{session()->forget('destroy-customer-success')}}
+                    });
+                </script>
+            @endif
+        <!-- END OF CUSTOMERS -->
+    <!-- END OF SUCCESS MESSAGES -->
 </body>
 
     <!--   Core JS Files   -->
-    <script src="/js/jquery.3.2.1.min.js" type="text/javascript"></script>
+    <script src="/js/notify.js" type="text/javascript"></script>
     <script src="/js/bootstrap.min.js" type="text/javascript"></script>
-
-    <!--  Notifications Plugin    -->
-    <script src="/js/bootstrap-notify.js"></script>
 
     <!-- Light Bootstrap Table Core javascript and methods for Demo purpose -->
     <script src="/js/light-bootstrap-dashboard.js?v=1.4.0"></script>
 
-    <!-- Light Bootstrap Table DEMO methods, don't include it in your project! -->
-    <script src="/js/demo.js"></script>
+    <!-- MAINTAIN ACTIVE TAB -->
+        <script>
+            $(document).ready(function(){ 
+                $('a[data-toggle="tab"]').click(function (e) {
+                    e.preventDefault();
+                    $(this).tab('show');
+                });
 
-    <script type="text/javascript">
-        $('#myTabs a').click(function (e) {
-          e.preventDefault()
-          $(this).tab('show')
-        })
-    </script>
+                $('a[data-toggle="tab"]').on("shown.bs.tab", function (e) {
+                    var id = $(e.target).attr("href");
+                    localStorage.setItem('selectedTab', id)
+                });
+
+                var selectedTab = localStorage.getItem('selectedTab');
+                if (selectedTab != null) {
+                    $('a[data-toggle="tab"][href="' + selectedTab + '"]').tab('show');
+                }
+            });
+        </script>
+    <!-- END OF MAINITAIN ACTIVE TAB -->
 
     <!-- VALIDATION ERRORS -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function(event) {
-            if ({!!count($errors->addExpense)!!} > 0)
-                $("#addExpense").modal();    
-            
-            if({!!count($errors->editExpense)!!} > 0)
-                $("#expense-view-edit-{{ session()-> get( 'error_id' ) }}").click();
+        <script>
+            document.addEventListener("DOMContentLoaded", function(event) {
+                if ({!!count($errors->addExpense)!!} > 0)
+                    $("#addExpense").modal();    
+                
+                if({!!count($errors->editExpense)!!} > 0){
+                    $("#expense-view-edit-{{ session()-> get( 'error_id' ) }}").on('click', function (e) {
+                 
+                        e.preventDefault();
+                        $("#edit_exp_name").val("{{old('edit_exp_name')}}");
+                        $('#edit_exp_amt').val("{{old('edit_exp_amt')}}");
 
-            if ({!!count($errors->addPeddler)!!} > 0)
-                $("#addPeddler").modal(); 
-
-            // if ({!!count($errors->addItem)!!} > 0)
-            //     $("#addItem").modal(); 
-
-            if ({!!count($errors->addItem)!!} > 0)
-                $("#addItem").modal(); 
-
-            if ({!!count($errors->editItem)!!} > 0)
-                $("#editItem").modal(); 
-
-            if ({!!count($errors->addCustomer)!!} > 0)
-                $("#addCustomer").modal(); 
-
-            if ({!!count($errors->editCustomer)!!} > 0)
-                $("#viewCustomer-{{ session()-> get( 'error_id' ) }}").click(); 
-
-        });
-    </script>
-
-    <!-- TERM PEDDLERS -->
-    <script>
-        //DELETE PEDDLER FROM TERM
-        $(document).on("click", ".rp_btn", function () {
-            var id = $(this).data('id');
-
-            //FORM
-            $("#removePeddler_form").attr("action", "/workers/" +id);
-
-        }); 
-
-        //EDIT PEDDLER FROM TERM
-        $(document).on("click", ".ep_btn", function () {
-            var id = $(this).data('id');
-
-             $.ajax({
-                url: "/getWorker/" + id,
-                type: 'GET',             
-                data: { 'id' : id },
-                success: function(response){
-                    // DEBUGGING
-                    console.log(response);
-
-                    // SET FORM INPUTS
-                    $("#edit_peddler option[value='"+response.worker_user_id+"']").attr('selected', true);
-                    $("#edit_position option[value='"+response.worker_type+"']").attr('selected', true);
-                },
-                error: function(data){
-                    console.log(data);
+                        var id = $(this).data('id');
+                       $("#editExpense_form").attr("action", "/expenses/" +id);
+                    }); 
+                    $("#expense-view-edit-{{ session()-> get( 'error_id' ) }}").click();
                 }
+
+                if ({!!count($errors->addPeddler)!!} > 0)
+                    $("#addPeddler").modal(); 
+
+                if({!!count($errors->editPeddler)!!} > 0)
+                    $("#ep-{{ session()-> get( 'error_id' ) }}").click();
+
+
+                if ({!!count($errors->addItem)!!} > 0)
+                    $("#addItem").modal(); 
+
+                if ({!!count($errors->editItem)!!} > 0)
+                    // $("#editItem").modal(); 
+
+                if ({!!count($errors->addCustomer)!!} > 0)
+                    $("#addCustomer").modal(); 
+
+                if ({!!count($errors->editCustomer)!!} > 0)
+                    $("#viewCustomer-{{ session()-> get( 'error_id' ) }}").click(); 
+
+                if ({!!count($errors->editTerm)!!} > 0){
+                    $("#editTermDetails_btn").on('click', function (e) {
+                 
+                        e.preventDefault();
+                        $("#et_collector option[value={{old('et_collector')}}]").attr('selected', true);
+
+                        $("#et_location").val("{{old('et_location')}}");
+                        $('#et_startdate').val("{{old('et_startdate')}}");
+
+                        @if(old('et_enddate') == null)
+                            $("#et_enddate").prop('disabled', true);
+                        @endif
+                        @if (old('et_finishdate') == null)
+                            $("#et_finishdate").prop('disabled', true);
+                        @endif
+
+                        $('#et_enddate').val("{{old('et_enddate')}}");
+                        $('#et_finishdate').val("{{old('et_finishdate')}}");
+
+                        var id = $(this).data('id');
+                        $("#editTermDetails_form").attr("action", "/termsprofile/" +id);
+                    });      
+                    $("#editTermDetails_btn").click();
+                }
+            });
+        </script>
+    <!-- END OF VALIDATION ERRORS  -->
+
+    <!-- TERM DETAILS -->
+        <script>
+            //EDIT PEDDLER FROM TERM
+            $(document).on("click", "#editTermDetails_btn", function () {
+                var id = $(this).data('id');
+
+                 $.ajax({
+                    url: "/getTermDetails/" + id,
+                    type: 'GET',             
+                    data: { 'id' : id },
+                    success: function(response){
+                        // DEBUGGING
+                        console.log(response[0]);
+
+                        $("#et_collector option[value='"+response[0].worker_user_id+"']").attr('selected', true);
+
+                        $("#et_location").val(response[0].location);
+                        $('#et_startdate').val(response[0].start_date);
+
+                        if (response[0].end_date == null)
+                            $("#et_enddate").prop('disabled', true);
+                        if (response[0].finish_date == null)
+                            $("#et_finishdate").prop('disabled', true);
+
+                        $('#et_enddate').val(response[0].end_date);
+                        $('#et_finishdate').val(response[0].finish_date);
+                    },
+                    error: function(data){
+                        console.log(data);
+                    }
+                }); 
+
+                //FORM
+                $("#editTermDetails_form").attr("action", "/termsprofile/" +id);
+            });
+        </script>
+    <!-- END OF TERM DETAILS -->
+    
+    <!-- TERM PEDDLERS -->
+        <script>
+            //DELETE PEDDLER FROM TERM
+            $(document).on("click", ".rp_btn", function () {
+                var id = $(this).data('id');
+
+                //FORM
+                $("#removePeddler_form").attr("action", "/workers/" +id);
+
             }); 
 
-            //FORM
-            $("#editPeddler_form").attr("action", "/workers/" +id);
-       }); 
-    </script>
+            //EDIT PEDDLER FROM TERM
+            $(document).on("click", ".ep_btn", function () {
+                var id = $(this).data('id');
 
+                 $.ajax({
+                    url: "/getWorker/" + id,
+                    type: 'GET',             
+                    data: { 'id' : id },
+                    success: function(response){
+                        // DEBUGGING
+                        console.log(response[0]);
+
+                        // SET FORM INPUTS
+                        $("#edit_peddler").val(response[0].worker_user_id);
+                        $("#peddler_name").val(response[0].fname + " " +response[0].mname +". " +response[0].lname);
+                        $("#edit_position option[value=" + response[0].worker_type +"]").prop('selected', 'selected').change();
+
+                        $("#peddler_name").prop('disabled', true);
+                    },
+                    error: function(data){
+                        console.log(data);
+                    }
+                }); 
+
+                //FORM
+                $("#editPeddler_form").attr("action", "/workers/" +id);
+            }); 
+        </script>
+    <!-- END OF TERM PEDDLERS -->
+    
     <!-- TERM EXPENSES-->
     <script>
         //DELETE EXPENSE FROM TERM
@@ -2088,253 +2579,254 @@
             $("#editExpense_form").attr("action", "/expenses/" +id);
         }); 
     </script>
-
+    <!-- END OF TERM EXPENSES -->
+   
     <!-- TERM ITEMS-->
-    <script>
-        $(document).ready(function(){ 
-            var options = $("#add_ti_item_name > option").clone();
-           
-            var i = 1;
-            // CREATE ADDITIONAL ITEM FORM
-            $('#add-form').click(function() {
-                i++;
-                $('#item-form').append(                                      
-                    "<div class='row form-group' id='ti-form-row-" +i +"'>"+   
-                        "<div class='col-md-8'>" +             
-                            "<select  class='form-control add_ti_item_name' id='ti-row-" +i +"' name='add_ti_item_name[]' required>" + 
-                            "</select>"+  
-                        "</div>"+
+        <script>
+            $(document).ready(function(){ 
+               
+                var i = 1;
+                // CREATE ADDITIONAL ITEM FORM
+                $('#add-form').click(function() {
+                    var options = $("#add_ti_item_name > option").clone();
+                    i++;
+                    $('#item-form').append(                                      
+                        "<div class='row form-group' id='ti-form-row-" +i +"'>"+   
+                            "<div class='col-md-8'>" +             
+                                "<select  class='form-control' id='ti-row-" +i +"' name='add_ti_item_name[]' required>" + 
+                                "</select>"+  
+                            "</div>"+
 
-                        "<div class='col-md-2'>"+              
-                            "<input type='number' class='form-control' name='add_ti_qty[]' id='add_ti_qty' required>"+
-                        "</div>"+
+                            "<div class='col-md-2'>"+              
+                                "<input type='number' min='1' class='form-control' name='add_ti_qty[]' id='add_ti_qty' required>"+
+                            "</div>"+
 
-                        "<div class='col-md-2'>"+ 
-                            "<button id='"+i +"' type='button' class='btn_remove btn btn-danger btn-fill'> - </button>"+
-                        "</div>"+
-                    "</div>"    
-                );
+                            "<div class='col-md-2'>"+ 
+                                "<button id='"+i +"' type='button' class='btn_remove btn btn-danger btn-fill'> - </button>"+
+                            "</div>"+
+                        "</div>"    
+                    );
 
-                $('.add_ti_item_name').append(options);
-                $('#ti-row-'+i).val("");
-            });
+                    $('#ti-row-'+i).append(options);
+                });
 
 
-            // REMOVE ITEM FORM
-            $(document).on('click', '.btn_remove', function(){  
-               var button_id = $(this).attr("id");  
-               var removed = $("#ti-form-row-"+button_id).remove(); 
-               $("#add_ti_item_name option[value='" +removed +"']").append();
-            });
+                // REMOVE ITEM FORM
+                $(document).on('click', '.btn_remove', function(){  
+                   var button_id = $(this).attr("id");  
+                   var removed = $("#ti-form-row-"+button_id).remove();
+                });
 
-            //EDIT ITEM FROM TERM
-            $("#edit_item_damages").on("change paste keyup", function() {
-                var value = $("#edit_item_damages").val();
-                if (value != 0 && value != null && value != " ")
-                    $("#edit_item_dtype").prop('disabled', false);
-                else {
-                    $("#edit_item_dtype").prop('disabled', true);
-                    $("#edit_item_dtype").val(null);
-                }
-            });
+                // EDIT ITEM
+                $('#edit_ti_item_name').on('change', function() {
+                    $id = $('#edit_ti_item_name').val();
+                    
+                    $.ajax({
+                        url: "/getTermItem/" + $id,
+                        type: 'GET',             
+                        data: { 'id' : $id },
+                        success: function(response){
+                            // DEBUGGING
+                            console.log(response);
 
-            $('#edit_ti_item_name').on('change', function() {
-                $id = $('#edit_ti_item_name').val();
-                
-                $.ajax({
-                    url: "/getTermItem/" + $id,
-                    type: 'GET',             
-                    data: { 'id' : $id },
-                    success: function(response){
-                        // DEBUGGING
-                        console.log(response);
+                            // SET FORM INPUTS
+                            $("#edit_item_original").val(response.ti_original);
+                            $("#edit_item_returns").val(response.ti_returned);
+                            // if (response.ti_damaged > 0 )
+                            //     $("#edit_item_udamages").val(response.);
+                            //     $("#edit_item_rdamages").val(response.);
+                            // else
+                            //     $("#edit_item_udamages").val(0);
+                            //     $("#edit_item_rdamages").val(0);
 
-                        // SET FORM INPUTS
-                        $("#edit_item_original").val(response.ti_original);
-                        $("#edit_item_returns").val(response.ti_returned);
-                        $("#edit_item_damages").val(response.ti_damaged);
-                    },
-                    error: function(data){
-                        console.log(data);
-                    }
+
+                            // /
+                        
+                        },
+                        error: function(data){
+                            console.log(data);
+                        }
+                    }); 
+                });
+
+                //REMOVE ITEM
+                $(document).on("click", ".ri_btn", function () {
+                    var id = $(this).data('id');
+
+                    //FORM
+                    $("#removeItem_form").attr("action", "/term_items/" +id);
                 }); 
             });
-
-            //REMOVE ITEM FROM TERM
-            $(document).on("click", ".ri_btn", function () {
-                var id = $(this).data('id');
-
-                //FORM
-                $("#removeItem_form").attr("action", "/term_items/" +id);
-            }); 
-        });
-    </script>  
-
+        </script>  
+    <!-- END OF TERM ITEMS -->
+    
     <!-- TERM CUSTOMERS -->
-    <script>
-        $(document).ready(function(){ 
-            var options = $("#item_name > option").clone();
-            
-            var i = 1;
-            // CREATE ADDITIONAL CUSTOMER ITEM FORM
-            $('#add-form-customer').click(function() {
-                i++;
-                $('#item-form-collector').append(                                      
-                    "<div class='row form-group' id='collector-form-row-" +i +"'>"+   
-                        "<div class='col-md-8'>" +             
-                            "<select  class='form-control item_name' id='collector-row-" +i +"' name='item_name[]' required>" + 
-                            "</select>"+  
-                        "</div>"+
+        <script>
+            $(document).ready(function(){ 
+                var options = $("#item_name > option").clone();
+                
+                var i = 1;
+                // CREATE ADDITIONAL CUSTOMER ITEM FORM
+                $('#add-form-customer').click(function() {
+                    i++;
+                    $('#item-form-collector').append(                                      
+                        "<div class='row form-group' id='collector-form-row-" +i +"'>"+   
+                            "<div class='col-md-8'>" +             
+                                "<select  class='form-control item_name' id='collector-row-" +i +"' name='item_name[]' required>" + 
+                                "</select>"+  
+                            "</div>"+
 
-                        "<div class='col-md-2'>"+              
-                            "<input type='number' class='form-control' name='item_qty[]' id='item_qty' required>"+
-                        "</div>"+
+                            "<div class='col-md-2'>"+              
+                                "<input type='number' class='form-control' name='item_qty[]' id='item_qty' required>"+
+                            "</div>"+
 
-                        "<div class='col-md-2'>"+ 
-                            "<button id='"+i +"' type='button' class='btn_remove_collector btn btn-danger btn-fill'> - </button>"+
-                        "</div>"+
-                    "</div>"    
-                );
+                            "<div class='col-md-2'>"+ 
+                                "<button id='"+i +"' type='button' class='btn_remove_collector btn btn-danger btn-fill'> - </button>"+
+                            "</div>"+
+                        "</div>"    
+                    );
 
-                $('.item_name').append(options);
-                $('#collector-row-'+i).val("");
-            });
-
-            // REMOVE CUSTOMER ITEM FORM
-            $(document).on('click', '.btn_remove_collector', function(){  
-               var button_id = $(this).attr("id");  
-               var removed = $("#collector-form-row-"+button_id).remove(); 
-            });
-
-            //VIEW-EDIT CUSTOMER
-            $(document).on("click", ".viewCustomer_btn", function () {
-                var id = $(this).data('id');
-
-                $.ajax({
-                    url: "/getCustomerOrder",
-                    type: 'GET',             
-                    data: {
-                            'id' : id ,
-                            'term_id' : {{$term[0]->term_id}},
-                            },
-                    success: function(response){
-                        // DEBUGGING
-                        console.log(response);
-
-                        $('#purchased-items').empty();
-
-                        // SET FORM INPUTS
-                        $('#edit_fname').val(response[0].customer_fname);
-                        $('#edit_mname').val(response[0].customer_mname);
-                        $('#edit_lname').val(response[0].customer_lname);
-                        $('#edit_gender').val(response[0].customer_gender);
-                        $('#edit_cnum').val(response[0].customer_cnum);
-                        $('#edit_addr').val(response[0].customer_addr);
-
-                        var i = 0;
-                        for (var x = 0; x < response.length; x++){
-                            i++;
-                            $('#purchased-items').append(
-                                '<div class="row form-group">'+
-                                    '<div class="{{$errors->editCustomer->has("edit_item_name") ? " has-error" : ""}}">'+
-                                        '<div class="col-md-8">'+
-                                            '<select  class="form-control" id="edit_item_name_' +x +'"'  
-                                                +'name="edit_item_name[]" required>'+
-                                                '@foreach($term_items as $term_item)'+
-                                                    '<option value="{{$term_item->ti_id}}">'+ 
-                                                        '{{$term_item -> supplier_name}}: {{$term_item -> inventory_name}} &#8369; {{$term_item -> inventory_price + ($term_item -> inventory_price * 0.25)}}'+
-                                                    '</option>'+
-                                                '@endforeach'+
-                                            '</select>'+
-                                            '@if ($errors->editCustomer->has("edit_item_name"))'+
-                                                '<span class="help-block">'+
-                                                    '<strong>'+
-                                                        '{{ $errors->editCustomer->first("edit_item_name") }}'+
-                                                    '</strong>'+
-                                                '</span>'+
-                                            '@endif'+
-                                        '</div>'+
-                                    '</div>'+
-                                    '<div class="{{$errors->editCustomer->has("edit_item_qty") ? " has-error" : ""}}">'+
-                                        '<div class="col-md-2">'+
-                                            '<input type="number" class="form-control" name="edit_item_qty[]" id="edit_item_qty" required value="' +response[x].order_qty +'">'+
-                                            '@if ($errors->editCustomer->has("edit_item_qty"))'+
-                                                '<span class="help-block">'+
-                                                    '<strong>'+
-                                                        '{{ $errors->editCustomer->first("edit_item_qty") }}'+
-                                                    '</strong>'+
-                                                '</span>'+
-                                            '@endif'+
-                                        '</div>'+
-                                    '</div>'+
-                                '</div>'
-                            );
-
-                            $("#edit_item_name_" +x +" option[value='"+response[x].ti_id+"']").attr('selected', true);
-                        }
-
-                    },
-                    error: function(data){
-                        console.log(data);
-                    }
+                    $('.item_name').append(options);
+                    $('#collector-row-'+i).val("");
                 });
 
-                //FORM
-                $("#editCustomer_form").attr("action", "/customers/" +id);
+                // REMOVE CUSTOMER ITEM FORM
+                $(document).on('click', '.btn_remove_collector', function(){  
+                   var button_id = $(this).attr("id");  
+                   var removed = $("#collector-form-row-"+button_id).remove(); 
+                });
+
+                //VIEW-EDIT CUSTOMER
+                $(document).on("click", ".viewCustomer_btn", function () {
+                    var id = $(this).data('id');
+
+                    $.ajax({
+                        url: "/getCustomerOrder",
+                        type: 'GET',             
+                        data: {
+                                'id' : id ,
+                                'term_id' : {{$term[0]->term_id}},
+                                },
+                        success: function(response){
+                            // DEBUGGING
+                            console.log(response);
+
+                            $('#purchased-items').empty();
+
+                            // SET FORM INPUTS
+                            $('#edit_fname').val(response[0].customer_fname);
+                            $('#edit_mname').val(response[0].customer_mname);
+                            $('#edit_lname').val(response[0].customer_lname);
+                            $('#edit_gender').val(response[0].customer_gender);
+                            $('#edit_cnum').val(response[0].customer_cnum);
+                            $('#edit_addr').val(response[0].customer_addr);
+
+                            var i = 0;
+                            for (var x = 0; x < response.length; x++){
+                                i++;
+                                $('#purchased-items').append(
+                                    '<div class="row form-group">'+
+                                        '<div class="{{$errors->editCustomer->has("edit_item_name") ? " has-error" : ""}}">'+
+                                            '<div class="col-md-8">'+
+                                                '<select  class="form-control" id="edit_item_name_' +x +'"'  
+                                                    +'name="edit_item_name[]" required>'+
+                                                    '@foreach($term_items as $term_item)'+
+                                                        '<option value="{{$term_item->ti_id}}">'+ 
+                                                            '{{$term_item -> supplier_name}}: {{$term_item -> inventory_name}} &#8369; {{$term_item -> inventory_price + ($term_item -> inventory_price * 0.25)}}'+
+                                                        '</option>'+
+                                                    '@endforeach'+
+                                                '</select>'+
+                                                '@if ($errors->editCustomer->has("edit_item_name"))'+
+                                                    '<span class="help-block">'+
+                                                        '<strong>'+
+                                                            '{{ $errors->editCustomer->first("edit_item_name") }}'+
+                                                        '</strong>'+
+                                                    '</span>'+
+                                                '@endif'+
+                                            '</div>'+
+                                        '</div>'+
+                                        '<div class="{{$errors->editCustomer->has("edit_item_qty") ? " has-error" : ""}}">'+
+                                            '<div class="col-md-2">'+
+                                                '<input type="number" class="form-control" name="edit_item_qty[]" id="edit_item_qty" required min="1" value="' +response[x].order_qty +'">'+
+                                                '@if ($errors->editCustomer->has("edit_item_qty"))'+
+                                                    '<span class="help-block">'+
+                                                        '<strong>'+
+                                                            '{{ $errors->editCustomer->first("edit_item_qty") }}'+
+                                                        '</strong>'+
+                                                    '</span>'+
+                                                '@endif'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</div>'
+                                );
+
+                                $("#edit_item_name_" +x +" option[value='"+response[x].ti_id+"']").attr('selected', true);
+                            }
+
+                        },
+                        error: function(data){
+                            console.log(data);
+                        }
+                    });
+
+                    //FORM
+                    $("#editCustomer_form").attr("action", "/customers/" +id);
+                });
+
+                //REMOVE CUSTOMER
+                $(document).on("click", ".removeCustomer_btn", function () {
+                    var id = $(this).data('id');
+
+                    //FORM
+                    $("#removeCustomer_form").attr("action", "/customers/" +id);
+                }); 
+
+                //CONFIRM CUSTOMER PAYMENT
+                $(document).on("click", ".payCustomer_btn", function () {
+                    var id = $(this).data('id');
+
+                    //FORM
+                    $("#payCustomer_form").attr("action", "/customers/" +id);
+                }); 
             });
-
-            //REMOVE CUSTOMER
-            $(document).on("click", ".removeCustomer_btn", function () {
-                var id = $(this).data('id');
-
-                //FORM
-                $("#removeCustomer_form").attr("action", "/customers/" +id);
-            }); 
-
-            //CONFIRM CUSTOMER PAYMENT
-            $(document).on("click", ".payCustomer_btn", function () {
-                var id = $(this).data('id');
-
-                //FORM
-                $("#payCustomer_form").attr("action", "/customers/" +id);
-            }); 
-        });
-    </script>  
+        </script>  
+    <!-- END OF TERM CUSTOMERS -->
 
     <!-- TERM COLLECTIONS -->
-    <script>
-        //VIEW-EDIT CUSTOMER
-            $(document).on("click", ".viewCollection_btn", function () {
-                var id = $(this).data('id');
-          
-                $.ajax({
-                    url: "/getSale/" +id,
-                    type: 'GET',             
-                    data: {'id' : id },
-                    success: function(response){
-                        // DEBUGGING
-                        console.log(response);
-                        // SET FORM INPUTS
-                        $('#edit_date_collected').val(response.sales_date);
-                        $('#edit_amt_collected').val(response.sales_amt);
-                        $('#edit_note_collected').val(response.sales_remarks);
-                    },
-                    error: function(data){
-                        console.log(data);
-                    }
+        <script>
+            //VIEW-EDIT COLLECTONR
+                $(document).on("click", ".viewCollection_btn", function () {
+                    var id = $(this).data('id');
+              
+                    $.ajax({
+                        url: "/getSale/" +id,
+                        type: 'GET',             
+                        data: {'id' : id },
+                        success: function(response){
+                            // DEBUGGING
+                            console.log(response);
+                            // SET FORM INPUTS
+                            $('#edit_date_collected').val(response.sales_date);
+                            $('#edit_amt_collected').val(response.sales_amt);
+                            $('#edit_note_collected').val(response.sales_remarks);
+                        },
+                        error: function(data){
+                            console.log(data);
+                        }
+                    });
+
+                    //FORM
+                    $("#editCollection_form").attr("action", "/sales/" +id);
                 });
 
-                //FORM
-                $("#editCollection_form").attr("action", "/sales/" +id);
-            });
+            //REMOVE COLLECTION
+                $(document).on("click", ".removeCollection_btn", function () {
+                    var id = $(this).data('id');
 
-        //REMOVE CUSTOMER
-            $(document).on("click", ".removeCollection_btn", function () {
-                var id = $(this).data('id');
-
-                //FORM
-                $("#removeCollection_form").attr("action", "/sales/" +id);
-            }); 
-    </script>
+                    //FORM
+                    $("#removeCollection_form").attr("action", "/sales/" +id);
+                }); 
+        </script>
+    <!-- END OF TERM CUSTOMERS -->
 @endsection
 

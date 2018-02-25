@@ -58,33 +58,39 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/html/user.html">
-                            <i class="pe-7s-user"></i>
-                            <p>User Profile</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{route('terms') }}">
+                        <a href="{{ route('terms') }}">
                             <i class="pe-7s-graph"></i>
-                            <p>Term Management</p>
+                            <p>Terms</p>
                         </a>
                     </li>
                     <li>
                         <a href="{{route('inventory') }}">
                             <i class="pe-7s-drawer"></i>
-                            <p>Inventory Management</p>
+                            <p>Inventories</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('stockins') }}">
+                            <i class="pe-7s-download"></i>
+                            <p>Stock Ins</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('stockouts') }}">
+                            <i class="pe-7s-upload"></i>
+                            <p>Stock Outs</p>
                         </a>
                     </li>
                     <li>
                         <a href="{{route('suppliers') }}">
                             <i class="pe-7s-box1"></i>
-                            <p>Supplier Management</p>
+                            <p>Suppliers</p>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('usrmgmt') }}">
                             <i class="pe-7s-users"></i>
-                            <p>User Management</p>
+                            <p>Users</p>
                         </a>
                     </li>
                     <li>
@@ -109,7 +115,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="#"><img src="{{URL::asset('images/dashboard.png')}}" alt=""/></a>
+                        <a class="navbar-brand" href="#">Dashboard</a>
                    </div>
                     <div class="collapse navbar-collapse">
                         <ul class="nav navbar-nav navbar-right">

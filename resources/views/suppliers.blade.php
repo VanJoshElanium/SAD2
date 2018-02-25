@@ -13,6 +13,8 @@
     <!-- Bootstrap core CSS 3.3.7    -->
     <link href="/css/bootstrap.min.css">
 
+    <script src="/js/jquery.3.2.1.min.js" type="text/javascript"></script>
+
     <!-- Animation library for notifications   -->
     <link href="/css/animate.min.css" rel="stylesheet"/>
 
@@ -55,36 +57,42 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/html/user.html">
-                            <i class="pe-7s-user"></i>
-                            <p>User Profile</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{route('terms') }}">
+                        <a href="{{ route('terms') }}">
                             <i class="pe-7s-graph"></i>
-                            <p>Term Management</p>
+                            <p>Terms</p>
                         </a>
                     </li>
                     <li>
                         <a href="{{route('inventory') }}">
                             <i class="pe-7s-drawer"></i>
-                            <p>Inventory Management</p>
+                            <p>Inventories</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('stockins') }}">
+                            <i class="pe-7s-download"></i>
+                            <p>Stock Ins</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('stockouts') }}">
+                            <i class="pe-7s-upload"></i>
+                            <p>Stock Outs</p>
                         </a>
                     </li>
                     <li class="active">
                         <a href="{{route('suppliers') }}">
                             <i class="pe-7s-box1"></i>
-                            <p>Supplier Management</p>
+                            <p>Suppliers</p>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('usrmgmt') }}">
                             <i class="pe-7s-users"></i>
-                            <p>User Management</p>
+                            <p>Users</p>
                         </a>
                     </li>
-                                        <li>
+                    <li>
                         <a href="{{ route('logs') }}">
                             <i class="pe-7s-note2"></i>
                             <p>Logs</p>
@@ -107,7 +115,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="#"><img src="{{URL::asset('images/supplier-management.png')}}" alt=""/></a>
+                        <a class="navbar-brand" href="#">Supplier Management</a>
                    </div>
                     <div class="collapse navbar-collapse">
                         <ul class="nav navbar-nav navbar-right">
@@ -181,18 +189,26 @@
                                         <tbody>
                                             @forelse($suppliers as $supplier)
                                                 <tr>    
-                                                  <td class="clickable-row" data-href="{{ route('supplies.show', ['supply' => $supplier->supplier_id]) }}">{{$supplier->supplier_id}}</td>
+                                                  <td>{{$supplier->supplier_id}}</td>
+                                                  <td>{{$supplier->supplier_name}}</td>
+                                                  <td>{{$supplier->supplier_addr}}</td>
+                                                  <td>{{$supplier->supplier_email}}</td>
+                                                  <td>{{$supplier->supplier_cnum}}</td>
+
+                                                  <!-- <td class="clickable-row" data-href="{{ route('supplies.show', ['supply' => $supplier->supplier_id]) }}">{{$supplier->supplier_id}}</td>
                                                   <td class="clickable-row" data-href="{{ route('supplies.show', ['supply' => $supplier->supplier_id]) }}">{{$supplier->supplier_name}}</td>
                                                   <td class="clickable-row" data-href="{{ route('supplies.show', ['supply' => $supplier->supplier_id]) }}">{{$supplier->supplier_addr}}</td>
                                                   <td class="clickable-row" data-href="{{ route('supplies.show', ['supply' => $supplier->supplier_id]) }}">{{$supplier->supplier_email}}</td>
-                                                  <td class="clickable-row" data-href="{{ route('supplies.show', ['supply' => $supplier->supplier_id]) }}">{{$supplier->supplier_cnum}}</td>
+                                                  <td class="clickable-row" data-href="{{ route('supplies.show', ['supply' => $supplier->supplier_id]) }}">{{$supplier->supplier_cnum}}</td> -->
                                                   <td> 
-                                                    <button data-target="#editModal" data-toggle="modal" id="view-edit-{{$supplier->supplier_id}}" data-id='{{$supplier->supplier_id}}' class="edit-btn btn btn-primary btn-fill">
+                                                    <button data-href="{{ route('supplies.show', ['supply' => $supplier->supplier_id]) }}" class="toProfile btn btn-primary btn-fill">
                                                         View
                                                     </button>
-                                                   </td>
+                                                   </td> 
+
+                                                   <!-- data-href="{{ route('supplies.show', ['supply' => $supplier->supplier_id]) }}" -->
                                                   <td>
-                                                    <button data-target="#editModal" data-toggle="modal" data-id='{{$supplier->supplier_id}}' class="del-btn btn btn-danger btn-fill">
+                                                    <button data-target="#removeModal" data-toggle="modal" data-id='{{$supplier->supplier_id}}' class="del-btn btn btn-danger btn-fill">
                                                         Remove
                                                     </button>
                                                   </td>
@@ -318,133 +334,71 @@
         </div>
     </div>
 
-    <!-- VIEW/EDIT/DELETE PROFILE MODAL -->
-    <div class="modal fade" role="dialog" id="editModal">
+    <!--REMOVE MODAL-->
+    <div class="modal fade" role="dialog" id="removeModal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Supplier Profile</h4>
+                    <h4 class="modal-title">Remove Supplier</h4>
                 </div>
-                                    
-                <div class="modal-body">
-                    <div id="view-edit-content" class="row">
-                        <!-- USER Edit FORM -->
-                        <div class="col-md-12"> 
-                            <form method="POST" class="form-horizontal" id="view-edit-profile">
-                                {{ csrf_field() }}
-                                {{method_field('PUT')}}
-                                <!-- SUPPLIER NAME & ADDR DETAILS-->                                    
-                                <div class="row form-group">   
-                                    <div class="{{$errors->editSupplier->has('edit_supplier_name') ? ' has-error' : ''}}"> 
-                                        <div class="col-md-12">    
-                                            <label>Supplier Name</label>
-                                            <input type="text" id="edit_supplier_name" class="form-control"  name="edit_supplier_name" required> 
-                                            @if ($errors->editSupplier->has('edit_supplier_name'))
-                                                <span class="help-block">
-                                                    <strong>
-                                                        {{ $errors->editSupplier->first('edit_supplier_name') }}
-                                                    </strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>    
+                     
+                <form method="POST" class="form-horizontal" id="removeSupplier">  
+                    {{csrf_field()}}
+                    <input type="hidden" name="_method" value="DELETE">
 
-                                <div class="row form-group">
-                                    <div class="{{$errors->editSupplier->has('edit_supplier_addr') ? ' has-error' : ''}}"> 
-                                        <div class="col-md-12"> 
-                                            <label>Supplier Address</label>
-                                            <textarea id="edit_supplier_addr" class="form-control" required name="edit_supplier_addr" rows="2"> </textarea>
-                                            @if ($errors->editSupplier->has('edit_supplier_addr'))
-                                                <span class="help-block">
-                                                    <strong>
-                                                        {{ $errors->editSupplier->first('edit_supplier_addr') }}
-                                                    </strong>
-                                                </span>
-                                            @endif                   
-                                        </div>      
-                                    </div> 
-                                </div>                           
-
-                                <!-- USER CONTACT DETAILS -->
-                                <div class="row form-group">
-                                    <div class="{{ $errors->editSupplier->has('edit_supplier_email') ? ' has-error' : '' }}">
-                                        <div class="col-md-12">  
-                                            <label>Email</label>
-                                            <input type="text" required name="edit_supplier_email" id="edit_supplier_email" class="form-control" >
-                                                                                
-                                            @if ($errors->editSupplier->has('edit_supplier_email'))
-                                                <span class="help-block">
-                                                    <strong>{{$errors->editSupplier->first('edit_supplier_email')}}</strong>
-                                                </span>
-                                            @endif
+                    <div class="modal-body">
+                        <div id="view-edit-content" class="row">
+                            <div class="col-md-12"> 
+                                <div class="row form-group">                       
+                                    <div class=""> 
+                                        <div class="col-md-12">   
+                                            You are about to remove a supplier. Do you want to proceed?
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="row form-group">
-                                    <div class="{{ $errors->editSupplier->has('edit_supplier_cnum') ? ' has-error' : '' }}">
-                                        <div class="col-md-12">  
-                                            <label>Contact Number</label>
-                                            <input type="number" required name="edit_supplier_cnum" id="edit_supplier_cnum" class="form-control">
-                                                                                
-                                            @if ($errors->editSupplier->has('edit_supplier_cnum'))
-                                                <span class="help-block">
-                                                    <strong>{{$errors->editSupplier->first('edit_supplier_cnum')}}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-
-                            
-                                <!-- SUBMIT BUTTON -->
-                                <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-edit">
-                                    Edit
-                                </button>
-
-                                <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic pull-right" style="margin-right: 2%">
-                                    Cancel
-                                </button>             
-                                <div class="clearfix"></div>
-                                     
-                            </form>   
-                                        
+                            </div>
                         </div>
                     </div>
 
-                    <!-- DELETE PROFILE MODAL -->
-                    <div id="delete-content">
-                        <p> You are about to remove a supplier. Do you want to proceed?</p>
+                    <div class="modal-footer">
+                            <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancel</button>
+                          <!--ADD New Term button-->
+                          <button type="submit" class="btn btn-bg btn-success btn-fill">Remove</button>   
                     </div>
-                </div>
-
-                <div class="modal-footer" id="delete-modal-footer">
-                    <form method="POST" class="form-horizontal" id="delete-profile">
-                        {{csrf_field()}}
-                        <input type="hidden" name="_method" value="DELETE">
-                        <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic">
-                            No
-                        </button>
-                        <button type="submit" id="form-button-delete" class="btn btn-success btn-fill pull-right">    Yes 
-                        </button>
-                    </form>
-                </div>
+                </form>
             </div>
         </div>
     </div>
+
+    <!-- SUCCESS MESSAGES -->
+        @if(session('store-success'))
+            <script> 
+                jQuery(document).ready(function($){
+                    $.notify( "{{session()-> get('store-success' )}}", "success");
+                });
+                {{session()->forget('store-success')}}
+            </script>
+        @endif
+
+        @if(session('destroy-success'))
+            <script> 
+                jQuery(document).ready(function($){
+                    $.notify( "{{session()-> get('destroy-success' )}}", "success");
+                });
+                {{session()->forget('destroy-success')}}
+            </script>
+        @endif
 </body>
 
 <!--   Core JS Files   -->
-    <script src="/js/jquery.3.2.1.min.js" type="text/javascript"></script>
+    <script src="/js/notify.js" type="text/javascript"></script>
     <script src="/js/bootstrap.min.js" type="text/javascript"></script>
 
     <!--  Charts Plugin -->
     <script src="/js/chartist.min.js"></script>
 
     <!--  Notifications Plugin    -->
-    <script src="/js/bootstrap-notify.js"></script>
 
     <!--  Google Maps Plugin    -->
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
@@ -460,59 +414,14 @@
         document.addEventListener("DOMContentLoaded", function(event) {
             if ({!!count($errors)!!} > 0)
                 $("#addModal").modal();    
-            
-            
-            if({!!count($errors->editSupplier)!!} > 0)
-                $("#view-edit-{{ session()-> get( 'error_id' ) }}").click();
         });
     </script>
 
+
+    <!--  TERM PROFILE -->
     <script>
-        $(document).on("click", ".clickable-row", function () {
+        $(document).on("click", ".toProfile", function () {
                 window.location = $(this).data("href");
-        });
-    </script>
-
-    <!--PASS ID OF SUPPLIER TO MODAL, MANIPULATE INPUT FIELDS, & DISPLAY USER INFO-->
-    <script>
-        //EDIT USER
-        $(document).on("click", ".edit-btn", function () {
-            var id = $(this).data('id');
-            //alert(id);
-            //VIEW USER
-            $.ajax({
-                url: "getSupplier/" + id,
-                type: 'GET',             
-                data: { 'id' : id },
-                success: function(response){
-                    // DEBUGGING
-                    console.log(response.supplier_name);
-
-                    // SET FORM INPUTS
-                    $('#edit_supplier_name').val(response.supplier_name);
-                    $('#edit_supplier_addr').val(response.supplier_addr); 
-                    $('#edit_supplier_email').val(response.supplier_email);
-                    $('#edit_supplier_cnum').val(response.supplier_cnum);
-
-                    // MODAL
-                    $("#editModal").modal('show'); 
-                    $("#view-edit-content").show();
-                    $("#delete-content").hide();
-                    $("#delete-modal-footer").hide();
-                },
-                error: function(data){
-                    console.log(data);
-                }
-            });
-          
-            //FORM
-            $("#view-edit-profile").attr("action", "/suppliers/" +id);
-            
-            //MODAL
-            $(".modal-title").text = "Edit Supplier";; 
-            $("#delete-content").hide();
-            $("#delete-modal-footer").hide();
-            $('#form-button-edit').show(); 
         });
 
         //DELETE SUPPLIER
@@ -520,13 +429,13 @@
             var id = $(this).data('id');
 
             //FORM
-            $("#delete-profile").attr("action", "/suppliers/" +id);
-
-            //MODAL
-            $(".modal-title").html = "Remove Supplier";
-            $("#view-edit-content").hide();
-            $("#delete-content").show();
-            $("#delete-modal-footer").show();
-        });  
+            $("#removeSupplier").attr("action", "/suppliers/" +id);
+        });
     </script>
+
+   <!--  <script>
+        $(document).on("click", ".clickable-row", function () {
+                window.location = $(this).data("href");
+        });
+    </script> -->
 @endsection

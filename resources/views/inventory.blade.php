@@ -70,33 +70,39 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/html/user.html">
-                            <i class="pe-7s-user"></i>
-                            <p>User Profile</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{route('terms') }}">
+                        <a href="{{ route('terms') }}">
                             <i class="pe-7s-graph"></i>
-                            <p>Term Management</p>
+                            <p>Terms</p>
                         </a>
                     </li>
                     <li class="active">
                         <a href="{{route('inventory') }}">
                             <i class="pe-7s-drawer"></i>
-                            <p>Inventory</p>
+                            <p>Inventories</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('stockins') }}">
+                            <i class="pe-7s-download"></i>
+                            <p>Stock Ins</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('stockouts') }}">
+                            <i class="pe-7s-upload"></i>
+                            <p>Stock Outs</p>
                         </a>
                     </li>
                     <li>
                         <a href="{{route('suppliers') }}">
                             <i class="pe-7s-box1"></i>
-                            <p>Supplier Management</p>
+                            <p>Suppliers</p>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('usrmgmt') }}">
                             <i class="pe-7s-users"></i>
-                            <p>User Management</p>
+                            <p>Users</p>
                         </a>
                     </li>
                     <li>
@@ -122,7 +128,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="#"><img src="{{URL::asset('images/inventory-management.png')}}" alt=""/></a>
+                        <a class="navbar-brand" href="#">Inventory Management</a>
                    </div>
                     <div class="collapse navbar-collapse">
                         <ul class="nav navbar-nav navbar-right">
@@ -186,7 +192,7 @@
 
                                             <div class="col-md-2" style="margin-top:8px;">
                                                 <button type="button" data-target="#addModal-un" data-toggle="modal" class="btn btn-success btn-fill" id="add-btn"> 
-                                                    Update Item/s
+                                                    Stock In
                                                 </button>
                                             </div> 
                                         </div>
@@ -223,7 +229,7 @@
                                                                 </button>
                                                             </td>
                                                             <td>
-                                                                <button data-target="#editModal-un" data-toggle="modal" data-id='{{$item->inventory_id}}' class="del-btn-un btn btn-danger btn-fill">
+                                                                <button data-target="#removeUnItem_modal" data-toggle="modal" data-id='{{$item->inventory_id}}' class="del-btn-un btn btn-danger btn-fill">
                                                                     Remove
                                                                 </button>
                                                             </td>
@@ -269,7 +275,7 @@
                                             <table id="inventory-table" class="table table-hover table-striped" cellspacing="0" width="100%">
                                                 <thead>
                                                     <tr>
-                                                        @if(count($items)>0)
+                                                        @if(count($repairs)>0)
                                                         <th>ID</th>
                                                         <th>Item Name</th>
                                                         <th>Supplier Name</th>
@@ -293,7 +299,7 @@
                                                             </td>
                                                             <td> 
                                                                 <button data-target="#editModal-dm" data-toggle="modal" id="edit-repair-btn" data-id='{{$repair->repair_id}}' class="edit-repair-btn btn btn-info btn-fill">
-                                                                    Edit
+                                                                    Fix
                                                                 </button>
                                                             </td>
                                                         </tr>
@@ -379,7 +385,7 @@
                                         <div class="{{$errors->addUn->has('supply_name') ? ' has-error' : ''}}"> 
                                             <div class="col-md-4">              
                                                 <label>Item Name</label>
-                                                <select class="form-control item_name" name="supply_name[]" required>
+                                                <select class="form-control item_name" name="supply_name[]" required id="first_item_name">
                                                 </select> 
                                                 @if ($errors->addUn->has('supply_name'))
                                                     <span class="help-block">
@@ -448,7 +454,7 @@
 
                                 <div class="form-group">
                                     <div class="{{$errors->addRepair->has('dm_supplier_name') ? ' has-error' : ''}}"> 
-                                        <div class="col-md-8">    
+                                        <div class="col-md-4">    
                                             <label for="sel1">Supplier Name</label>
                                             <select class="form-control" id="dm_supplier_name" name="dm_supplier_name" required>
                                             <option value="" selected="selected"></option>
@@ -466,7 +472,7 @@
                                         </div>
                                     </div>
 
-                                    <!-- <div class="col-md-4">    
+                                    <div class="col-md-4">    
                                         <label for="sel1">Handler</label>
                                         <select class="form-control" name="inventory_user_id" required id="pic">
                                             <option value="" data-hidden="true" selected="selected">
@@ -491,7 +497,7 @@
                                                 </span>
                                             @endif
                                         </div>
-                                    </div> -->
+                                    </div>
 
                                 </div>
 
@@ -608,11 +614,11 @@
 
     <!-- VIEW/EDIT MODAL UNDAMAGED -->
     <div class="modal fade" role="dialog" id="editModal-un">
-        <div class="modal-dialog modal-sm">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Item Profile</h4>
+                    <center> <h4 class="modal-title">Item Profile</h4> </center>
                 </div>
                                     
                 <div class="modal-body">
@@ -636,7 +642,7 @@
                                     <div class="col-md-4">    
                                         <label for="sel1">Handler</label>
                                         <select class="form-control" name="view_pic" required id="view_pic">
-                                        <option value="" data-hidden="true" selected="selected">
+                                        <option value="" data-hidden="true" selected="selected"> </option>
                                             @foreach($workers as $worker)
                                                 <option value="{{$worker->user_id}}">
                                                     {{$worker->fname}} {{$worker->mname}}. {{$worker->lname}}
@@ -645,7 +651,7 @@
                                         </select>         
                                     </div>
 
-                                    <div class="{{$errors->has('received_at') ? ' has-error' : ''}}">
+                                    <div class="{{$errors->has('received_at') ? ' has-error': ''}}">
                                         <div class="col-md-4">    
                                             <label>Date Received</label>
                                             <input type="datetime-local" id="view_received_at" class="form-control"  name="view_received_at" required value="{{old('received_at')}}"> 
@@ -684,44 +690,28 @@
                                              <input type="number" id="view_item_quantity" class="form-control" required name="view_inventory_quantity"> 
                                         </div>
                                     </div>                           
-                                </div> 
+                                </div>            
 
-                                <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-edit">
+                                <div class="modal-footer" >
+                                    <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-edit">
                                         Edit
                                     </button>
 
                                     <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic pull-right" style="margin-right: 2%">
                                         Cancel
                                     </button>  
-                            </form>           
+                                </div>
+                            </form>
                         </div>
                     </div>
-
-                    <!-- DELETE PROFILE MODAL -->
-                    <div id="delete-content">
-                        <p> You are about to remove an item. Do you want to proceed?</p>
-                    </div>
-                </div>
-
-                <div class="modal-footer" id="delete-modal-footer">
-                    <form method="POST" class="form-horizontal" id="delete-item">
-                        {{csrf_field()}}
-                        <input type="hidden" name="_method" value="DELETE">
-                        <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic">
-                            No
-                        </button>
-                        <button type="submit" id="form-button-delete" class="btn btn-success btn-fill pull-right">    Yes 
-                        </button>
-                    </form>
                 </div>
             </div>
         </div>
     </div>
 
-
     <!-- ADD FIXED QTY MODAL DAMAGED -->
     <div class="modal fade" role="dialog" id="editModal-dm">
-        <div class="modal-dialog modal-sm">
+        <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -736,16 +726,25 @@
 
                     <div class="modal-body">
                         <div class="row form-group">
-                            <div class="col-sm-12">
-                                <label>Item name: </label> 
-                                    <span id="repair_name" class="repair_name"></span>
-                                    <input type="hidden" value="" name="repair_id" id="repair_id">
+                            <div class="col-md-6">
+                                <label>Item name: </label>
+                                    <input id="repair_name" class="form-control" type="text" value="" disabled>
+                            </div>
+                            <div class="col-md-6">    
+                                <label for="sel1">Handler</label>
+                                <select class="form-control" name="handled_by" required id="handled_by" required>
+                                    @foreach($workers as $worker)
+                                        <option value="{{$worker->user_id}}">
+                                            {{$worker->fname}} {{$worker->mname}}. {{$worker->lname}}
+                                        </option>
+                                    @endforeach
+                                </select>         
                             </div>
                         </div>
 
                         <div class="row form-group">
                             <div class="{{$errors->editRepair->has('qty_fixed') ? ' has-error' : ''}}">                        
-                                <div class="col-sm-12">    
+                                <div class="col-md-6">    
                                     <label>Quantity Fixed</label>
                                     <input type="number" id="qty_fixed" class="form-control" name="qty_fixed">
                                     @if ($errors->has('qty_fixed'))
@@ -756,13 +755,26 @@
                                         </span>
                                     @endif
                                 </div>
+                                <div class="{{$errors->editRepair->has('fixed_at') ? ' has-error' : ''}}">
+                                        <div class="col-md-6">    
+                                            <label>Date Fixed</label>
+                                            <input type="datetime-local" id="fixed_at" class="form-control"  name="fixed_at" required value="{{App\Inventory::currdate()}}"> 
+                                            @if ($errors->has('fixed_at'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{ $errors->editRepair->first('fixed_at') }}
+                                                    </strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-bg btn-basic" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-bg btn-info btn-fill">Save</button>
+                        <button type="submit" class="btn btn-bg btn-success btn-fill">Save</button>
                     </div>
                 </form>
             </div>
@@ -788,12 +800,12 @@
                             <div class="col-lg-12"> 
                                 <div class="form-group">
                                     
-                                    <div class="col-md-8">    
+                                    <div class="col-md-4">    
                                         <label for="sel1">Supplier Name</label>
                                         <input type="text" required name="edit_supplier_name" class="form-control" id="edit_supplier_name" disabled="disabled"> 
                                     </div>
 
-                                    <!-- <div class="col-md-4">    
+                                    <div class="col-md-4">    
                                         <label for="sel1">Handler</label>
                                         <select class="form-control" name="edit_handler" required id="pic" required>
                                             @foreach($workers as $worker)
@@ -807,7 +819,7 @@
                                     <div class="{{$errors->editRepair->has('edit_received_at') ? ' has-error' : ''}}">
                                         <div class="col-md-4">    
                                             <label>Date Received</label>
-                                            <input type="datetime-local" id="edit_received_at" class="form-control"  name="edit_received_at" required> 
+                                            <input type="datetime-local" id="edit_received_at" class="form-control"  name="edit_received_at" required value="{{App\Inventory::currdate()}}"> 
                                             @if ($errors->has('edit_received_at'))
                                                 <span class="help-block">
                                                     <strong>
@@ -816,7 +828,7 @@
                                                 </span>
                                             @endif
                                         </div>
-                                    </div> -->
+                                    </div>
                                 </div>
                                
                                 <div class="row form-group">   
@@ -827,7 +839,7 @@
                                 
                                     <div class='col-md-4'>  
                                         <label>Item State</label> 
-                                        <select required name="edit_item_state" class="form-control" id="edit_item_state" disabled="disabled">
+                                        <select required name="edit_item_state" class="form-control" id="edit_item_state">
                                             <option value='1'> Repairable </option>
                                             <option value='0'> Unrepairable </option>
                                         </select>
@@ -858,6 +870,45 @@
             </div>
         </div>
     </div>
+
+    <!-- REMOVE UNDAMAGED -->
+    <div class="modal fade" role="dialog" id="removeUnItem_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Remove Undamaged Item</h4>
+                </div>
+                     
+                <form method="POST" class="form-horizontal" id="removeUnItem_form">  
+                    {{csrf_field()}}
+                    <input type="hidden" name="_method" value="DELETE">
+
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12"> 
+                                <div class="row form-group">                       
+                                    <div class="col-md-12">   
+                                        You are about to remove an item from the inventory. Do you want to proceed?
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">      Cancel
+                        </button>
+                         
+                        <button type="submit" class="btn btn-bg btn-success btn-fill">
+                            Remove
+                        </button>   
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </body>
 
 <!--   Core JS Files   -->
@@ -879,8 +930,9 @@
     <!-- Light Bootstrap Table DEMO methods, don't include it in your project! -->
     <script src="/js/demo.js"></script>
 
-    <!-- VALIDATION ERRORS -->
+    
     <script>
+        // VALIDATION ERRORS
         document.addEventListener("DOMContentLoaded", function(event) {
             if ({!!count($errors->addRepair)!!} > 0)
                 $("#addModal").modal();  
@@ -888,9 +940,6 @@
             if ({!!count($errors->addUn)!!} > 0)
                 $("#addModal-un").modal();    
         });
-    </script>
-
-    <script>
 
         // LOAD LIST OF SUPPLIED ITEMS ONCE A SUPPLIER IS CHOSEN - UNDAMAGED//
         $(document).ready(function(){ 
@@ -923,6 +972,7 @@
 
             // CREATE ADDITIONAL ITEM FORM
             $('#add-form').click(function() {
+                var copy = $("#first_item_name > option").clone();
                 i++;
  
                 $('#un-form').append(
@@ -957,7 +1007,7 @@
                     "</div>"
                 );
 
-                $('#item-row-'+i).append(options);
+                $('#item-row-'+i).append(copy);
             });
 
 
@@ -1077,11 +1127,6 @@
                     $('#view_received_at').val(formatted_date);
 
                     $("#view_pic option[value='"+response[0].user_id+"']").attr('selected', true)
-
-                    // MODAL
-                    $("#view-edit-content").show();
-                    $("#delete-content").hide();
-                    $("#delete-modal-footer").hide();
                 },
                 error: function(data){
                     console.log(data);
@@ -1090,11 +1135,7 @@
 
             //FORM
             $("#view-edit-item").attr("action", "/inventory/" +id);
-       
-            //MODAL
-            $("#delete-content").hide();
-            $("#delete-modal-footer").hide();
-            $('#form-button-edit').show(); 
+    
         });
 
         // DELETE UNDAMAGED ITEM
@@ -1102,16 +1143,13 @@
             var id = $(this).data('id');
 
             //FORM
-            $("#delete-item").attr("action", "/inventory/" +id);
+            $("#removeUnItem_form").attr("action", "/inventory/" +id);
 
             //MODAL
             $(".modal-title").html = "Remove Item";
-            $("#view-edit-content").hide();
-            $("#delete-content").show();
-            $("#delete-modal-footer").show();
         }); 
 
-        // ADD QTY FIXED DAMAGED INVEN
+        // ADD QTY FIXED DAMAGED INVENTORY
         $(document).on("click", ".edit-repair-btn", function () {
             var id = $(this).data('id');
 
@@ -1125,7 +1163,7 @@
 
                     // SET FORM INPUTS
                     $('#repair_id').val(response[0].repair_id);
-                    $('#repair_name').text(response[0].inventory_name);
+                    $('#repair_name').val(response[0].inventory_name);
 
                     //FORM
                     $("#edit-repair-form").attr("action", "/repair/" +id);
@@ -1136,7 +1174,7 @@
             });  
         }); 
 
-        // EDIT ITEM DAMAGED INVEN
+        // EDIT ITEM DAMAGED INVENTORY
         $(document).on("click", ".view-repair-btn", function () {
             var id = $(this).data('id');
 
@@ -1151,13 +1189,13 @@
                     // SET FORM INPUTS
                     $('#edit_supplier_name').val(response[0].supplier_name);
                     $('#edit_item_name').val(response[0].inventory_name);
-                    // $("#edit_handler option[value='"+response[0].repair_user_id+"']").attr('selected', true);
+                    $("#edit_handler option[value='"+response[0].repair_user_id+"']").attr('selected', true);
 
-                    // //DATE TIME FORMATTING
-                    // var to_erase = (response[0].repair_date).substr(response[0].repair_date.length - 3);
-                    // var formatted_date = response[0].repair_date.replace(to_erase, '');
-                    // formatted_date = formatted_date.replace(' ', 'T');
-                    // $('#edit_received_at').val(formatted_date);
+                    //DATE TIME FORMATTING
+                    var to_erase = (response[0].repair_ddate).substr(response[0].repair_ddate.length - 3);
+                    var formatted_date = response[0].repair_ddate.replace(to_erase, '');
+                    formatted_date = formatted_date.replace(' ', 'T');
+                    $('#edit_received_at').val(formatted_date);
                     $("#edit_item_state option[value='"+response[0].repair_status+"']").attr('selected', true);
 
                     $('#edit_item_dmqty').val(response[0].repair_qty);
@@ -1170,5 +1208,23 @@
                 }
             });  
         }); 
+
+        //MAINTAIN ACTIVE TAB
+        $(document).ready(function(){ 
+            $('a[data-toggle="tab"]').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+
+            $('a[data-toggle="tab"]').on("shown.bs.tab", function (e) {
+                var id = $(e.target).attr("href");
+                localStorage.setItem('selectedTab', id)
+            });
+
+            var selectedTab = localStorage.getItem('selectedTab');
+            if (selectedTab != null) {
+                $('a[data-toggle="tab"][href="' + selectedTab + '"]').tab('show');
+            }
+        });
     </script>
 @endsection
