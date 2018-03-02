@@ -185,14 +185,19 @@
                                                     <input type="text" name="titlesearch" class="form-control" placeholder="Search . . ." value="{{ old('titlesearch') }}">
                                                 </div>
                                             
-                                                <div class="col-md-2" style="margin-top:10px">
+                                                <div class="col-md-1" style="margin-top:10px">
                                                     <button style="height: 40px;"; class="btn btn-success pe-7s-search"></button>
                                                 </div>
                                             </form>
 
-                                            <div class="col-md-2" style="margin-top:8px;">
+                                            <div class="col-md-1" style="margin-top:8px;">
                                                 <button type="button" data-target="#addModal-un" data-toggle="modal" class="btn btn-success btn-fill" id="add-btn"> 
                                                     Stock In
+                                                </button>
+                                            </div> 
+                                            <div class="col-md-2" style="margin-top:11px;">
+                                                <button type="button" data-target="#g_list" data-toggle="modal" class="btn btn-success btn-fill" id="add-btn"> 
+                                                    Make Item List
                                                 </button>
                                             </div> 
                                         </div>
@@ -321,7 +326,85 @@
             </div>
         </div>
     </div>
+    
+    <!-- GENERATE LIST/ PRINT LIST-->
+    <div class="modal fade" role="dialog" id="g_list">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Print List</h4>
+                </div>
+                                    
+                <div class="modal-body">
+                    <div class="row">
+                        <!-- USER ADD FORM -->
+                        <div class="col-lg-12"> 
+                            <form class="form-horizontal" method="POST" action="/inventory/-999">
+                                {{ csrf_field() }}`
+                                {{ method_field('PUT') }}
+                                <div class="row form-group">   
+                                    <div class="col-md-4">    
+                                        <label for="sel1">Supplier Name</label>
+                                        <select class="form-control" name="supplier_name" required id="supplier_name">
+                                            <option value="" data-hidden="true" selected="selected">
+                                            </option>
+                                            @foreach($suppliers as $supplier)
+                                                <option value="{{$supplier->supplier_id}}">
+                                                    {{$supplier->supplier_name}}
+                                                </option>
+                                            @endforeach
+                                        </select>         
+                                    </div>
+                                </div>    
 
+                                <div id="un-form">
+                                    <div class="row form-group" style="margin-top: 5%">
+                                        <div class="{{$errors->addUn->has('supply_name') ? ' has-error' : ''}}"> 
+                                            <div class="col-md-4">              
+                                                <label>Item Name</label>
+                                                <select class="form-control item_name" name="supply_name[]" required id="first_item_name">
+                                                </select> 
+                                                @if ($errors->addUn->has('supply_name'))
+                                                    <span class="help-block">
+                                                        <strong>
+                                                            {{ $errors->addUn->first('supply_name') }}
+                                                        </strong>
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">              
+                                            <label>Item Quantity</label>
+                                             <input type="number" class="form-control" required name="inventory_quantity[]"> 
+                                        </div>
+                                    </div>                           
+                                </div>
+
+
+                                <div class="modal-footer">
+                                    <!-- SUBMIT BUTTON -->
+                                    <button type="button" class="btn btn-info btn-fill pull-left add-form">
+                                        Add More Item
+                                    </button>
+
+                                    <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-add">
+                                        Print
+                                    </button>
+
+                                    <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic pull-right" style="margin-right: 2%">
+                                        Cancel
+                                    </button>             
+                                    <div class="clearfix"></div>  
+                                </div>   
+                            </form>                
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- ADD MODAL UNDAMAGED-->
     <div class="modal fade" role="dialog" id="addModal-un">
         <div class="modal-dialog modal-lg">
