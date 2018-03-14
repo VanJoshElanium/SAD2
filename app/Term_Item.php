@@ -3,19 +3,34 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Term_Item extends Model
 {
+    use LogsActivity;
+
     protected $primaryKey = 'ti_id';
     protected $table = 'term_items';
 
+
     /* The attributes that are mass assignable. */
     protected $fillable = [
-         'ti_qty', 'ti_term_id', 'ti_inventory_id', 'ti_date', 'ti_worker_id'
+         'ti_term_id', 'ti_inventory_id', 'ti_date', 'ti_user_id', 'ti_udamaged', 'ti_rdamaged', 'ti_returned', 'ti_original',
     ];
 
-    public function worker()
+    protected static $logAttributes = [
+         'ti_term_id', 'ti_inventory_id', 'ti_date', 'ti_user_id', 'ti_udamaged', 'ti_rdamaged', 'ti_returned', 'ti_original',
+    ];
+
+    protected static $logOnlyDirty = true;
+
+    public function getDescriptionForEvent(string $eventName): string
     {
-        return $this->belongsTo('App\Worker', 'ti_worker_id', 'worker_id');
+        return ucfirst($eventName) . " term item";
+    }
+
+    public function user()
+    {
+        return $this->belongsTo('App\User', 'ti_user_id', 'user_id');
     }
 }

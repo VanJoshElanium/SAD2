@@ -5,24 +5,38 @@ namespace App;
 use Laravel\Scout\Searchable;
 use Kyslik\ColumnSortable\Sortable;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+    use LogsActivity;
+    
+    // protected $logName = 'user';
     protected $primaryKey = 'user_id';
-
-   
 
     /* The attributes that are mass assignable. */
     protected $fillable = [
-         'username','password', 'user_type', 'user_status'
+         'user_id', 'username','password', 'user_type', 'user_status'
     ];
+
+    protected static $logAttributes = [
+         'user_id', 'username','password', 'user_type', 'user_status'
+    ];
+
+    protected static $logOnlyDirty = true;
 
     public $sortable = ['id', 'user_type'];
 
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /* ACTIVITY LOGGING*/
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return ucfirst($eventName) . " user";
+    }
 
     /* RELATIONSHIPS */
     public function profile()
@@ -35,9 +49,19 @@ class User extends Authenticatable
         return $this->hasOne('App\Worker', 'worker_user_id');
     }
 
-    public function stockins()
+    public function stockin_items()
     {
-        return $this->hasMany('App\Stockin', 'si_user_id');
+        return $this->hasMany('App\Stockin_Item', 'si_user_id');
+    }
+
+    public function logs()
+    {
+        return $this->hasMany('App\Log', 'log_user_id');
+    }
+
+    public function term_items()
+    {
+        return $this->hasMany('App\Term_items', 'ti_user_id');
     }
 
 

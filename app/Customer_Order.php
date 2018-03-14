@@ -6,15 +6,29 @@ use Carbon\Carbon;
 use Laravel\Scout\Searchable;
 use Kyslik\ColumnSortable\Sortable;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Customer_Order extends Model
 {
+    use LogsActivity;
+
     protected $primaryKey = 'co_id';
-     protected $table = 'customer_orders';
+    protected $table = 'customer_orders';
 
     protected $fillable = [
         'co_term_id', 'co_customer_id', 'co_collect_date', 'co_status', 
     ];
+
+    protected static $logAttributes = [
+        'co_term_id', 'co_customer_id', 'co_collect_date', 'co_status', 
+    ];
+
+    protected static $logOnlyDirty = true;
+
+    public function getDescriptionForEvent(string $eventName): string
+        {
+            return ucfirst($eventName) . " customer's order";
+        }
 
     //RELATIONSHIPS
     public function orders()
