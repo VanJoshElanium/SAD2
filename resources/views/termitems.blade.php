@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,19 +10,15 @@
         border-collapse: collapse;
         
     }
-
     #items td, #items th {
         border: 1px solid #ddd;
         }
     #items td, #items th:nth-child(n+2) {
         padding: 3px 70px 3px 3px;
     }
-
     #items tr:nth-child(even){background-color: #f2f2f2;}   
     #items tr:nth-last-child(1){border: none;}   
-
     #items tr:hover {background-color: #ddd;}
-
     #items th {
         padding-top: 12px;
         padding-bottom: 12px;
@@ -34,7 +29,7 @@
     }
     </style>
 </head>
-	<body>
+    <body>
         <table>
             <tbody>
                 <tr>
@@ -50,8 +45,8 @@
         <p style="font-size: 10px;"><i>Note: This is the list of items approved by the owner that are going to be sold on the location stated above.</i></p>
         <hr>
         <center><h3>Peddling Item List</h3></center>
-		<div id="items">
-			<table>
+        <div id="items">
+            <table>
                 <tr>
                     <th>No</th>
                     <th style="margin-right:50%;">Item</th>
@@ -96,7 +91,7 @@
             
             <br>
 
-		</div>
+        </div>
             <table>
                 <tbody>
                 <tr>
@@ -105,5 +100,5 @@
                 </tr>
                 </tbody>
             </table>
-	</body>
+    </body>
 </html>

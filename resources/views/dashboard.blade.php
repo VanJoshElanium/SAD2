@@ -40,7 +40,7 @@
         }
         .box2{
             border: 0px solid #888888;
-            box-shadow: 2px 2px 3px 2px rgba(0,0,0,0.2)	;
+            box-shadow: 2px 2px 3px 2px rgba(0,0,0,0.2) ;
         }
         /*
         NOTE: Here you can hide or not the 3 sections
@@ -121,6 +121,13 @@
                             <p>Logs</p>
                         </a>
                     </li>
+                    
+                    <li>
+                        <a href="{{ route('logs') }}">
+                            <i class="pe-7s-help1"></i>
+                            <p>Help</p>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -128,32 +135,33 @@
         <div class="main-panel bgd">
 
             <!-- NAVBAR -->
-            <nav class="navbar navbar-default navbar-fixed">
+           <nav class="navbar navbar-default">
                 <div class="container-fluid">
-                    <div class="navbar-header"><br>
-                        <div class="row">
-                            <div class="col-md-6"><a class="navbar-brand" href="#">Dashboard</a></div>
-                            <div class="col-md-2"></div>
-                            <!--<a class="btn  btn-primary btn-fill btn-sm" href="{{ URL::previous() }}">Back</a>-->
-                        </div>
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
+                           <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">Dashboard</a>
                    </div>
                     <div class="collapse navbar-collapse">
                         <ul class="nav navbar-nav navbar-right">
                             <li>
-                                <a href="{{ route('profile') }}">
-                                        {{$curr_usr->fname}} {{$curr_usr->mname}} {{$curr_usr->lname}}  
-                                        <!-- Full Name of currently logged in user -->
+                                <a href="/html/user.html">
+                                    {{$curr_usr->fname}} {{$curr_usr->mname}} {{$curr_usr->lname}}  
+                                    <!-- Full Name of currently logged in user -->
                                 </a>
                             </li>
-
                             <li>
-                                <a class="flip-animate" href="{{ route('logout') }}"
+                                <a href="{{ route('logout') }}"
                                     onclick="event.preventDefault();
                                     document.getElementById('logout-form').submit();">
                                     Logout
                                 </a>
 
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                <form id="logout-form" action="/users" method="POST" style="display: none;">
                                     {{ csrf_field() }}
                                 </form>
                             </li>
@@ -173,19 +181,19 @@
                             <!-- TERMS BUTTON-->
                             <div class="col-md-4">
                                 <div class="card card-user box">
-                                    <div class="image" style="background-color:#2EBE00;"></div>
+                                    <div class="image" style="background-color:#556B2F;"></div>
                                     <div class="content bg">
                                         <div class="author">
                                             <br><br><br><br><br><br>
                                             <img class="" src="{{ asset('images/icons8-pie-chart-100.png') }}" alt="..."/><br><br><br>
                                               <h4 class="title"><b>Term</b></h4>
-                                                <h5>Here is where the lists of all the Terms of ongoing or finished</h5>
+                                                <h5>Ongoing and completed terms</h5>
 
                                             <hr>
                                             <h5 class="title text-center"> 
                                                
                                             </h5>
-                                             <button style="margin-top:5%; margin-bottom:5%" type="button" data-target="#editSupplierModal" data-toggle="modal" id="edit-supplier-btn" class="btn  btn-primary btn-fill btn-lg" data-id=''> 
+                                             <button style="margin-top:5%; margin-bottom:5%" type="button" data-target="#editSupplierModal" data-toggle="modal" id="edit-supplier-btn" class=" toLocation btn  btn-primary btn-fill btn-md" data-href="{{route('terms')}}" data-id=''> 
                                                 View List
                                             </button>
                                         </div>
@@ -195,19 +203,14 @@
                             <!-- INVENTORY BUTTON-->
                             <div class="col-md-4">
                                 <div class="card card-user box">
-                                    <div class="image" style="background-color:#FF7629;"></div>
+                                    <div class="image" style="background-color:#FFA732;"></div>
                                     <div class="content bg">
                                         <div class="author">
                                             <br><br><br><br><br><br>
                                             <img class="" src="{{ asset('images/icons8-warehouse-100.png') }}" alt="..."/><br><br><br>
                                               <h4 class="title"><b>Inventory List</b></h4>
-                                                <h5>Contains all the list of items available in the inventory</h5>
-
-                                            <hr>
-                                            <h5 class="title text-center"> 
-                                               
-                                            </h5>
-                                             <button style="margin-top:5%; margin-bottom:5%" type="button" data-target="#editSupplierModal" data-toggle="modal" id="edit-supplier-btn" class="btn  btn-primary btn-fill btn-lg" data-id=''> 
+                                                <h5>Undamaged and damaged items</h5>
+                                             <button style="margin-top:5%; margin-bottom:5%" type="button" data-target="#editSupplierModal" data-toggle="modal" id="edit-supplier-btn" class=" toLocation btn  btn-primary btn-fill btn-md" data-href="{{route('inventory')}}" data-id=''> 
                                                 View List
                                             </button>
                                         </div>
@@ -217,19 +220,23 @@
                             <!-- SUPPLIERS BUTTON-->
                             <div class="col-md-4">
                                 <div class="card card-user box">
-                                    <div class="image" style="background-color:#C88841;"></div>
+                                    <div class="image" style="background-color:#CD853F;"></div>
+
+
+
+
                                     <div class="content bg">
                                         <div class="author">
                                             <br><br><br><br><br><br>
                                             <img class="" src="{{ asset('images/icons8-box-100.png') }}" alt="..."/><br><br><br>
                                               <h4 class="title"><b>Suppliers</b></h4>
-                                                <h5>Look up and see the details and add new items of suppliers</h5>
+                                                <h5>Suppliers and their supplied items</h5>
 
                                             <hr>
                                             <h5 class="title text-center"> 
                                                
                                             </h5>
-                                             <button style="margin-top:5%; margin-bottom:5%" type="button" data-target="#editSupplierModal" data-toggle="modal" id="edit-supplier-btn" class="btn  btn-primary btn-fill btn-lg" data-id=''> 
+                                             <button style="margin-top:5%; margin-bottom:5%" type="button" data-target="#editSupplierModal" data-toggle="modal" id="edit-supplier-btn" class=" toLocation btn  btn-primary btn-fill btn-md" data-href="{{route('suppliers')}}"> 
                                                 View List
                                             </button>
                                         </div>
@@ -239,19 +246,19 @@
                             <!-- USERS BUTTON-->
                             <div class="col-md-4 col-md-offset-2">
                                 <div class="card card-user box">
-                                    <div class="image" style="background-color:#407DD0;"></div>
+                                    <div class="image" style="background-color:#1E6555;"></div>
                                     <div class="content bg">
                                         <div class="author">
                                             <br><br><br><br><br><br>
                                             <img class="" src="{{ asset('images/icons8-user-account-100.png') }}" alt="..."/><br><br><br>
                                               <h4 class="title"><b>Users</b></h4>
-                                                <h5>Contains all user details. Here you can add new users, and edit the user's accounts. Passwords can also be changed is forgotten.</h5>
+                                                <h5>User profiles</h5>
 
                                             <hr>
                                             <h5 class="title text-center"> 
                                                
                                             </h5>
-                                             <button style="margin-top:5%; margin-bottom:5%" type="button" data-target="#editSupplierModal" data-toggle="modal" id="edit-supplier-btn" class="btn  btn-primary btn-fill btn-lg" data-id=''> 
+                                             <button style="margin-top:5%; margin-bottom:5%" type="button" data-target="#editSupplierModal" data-toggle="modal" id="edit-supplier-btn" class=" toLocation btn  btn-primary btn-fill btn-md" data-href="{{route('usrmgmt')}}"> 
                                                 View List
                                             </button>
                                         </div>
@@ -261,19 +268,19 @@
                             <!-- LOGS BUTTON-->
                             <div class="col-md-4">
                                 <div class="card card-user box">
-                                    <div class="image" style="background-color:#ED435A;"></div>
+                                    <div class="image" style="background-color:#962E3E;"></div>
                                     <div class="content bg">
                                         <div class="author">
                                             <br><br><br><br><br><br>
                                             <img class="" src="{{ asset('images/icons8-paper-100.png') }}" alt="..."/><br><br><br>
                                               <h4 class="title"><b>Logs</b></h4>
-                                                <h5>Contains all the edits from users, suppliers, and terms details. Item logs can be viewed within the Inventory.</h5>
+                                                <h5>User activities</h5>
 
                                             <hr>
                                             <h5 class="title text-center"> 
                                                
                                             </h5>
-                                             <button style="margin-top:5%; margin-bottom:5%" type="button" data-target="#editSupplierModal" data-toggle="modal" id="edit-supplier-btn" class="btn  btn-primary btn-fill btn-lg" data-id=''> 
+                                             <button style="margin-top:5%; margin-bottom:5%" type="button" data-target="#editSupplierModal" data-toggle="modal" id="edit-supplier-btn" class=" toLocation btn  btn-primary btn-fill btn-md" data-href="{{route('logs')}}"> 
                                                 View List
                                             </button>
                                         </div>
@@ -323,7 +330,7 @@
                                             <h5 class="title text-center"> 
                                                
                                             </h5>
-                                             <button style="margin-top:5%; margin-bottom:5%" type="button" data-target="#editSupplierModal" data-toggle="modal" id="edit-supplier-btn" class="btn  btn-primary btn-fill btn-lg" data-id=''> 
+                                             <button style="margin-top:5%; margin-bottom:5%" type="button" data-target="#editSupplierModal" data-toggle="modal" id="edit-supplier-btn" class=" toLocation btn  btn-primary btn-fill btn-md" data-id=''> 
                                                 View List
                                             </button>
                                         </div>
@@ -344,7 +351,7 @@
                                             <h5 class="title text-center"> 
                                                
                                             </h5>
-                                             <button style="margin-top:5%; margin-bottom:5%" type="button" data-target="#editSupplierModal" data-toggle="modal" id="edit-supplier-btn" class="btn  btn-primary btn-fill btn-lg" data-id=''> 
+                                             <button style="margin-top:5%; margin-bottom:5%" type="button" data-target="#editSupplierModal" data-toggle="modal" id="edit-supplier-btn" class=" toLocation btn  btn-primary btn-fill btn-md" data-id=''> 
                                                 View List
                                             </button>
                                         </div>
@@ -376,7 +383,7 @@
                                 
                                     <thead>
                                         <th>No.</th>
-                                    	<th>Date Started</th>
+                                        <th>Date Started</th>
                                         <th>Date Peddling Ended</th>
                                         <th>Location</th>
                                         <th>Balance</th>
@@ -434,8 +441,8 @@
                                 
                                     <thead>
                                         <th>No.</th>
-                                    	<th>Date Started</th>
-                                    	<th>Date Ended</th>
+                                        <th>Date Started</th>
+                                        <th>Date Ended</th>
                                         <th>Location</th>
                                         <th>View</th>  
                                         <!-- <th>View Details</th> -->
@@ -488,19 +495,20 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
-
             demo.initChartist();
-
             $.notify({
                 icon: 'pe-7s-gift',
                 message: "Welcome to <b>Light Bootstrap Dashboard</b> - a beautiful freebie for every web developer."
-
             },{
                 type: 'info',
                 timer: 4000
             });
-
         });
-    </script>
-@endsection
 
+        $(document).on("click", ".toLocation", function () {
+            window.location = $(this).data("href");
+        }); 
+    </script>
+
+
+@endsection

@@ -15,6 +15,9 @@
     <!-- Bootstrap core CSS     -->
     <link href="/css/bootstrap.min.css" rel="stylesheet" />
 
+    
+    <script src="/js/jquery.3.2.1.min.js" type="text/javascript"></script>
+    
     <!-- Animation library for notifications   -->
     <link href="/css/animate.min.css" rel="stylesheet"/>
 
@@ -70,34 +73,40 @@
                             <p>Dashboard</p>
                         </a>
                     </li>
-                    <li>
-                        <a href="/html/user.html">
-                            <i class="pe-7s-user"></i>
-                            <p>User Profile</p>
-                        </a>
-                    </li>
                     <li class="active">
-                        <a href="{{route('terms') }}">
+                        <a href="{{ route('terms') }}">
                             <i class="pe-7s-graph"></i>
-                            <p>Term Management</p>
+                            <p>Terms</p>
                         </a>
                     </li>
-                    <li >
+                    <li>
                         <a href="{{route('inventory') }}">
                             <i class="pe-7s-drawer"></i>
-                            <p>Inventory</p>
+                            <p>Inventories</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('stockins') }}">
+                            <i class="pe-7s-download"></i>
+                            <p>Stock Ins</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('stockouts') }}">
+                            <i class="pe-7s-upload"></i>
+                            <p>Stock Outs</p>
                         </a>
                     </li>
                     <li>
                         <a href="{{route('suppliers') }}">
                             <i class="pe-7s-box1"></i>
-                            <p>Supplier Management</p>
+                            <p>Suppliers</p>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('usrmgmt') }}">
                             <i class="pe-7s-users"></i>
-                            <p>User Management</p>
+                            <p>Users</p>
                         </a>
                     </li>
                     <li>
@@ -122,7 +131,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="#"><img src="{{URL::asset('images/term-management.png')}}" alt=""/></a>
+                        <a class="navbar-brand" href="#">Terms</a>
                     </div>
                     <div class="collapse navbar-collapse">
                         <ul class="nav navbar-nav navbar-right">
@@ -178,11 +187,13 @@
                                 <table class="table table-hover table-striped">
                                 
                                     <thead>
+                                        @if(count($og_terms)>0)
                                         <th>ID</th>
                                     	<th>Date Started</th>
                                         <th>Date Peddling Ended</th>
                                         <th>Date Collecting Ended</th>
-                                    	<th>Collector</th>         
+                                    	<th>Collector</th>   
+                                        @endif      
                                         <!-- <th>View Details</th> -->
                                     </thead>
                                     <tbody>
@@ -224,7 +235,7 @@
                                                 </td>
                                             </tr>
                                         @empty
-                                            <h3 style="text-align: center"> No terms stored. </h3>
+                                            <h3 style="text-align: center"> No on-going terms to show </h3>
                                         @endforelse
                                     </tbody>
                                 </table>
@@ -254,11 +265,13 @@
                                 <table class="table table-hover table-striped">
                                  
                                     <thead>
+                                        @if(count($cd_terms) > 0 )
                                         <th>ID</th>
                                         <th>Date Started</th>
                                         <th>Date Peddling Ended</th>
                                         <th>Date Collecting Ended</th>
-                                        <th>Collector</th>         
+                                        <th>Collector</th> 
+                                        @endif        
                                         <!-- <th>View Details</th> -->
                                     </thead>
                                     <tbody>
@@ -283,7 +296,7 @@
                                                 </td>
                                             </tr>
                                         @empty
-                                            <h3 style="text-align: center"> No terms stored. </h3>
+                                            <h3 style="text-align: center"> No completed terms to show </h3>
                                         @endforelse
                                     </tbody>
                                 </table>
@@ -346,7 +359,7 @@
                                     <div class="{{ $errors->has('date_started') ? ' has-error' : '' }}">
                                         <div class="col-md-6">
                                             <label>Date Started</label>
-                                            <input name="date_started"  id="date_started" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'" value="{{ old('date_started') }}">
+                                            <input name="date_started"  id="date_started" class="form-control" type="text" max="{{Carbon\Carbon::now()->toDateString()}}" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'" value="{{ old('date_started') }}">
                                                                                 
                                             @if ($errors->has('date_started'))
                                                 <span class="help-block">
@@ -410,7 +423,7 @@
                                     <div class="{{$errors->addEd->has('ed') ? ' has-error' : ''}}"> 
                                         <div class="col-md-6 col-md-offset-3">
                                             <label>Date Ended</label>
-                                            <input name="ed"  id="ed" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'">
+                                            <input name="ed"  id="ed" class="form-control" type="text" onfocus="(this.type='date')" max="{{Carbon\Carbon::now()->toDateString()}}" required onblur="if(!this.value)this.type='text'">
                                             @if($errors->addEd->has('ed'))                            
                                                 <span class="help-block">
                                                     <strong>  
@@ -459,7 +472,7 @@
                                     <div class="{{$errors->addFd->has('fd') ? ' has-error' : ''}}"> 
                                         <div class="col-md-6 col-md-offset-3">
                                             <label>Date Ended</label>
-                                            <input name="fd"  id="fd" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'">
+                                            <input name="fd"  id="fd" max="{{Carbon\Carbon::now()->toDateString()}}" class="form-control" type="text" onfocus="(this.type='date')" required onblur="if(!this.value)this.type='text'">
                                             @if($errors->addFd->has('fd'))                            
                                                 <span class="help-block">
                                                     <strong>  
@@ -517,15 +530,50 @@
         </div>
     </div>
 
+    <!-- SUCCESS MESSAGES -->
+        @if(session('store-term-success'))
+            <script> 
+                jQuery(document).ready(function($){
+                    $.notify( "{{session()-> get('store-term-success' )}}", "success");
+                    {{session()->forget('store-term-success')}}
+                });
+            </script>
+        @endif
+
+        @if(session('store-ed-success'))
+            <script> 
+                jQuery(document).ready(function($){
+                    $.notify( "{{session()-> get('store-ed-success' )}}", "success");
+                    {{session()->forget('store-ed-success-success')}}
+                });
+            </script>
+        @endif
+
+        @if(session('store-fd-success'))
+            <script> 
+                jQuery(document).ready(function($){
+                    $.notify( "{{session()-> get('store-fd-success' )}}", "success");
+                    {{session()->forget('store-fd-success-success')}}
+                });
+            </script>
+        @endif
+
+        @if(session('destroy-success'))
+            <script> 
+                jQuery(document).ready(function($){
+                    $.notify( "{{session()-> get('destroy-success' )}}", "success");
+                    {{session()->forget('destroy-success')}}
+                });
+            </script>
+        @endif
 
 </body>
 
     <!--   Core JS Files   -->
-    <script src="/js/jquery.3.2.1.min.js" type="text/javascript"></script>
+    <script src="/js/notify.js" type="text/javascript"></script>
     <script src="/js/bootstrap.min.js" type="text/javascript"></script>
 
     <!--  Notifications Plugin    -->
-    <script src="/js/bootstrap-notify.js"></script>
 
     <!-- Light Bootstrap Table Core javascript and methods for Demo purpose -->
     <script src="/js/light-bootstrap-dashboard.js?v=1.4.0"></script>
@@ -553,10 +601,10 @@
                 $("#addModal").modal();    
                
             if({!!count($errors->addEd)!!} > 0)
-                $("#peddlingEnd").modal(); 
+                $("#add_ed").click(); 
 
             if ({!!count($errors->addFd)!!} > 0)
-                $("#collectingEnd").modal();   
+                $("#add_fd").click();   
         });
     </script>
 
@@ -578,6 +626,7 @@
                 var id = $(this).data('id');
 
                 $("#ed_form").attr("action", "/terms/" +id);
+
             }); 
 
         // ADD COLLECTING END
