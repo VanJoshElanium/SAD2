@@ -10,6 +10,8 @@ use App\Worker;
 use App\Inventory;
 use App\Term_Item;
 use App\Expense;
+use App\Stockin;
+use App\Stockin_Item;
 use App\Sale;
 use App\Repair;
 use App\Supplier;
@@ -50,18 +52,19 @@ class Term_ItemController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
+      
         $input = Input::all();
-        
+
         for ($i=0; $i < count($input['add_ti_item_name']); ++$i) {
 
-            $item_qty = Inventory::where('inventories.inventory_id', '=', $request -> add_ti_item_name)
+            $item_qty = Inventory::where('inventories.inventory_id', '=', $input['add_ti_item_name'][$i])
                     -> select ('inventory_qty')
                     -> get();
 
             $validator = Validator::make($request->all(), [
                 'add_ti_qty.' .$i  => 'numeric|min:1|max:' .$item_qty[0] -> inventory_qty,
-                'add_ti_item_name.*' => 'distinct'
+                'add_ti_item_name.*' => 'distinct',
+                'add_ti_date' => 'required|date'
             ]);
             
             if ($validator->fails()) {
@@ -73,10 +76,11 @@ class Term_ItemController extends Controller
             else{
                 $term_item = new Term_Item;
                 $term_item -> ti_date = $request -> add_ti_date;
-                $term_item -> ti_worker_id = $request -> add_ti_worker;
+                $term_item -> ti_user_id = $request -> add_ti_worker;
                 $term_item -> ti_inventory_id = $input['add_ti_item_name'][$i];
                 $term_item -> ti_original = $input['add_ti_qty'][$i];
-                $term_item -> ti_damaged = 0;
+                $term_item -> ti_udamaged = 0;
+                $term_item -> ti_rdamaged = 0;
                 $term_item -> ti_returned = 0;
                 $term_item -> ti_term_id = $request-> term_id;
                 $term_item -> save();
@@ -86,9 +90,11 @@ class Term_ItemController extends Controller
                 $inventory_item -> inventory_qty -= $term_item -> ti_original;
                 $inventory_item -> save();
             }   
-        }
-    
-        return redirect('/termsprofile/' .$request-> term_id);
+        } 
+
+        if (count($input['add_ti_item_name']) > 1)
+            return redirect('/termsprofile/' .$request-> term_id) -> with('store-item-success','Items were successfully added to term!');
+        else return redirect('/termsprofile/' .$request-> term_id) -> with('store-item-success','Item was successfully added to term!');
     }
 
     /**
@@ -121,7 +127,7 @@ class Term_ItemController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
+    {  
         $term_item = Term_Item::find($request-> edit_ti_item_name);
 
         $inven_qty = Term_Item::where('term_items.ti_id', '=', $request -> edit_ti_item_name)
@@ -131,7 +137,8 @@ class Term_ItemController extends Controller
                     
         $validator = Validator::make($request->all(), [
                 'edit_item_original' => 'numeric|max:' .($inven_qty[0] -> inventory_qty + $term_item -> ti_original),
-                'edit_item_damages'  => 'numeric|max:' .($request-> edit_item_original),
+                'edit_item_udamages'  => 'numeric|max:' .($request-> edit_item_original),
+                'edit_item_rdamages'  => 'numeric|max:' .($request-> edit_item_original),
                 'edit_item_returns'  => 'numeric|max:' .($request-> edit_item_original)
         ]);
         
@@ -141,20 +148,23 @@ class Term_ItemController extends Controller
                 ->withInput($request->all());
         }
         else{
-            //Get original quantities, before the update
+            //Get original quantities from DB, before the update
             $original_qty = $term_item -> ti_original;
-            $original_damaged = $term_item -> ti_damaged;
+            $original_rdamaged = $term_item -> ti_udamaged;
+            $original_udamaged = $term_item -> ti_rdamaged;
             $original_returned = $term_item -> ti_returned;
 
             //Update db with new quantities
             $term_item -> ti_original = $request-> edit_item_original;
-            $term_item -> ti_damaged = $request-> edit_item_damages;
+            $term_item -> ti_udamaged = $request-> edit_item_udamages; 
+            $term_item -> ti_rdamaged = $request-> edit_item_rdamages;
             $term_item -> ti_returned = $request-> edit_item_returns;
             $term_item -> save();
 
-
+          
             // UPDATE UNDAMAGED INVENTORY
                 $inventory_item = Inventory::find($term_item -> ti_inventory_id);
+
                 //Update inventories.inventory_qty using edited ti_original qty
                     if ($original_qty <  $term_item -> ti_original) //ex.) 10 -> 11
                         $inventory_item -> inventory_qty -= ($term_item -> ti_original - $original_qty);
@@ -164,42 +174,117 @@ class Term_ItemController extends Controller
                     $inventory_item -> save();
 
                 //Update inventories.inventory_qty using edited ti_returned qty
-                    if ($original_returned <  $term_item -> ti_returned) //ex.) 0 -> 4
-                        $inventory_item -> inventory_qty += ($term_item -> ti_returned - $original_returned);
+                    if ($original_returned == 0 && $term_item -> ti_returned != 0){
+                        $inventory_item -> inventory_qty += $term_item -> ti_returned;
 
-                    else if ($original_returned >  $term_item -> ti_returned) //ex.) 4 -> 2
-                        $inventory_item -> inventory_qty -= ($original_returned - $term_item -> ti_returned);
+                        $si_item = new Stockin_Item;
+                        $si_item -> si_date = $request -> edit_item_date;
+                        $si_item -> si_user_id = $request -> edit_item_handler;
+                        $si_item -> save();
 
-                    $inventory_item -> save();
+                        $stockin = new Stockin;
+                        $stockin -> si_inventory_id = $term_item -> ti_inventory_id;
+                        $stockin -> si_qty = $term_item -> ti_returned;
+                        $stockin -> si_si_id = $si_item -> si_item_id;
+                        $stockin -> si_term_id = $term_item -> ti_term_id;
+                        $stockin -> save();
+                        $inventory_item -> save();
+
+                    }
+                   
+                    if ($original_returned != 0 && $term_item -> ti_returned != $original_returned){
+
+                        $stock_in = Stockin::where([
+                                        ['si_inventory_id', '=', $term_item -> ti_inventory_id],
+                                        ['si_term_id', '=', $term_item -> ti_term_id],
+                                    ])
+                                    -> get();
+                         
+                        $og_stock_in = $stock_in[0] -> si_qty;
+
+                        if ($original_returned <  $term_item -> ti_returned){ //ex.) 1 -> 4
+                            $inventory_item -> inventory_qty += ($term_item -> ti_returned - $original_returned);
+                            $stock_in[0] -> si_qty += ($term_item -> ti_returned - $og_stock_in);
+                        }
+
+                        if ($original_returned >  $term_item -> ti_returned){ //ex.) 4 -> 2
+                            $inventory_item -> inventory_qty -= ($original_returned - $term_item -> ti_returned);
+                            $stock_in[0] -> si_qty -= ($og_stock_in  - $term_item -> ti_returned);
+                        }
+                        $inventory_item -> save();
+                        $stock_in[0] -> save();
+                   
+                    }
             ///////////////////////////////
 
             // UPDATE DAMAGED INVENTORY
-                if ($original_damaged == 0 && $term_item -> ti_damaged != 0){
-                    //Create damaged item
+                if ($original_udamaged == 0 && $term_item -> ti_udamaged != 0){                
+                    //Update repairs.repair_qty using edited udamages_qty; Irreparable
                     $repair = new Repair;
-                    $repair -> repair_inventory_id = $term_item -> ti_inventory_id;            
-                    $repair -> repair_status = $request -> edit_item_dtype;
-
-                    //Update repairs.repair_qty using edited ti_damaged_qty
-                    $repair -> repair_qty = $term_item -> ti_damaged;
+                    $repair -> repair_inventory_id = $term_item -> ti_inventory_id; 
+                    $repair -> repair_term_id = $term_item -> ti_term_id;
+                    $repair -> repair_user_id = $request-> edit_item_handler;
+                    $repair -> repair_qty = $request-> edit_item_udamages;
+                    $repair -> repair_ddate = $request-> edit_item_date;
+                    $repair -> repair_status = 0; 
                     $repair -> save();
-                }   
-                else if ($original_damaged != 0 && $term_item -> ti_damaged != 0){
-                    $repair = Repair::where('repair_inventory_id', '=', $term_item -> ti_inventory_id);
-                    $repair -> repair_status = $request -> edit_item_dtype;
+                } 
 
-                    //Update repairs.repair_qty using edited ti_damaged_qty
-                    if ($original_damaged <  $term_item -> ti_damaged) //ex.) 2 -> 3
-                        $repair -> repair_qty += ($term_item -> ti_damaged - $original_damaged);
-
-                    else if ($original_damaged >  $term_item -> ti_damaged) //ex.) 5 -> 2
-                        $repair -> repair_qty -= ($original_damaged - $term_item -> ti_damaged);
-
+                if ($original_rdamaged == 0 && $term_item -> ti_rdamaged != 0){                
+                    //Update repairs.repair_qty using edited rdamages_qty; Repairable
+                    $repair = new Repair;
+                    $repair -> repair_inventory_id = $term_item -> ti_inventory_id; 
+                    $repair -> repair_term_id = $term_item -> ti_term_id;
+                    $repair -> repair_user_id = $request-> edit_item_handler;
+                    $repair -> repair_qty = $request-> edit_item_rdamages;
+                    $repair -> repair_ddate = $request-> edit_item_date;
+                    $repair -> repair_status = 1; 
                     $repair -> save();
+                }  
+
+                if ($original_udamaged != 0  && $term_item -> ti_udamaged != $original_udamaged) {
+                    $urepair = Repair::where([
+                                    ['repair_inventory_id', '=', $term_item -> ti_inventory_id],
+                                    ['repair_term_id', '=', $term_item -> ti_term_id],
+                                    ['repair_status', '=', 0]
+                                ])
+                                -> get();
+
+                    //Update repairs.repair_qty using edited udamages_qty //Irreparable
+                    if ($urepair[0] -> repair_qty <  $request-> edit_item_udamages){ //ex.) 2 -> 3
+                        $urepair[0] -> repair_qty += ($request-> edit_item_udamages - $original_udamaged);
+
+                    }
+                    if ($urepair[0] -> repair_qty >  $request-> edit_item_udamages){ //ex.) 5 -> 2
+                        $urepair[0] -> repair_qty -= ($original_udamaged - $request-> edit_item_udamages);
+                    }
+                    $urepair[0] -> save();
+                    
                 }
-            ///////////////////////////////
+
+                if ($original_rdamaged != 0 && $term_item -> ti_rdamaged != 0 && $term_item -> ti_rdamaged != $original_rdamaged){
+                    $rrepair = Repair::where([
+                                    ['repair_inventory_id', '=', $term_item -> ti_inventory_id],
+                                    ['repair_term_id', '=', $term_item -> ti_term_id],
+                                    ['repair_status', '=', 1]
+                                ])
+                                -> get();
+                   
+
+                    //Update repairs.repair_qty using edited rdamages_qty //Irreparable
+                    if ($rrepair[0] -> repair_qty <  $request-> edit_item_rdamages){ //ex.) 2 -> 3
+                        $rrepair[0] -> repair_qty += ($request-> edit_item_rdamages - $original_rdamaged);
+                    }
+                    if ($rrepair[0] -> repair_qty >  $request-> edit_item_rdamages){ //ex.) 5 -> 2
+                        $rrepair[0] -> repair_qty -= ($original_rdamaged - $request-> edit_item_rdamages);
+                    }
+                    $rrepair[0] -> save();
+                  
+                }
+
+            return redirect() -> back() -> with('update-item-success','Item was successfully edited!');
         }
-        return redirect('/termsprofile/' .$request-> term_id);
+       
     }
 
     /**
@@ -210,49 +295,85 @@ class Term_ItemController extends Controller
      */
     public function destroy($id)
     {
+
         $term_item = Term_Item::find($id);
+        $term = $term_item -> ti_term_id;
+  
         $inventory_item = Inventory::find($term_item -> ti_inventory_id);
 
         //DAMAGED INVENTORY
-            if ($term_item -> ti_damaged != 0){
-                $repair_item = Repair::where('repair_inventory_id', '=', $term_item-> ti_inventory_id) -> get();
-                
-                if ($term_item -> ti_damaged == $repair_item[0] -> repair_qty)
-                    $repair = Repair::destroy($repair_item[0] -> repair_id);
-                else{
-                    $repair_item -> repair_qty -= $term_item -> ti_damaged;
-                    $repair_item -> save();
+            if ($term_item -> ti_udamaged != 0){
+                $urepair_item = Repair::where([
+                            ['repair_inventory_id', '=', $term_item-> ti_inventory_id],
+                            ['repair_term_id', '=', $term_item-> ti_term_id],
+                            ['repair_status', '=', 0] //Irreparable
+                        ]) -> get();
 
-                    $inventory_item -> inventory_qty += $term_item -> ti_damaged; //++damages
-                    $inventory_item -> save();
+                $rrepair_item = Repair::where([
+                            ['repair_inventory_id', '=', $term_item-> ti_inventory_id],
+                            ['repair_term_id', '=', $term_item-> ti_term_id],
+                            ['repair_status', '=', 1] //Repairable
+                        ]) -> get();
+                
+                if ($term_item -> ti_udamaged == $urepair_item[0] -> repair_qty)
+                    $repair = Repair::destroy($urepair_item[0] -> repair_id);
+                    
+                else{
+                    $urepair_item -> repair_qty -= $term_item -> ti_udamaged;
+                    $urepair_item -> save();
+                    // $inventory_item -> inventory_qty += $term_item -> ti_udamaged; //++damages
+                    // $inventory_item -> save();
+
+                }
+
+                // $stockin = new Stockin_Item;
+                // $stockin -> si_date = 
+                // $stockin -> si_user_id = 
+                if ($term_item -> ti_rdamaged == $rrepair_item[0] -> repair_qty)
+                    $rrepair = Repair::destroy($rrepair_item[0] -> repair_id);
+                else{
+                    $repair_item -> repair_qty -= $term_item -> ti_rdamaged;
+                    $rrepair_item -> save();
+
+                    // $inventory_item -> inventory_qty += $term_item -> ti_rdamaged; //++damages
+                    // $inventory_item -> save();
                 }
             }
 
         //UNDAMAGED INVENTORY
             $inventory_item -> inventory_qty += $term_item -> ti_returned; // ++returns
-            $inventory_item -> inventory_qty += $term_item -> ti_original - ($term_item -> ti_returned + $term_item -> ti_damaged); // ++sold
+            $inventory_item -> inventory_qty += $term_item -> ti_original - ($term_item -> ti_returned + $term_item -> ti_udamaged +$term_item -> ti_rdamaged); // ++sold
             $inventory_item -> save();
 
             $term_item = Term_Item::destroy($id);
 
-        return redirect('/termsprofile/' .$term_item -> ti_term_id);
+        return redirect('/termsprofile/' .$term) -> with('destroy-item-success','Item was successfully removed from term!');
     }
 
     public function getTermItem($id)
-    {
+    { 
+        $tidata = new \stdClass();
         $tidata = Term_Item::find($id);
-        return $tidata;
+
+
+        return json_encode($tidata);
     }
 
     public function printItems($id){
         $term_items = Term::join('term_items', 'terms.term_id', '=', 'term_items.ti_term_id')
+                    -> join ('workers', 'worker_term_id', '=', 'term_id')
+                    -> join ('profiles as handler', 'handler.profile_user_id', '=', 'ti_user_id')
+                    -> join('profiles as worker', 'worker.profile_user_id', '=', 'worker_user_id')
                     -> join('inventories', 'inventories.inventory_id', '=', 'term_items.ti_inventory_id')
                     -> join('suppliers', 'suppliers.supplier_id', '=', 'inventories.inventory_supplier_id')
-                    -> select ('terms.term_id', 'term_items.*', 'inventories.inventory_name', 'inventories.inventory_price', 'suppliers.supplier_name', 'suppliers.supplier_id')
+                    -> select ('terms.*', 'term_items.*', 'inventories.inventory_name', 'inventories.inventory_price', 'suppliers.supplier_name', 'suppliers.supplier_id', 'worker.fname as cfname', 'worker.mname as cmname', 'worker.lname as clname', 'handler.fname as hfname', 'handler.mname as hmname', 'handler.lname as hlname')
                     -> where ([
-                        ['terms.term_id', '=', $id]
+                        ['terms.term_id', '=', $id],
+                        ['worker_term_id', '=', $id]
                     ])
+                    -> groupBy('ti_id')
                     -> get();
+        // dd($term_items);
         $pdf = PDF::loadView('termitems', compact('term_items'));
         return $pdf->download('termitems.pdf');
     }

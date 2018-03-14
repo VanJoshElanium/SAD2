@@ -110,13 +110,14 @@ class TermsController extends Controller
                     'term_status' => 1
                 ]);
 
+
         $worker = new Worker;
         $worker -> worker_term_id = $term -> term_id;
         $worker -> worker_user_id = $request -> collector;
         $worker -> worker_type = 0; //collector
         $worker -> save();
         //session()->flash('message', 'Successfully created a new supplier!');
-        return redirect('/terms');
+        return redirect('/terms') -> with('store-term-success','Term was successfully removed!');
     }
 
     /**
@@ -154,14 +155,19 @@ class TermsController extends Controller
         $now = Carbon::now() -> toDateString();
 
         if($request -> update_type == "ed"){
-            if ($term -> fd != null)
+            if ($term -> finish_date != null)
                 $validator = Validator::make($request->all(), [
-                    'ed' => 'required|date|before_or_equal:'.$now. '|before:' .$term -> fd .'|after:'.$term-> start_date
+                    'ed' => 'required|date|before_or_equal:'.$now. '|before:' .$term -> finish_date .'|after:'.$term-> start_date
                 ]);
             else
                 $validator = Validator::make($request->all(), [
                     'ed' => 'required|date|before_or_equal:'.$now.'|after:'.$term-> start_date
                 ]);
+
+            $attributeNames = array(
+                   'ed' => 'peddling end',
+                );
+            $validator->setAttributeNames($attributeNames);
 
             if ($validator->fails()) {
                 return redirect('/terms')
@@ -171,13 +177,18 @@ class TermsController extends Controller
             else{
                 $term -> end_date = $request -> ed;
                 $term -> save();
-                return redirect('/terms');
+                return redirect('/terms') -> with('store-ed-success','Peddling end was successfully assigned to term!');
             }  
         }
         else{
             $validator = Validator::make($request->all(), [
                 'fd' => 'required|date|before_or_equal:'.$now.'|after:'.$term-> end_date
             ]);
+
+            $attributeNames = array(
+                   'fd' => 'collecting end',
+                );
+            $validator->setAttributeNames($attributeNames);
 
             if ($validator->fails()) {
                 return redirect('/terms')
@@ -187,7 +198,7 @@ class TermsController extends Controller
             else{
                 $term -> finish_date = $request -> fd;
                 $term -> save();
-                return redirect('/terms');
+                return redirect('/terms') -> with('store-fd-success','Collecting end was assigned to term!');
             }
         }            
     }
@@ -204,7 +215,7 @@ class TermsController extends Controller
         $term -> term_status = 0;
         $term -> save();
         //dd($supplier); //for debugging purposes
-        return redirect('/terms');
+        return redirect('/terms') -> with('destroy-success','Term was successfully removed!');
         //Session::flash('message', 'User has been successfully removed!');*/
     }
 }

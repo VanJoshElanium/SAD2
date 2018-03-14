@@ -8,7 +8,6 @@ use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\StoreWorker;
 use App\Http\Controllers\Controller;  
 use Illuminate\Support\Facades\Auth;
 
@@ -46,8 +45,14 @@ class WorkerController extends Controller
             'position' => array(
                             'unique:workers,worker_type,null,null,worker_term_id,'.$request-> term_id .',worker_type, 1'
                         ),
+            'peddler' => 'unique:workers,worker_user_id,null,null,worker_term_id,'.$request-> term_id
         ]);
         
+        $attributeNames = array(
+                   'peddler' => "peddler's name",
+                );
+          $validator->setAttributeNames($attributeNames);
+
         if ($validator->fails()) {
             return redirect('/termsprofile/' .$request-> term_id)
                 ->withErrors($validator, 'addPeddler')
@@ -60,7 +65,7 @@ class WorkerController extends Controller
                 'worker_type' => $request-> position
             ]);
         } 
-        return redirect('/termsprofile/' .$request-> term_id);
+        return redirect('/termsprofile/' .$request-> term_id) -> with('store-peddler-success','Peddler was successfully added to term!');
         
     }
 
@@ -97,9 +102,14 @@ class WorkerController extends Controller
     {   
         $validator = Validator::make($request->all(), [
             'edit_position' => array(
-                            'unique:workers,worker_type,NULL,worker_id,worker_term_id,' .$request-> term_id
+                            'unique:workers,worker_type,' .$id .',worker_id,worker_term_id,' .$request-> term_id .',worker_type, 1'
                         ),
         ]);
+
+        $attributeNames = array(
+                   'edit_position' => "position",
+                );
+          $validator->setAttributeNames($attributeNames);
 
         if ($validator->fails()) {
             return redirect('/termsprofile/' .$request-> term_id)
@@ -111,7 +121,7 @@ class WorkerController extends Controller
             $worker = Worker::find($id);
             $worker -> worker_type = $request -> edit_position;
             $worker -> save();
-            return redirect('termsprofile/' .$request -> term_id);
+            return redirect('termsprofile/' .$request -> term_id) -> with('update-peddler-success','Peddler was successfully edited!');
         }
     }
 
@@ -126,11 +136,15 @@ class WorkerController extends Controller
         $worker = Worker::find($id);
         $term_id = $worker -> worker_term_id;
         $worker = Worker::destroy($id);
-        return redirect('termsprofile/' .$term_id);
+        return redirect('termsprofile/' .$term_id) -> with('destroy-peddler-success','Peddler was successfully removed from term!');
     }
 
     public function getWorker($id){
-        $workerdata = Worker::find($id);
+        $workerdata = DB::table('workers')
+                      -> join('profiles', 'profile_user_id', '=', 'worker_user_id')
+                      -> select ('profiles.fname', 'profiles.mname', 'profiles.lname', 'workers.*')
+                      -> where ('worker_id', '=', $id)
+                      -> get();
         return $workerdata;
     }
 }

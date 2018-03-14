@@ -7,6 +7,7 @@ use App\User;
 use App\Supply;
 use App\Repair;
 use App\Stockin;
+use App\Stockin_Item;
 use App\Supplier;
 use App\Inventory;
 use Carbon\Carbon;
@@ -47,14 +48,22 @@ class InventoryController extends Controller
                 -> paginate(5);
         }else{
             //DAMAGED ITEMS
-            $repairs = Repair::join('inventories', 'inventories.inventory_id', '=', 'repairs.repair_inventory_id')
+            $rrepairs = Repair::join('inventories', 'inventories.inventory_id', '=', 'repairs.repair_inventory_id')
                 -> join('suppliers', 'suppliers.supplier_id', '=', 'inventories.inventory_supplier_id')
                 -> select('inventories.*',  'repairs.*', 'suppliers.supplier_name', 'suppliers.supplier_id')
-                -> where([
-                        ['inventory_status' , '!=', 0]
-                    ])
+                -> where('repair_status', '1')
+                -> groupBy('inventory_id')
+                -> orderBy('repairs.updated_at', 'desc')
                 -> paginate(5);
 
+            $urepairs = Repair::join('inventories', 'inventories.inventory_id', '=', 'repairs.repair_inventory_id')
+                -> join('suppliers', 'suppliers.supplier_id', '=', 'inventories.inventory_supplier_id')
+                -> select('inventories.*',  'repairs.*', 'suppliers.supplier_name', 'suppliers.supplier_id')
+                -> where('repair_status', '0')
+                -> groupBy('inventory_id')
+                -> orderBy('repairs.updated_at', 'desc')
+                -> paginate(5);
+            
             //ACTIVE INVENTORY ITEMS
             $items = Inventory::join('suppliers', 'suppliers.supplier_id', '=', 'inventories.inventory_supplier_id')
                 // -> join('suppliers', 'suppliers.supplier_id', '=', 'supplies.supply_supplier_id')
@@ -62,21 +71,24 @@ class InventoryController extends Controller
                 -> where([
                         ['inventory_status' , '=', 1]
                     ])
+                -> orderBy('inventories.updated_at', 'desc')
                 -> paginate(5);
         } 
-        return view('inventory', compact('items', 'curr_usr', 'suppliers', 'workers', 'repairs'));
+        return view('inventory', compact('items', 'curr_usr', 'suppliers', 'workers', 'rrepairs', 'urepairs'));
     }
 
     public function getItem($id)
     {
-        //GET INVENTORY ITEM DATA
-        $itemdata = Inventory::join('stockins', 'si_inventory_id', '=', 'inventories.inventory_id')
-                -> join('users', 'users.user_id', '=', 'stockins.si_user_id')
+        $itemdata= Inventory::join('stockins', 'si_inventory_id', '=', 'inventories.inventory_id')
+                -> join('stockin_items', 'si_item_id','=', 'si_si_id')
+                -> join('users', 'users.user_id', '=', 'stockin_items.si_user_id')
                 -> join('profiles', 'profiles.profile_user_id', '=', 'users.user_id')
                 -> join('suppliers', 'suppliers.supplier_id', '=', 'inventories.inventory_supplier_id')
-                -> select('inventories.*', 'stockins.si_id', 'stockins.si_date', 'suppliers.supplier_id', 'suppliers.supplier_name', 'profiles.fname', 'profiles.mname', 'profiles.lname', 'users.user_id')
+                -> select('inventories.*', 'stockins.*', 'stockin_items.*', 'suppliers.supplier_id', 'suppliers.supplier_name', 'profiles.fname', 'profiles.mname', 'profiles.lname', 'users.user_id')
                 -> where('inventories.inventory_id', '=', $id)
-                -> get();
+                -> orderBy ('si_date', 'desc')
+                -> first();
+
         return $itemdata;
     }
 
@@ -89,7 +101,7 @@ class InventoryController extends Controller
         $supplies = Inventory::select('inventories.inventory_id', 'inventories.inventory_name', 'inventories.inventory_qty', 'inventories.inventory_price')
                     -> where([
                             ['inventory_supplier_id', '=', $id],
-                            ['inventory_qty', '=', 0]
+                            // ['inventory_qty', '=', 0]
                         ])
                     -> get();
         //Session::flash('message', 'User has been successfully created!');
@@ -164,6 +176,11 @@ class InventoryController extends Controller
                 'supply_name.*' => 'distinct'
             ]);
             
+            $attributeNames = array(
+                   'supply_name.*' => "item name",
+                );
+           $validator->setAttributeNames($attributeNames);
+
             if ($validator->fails()) 
             {
                 return redirect('/inventory')
@@ -173,6 +190,11 @@ class InventoryController extends Controller
             }
             else
             {
+                $si_item = new Stockin_Item;
+                $si_item -> si_date = $request->get('received_at');
+                $si_item -> si_user_id = $request->get('inventory_user_id');
+                $si_item -> save();
+
                 for ($i=0; $i < count($input['inventory_quantity']); ++$i) {
                     $item = Inventory::find($input['supply_name'][$i]);
                     // $item -> inventory_user_id = $request->get('inventory_user_id');
@@ -182,33 +204,49 @@ class InventoryController extends Controller
                     $item -> inventory_qty += $input['inventory_quantity'][$i];
                     $item -> inventory_status = 1;
                     $item -> save();
+    
 
                     $stockin = new Stockin;
-                    // $stockin -> si_date = $request->get('received_at');
                     $stockin-> si_qty = $input['inventory_quantity'][$i];
                     $stockin -> si_inventory_id = $item -> inventory_id;
-                    // $stockin -> si_user_id = $request->get('inventory_user_id');
+                    $stockin -> si_si_id = $si_item -> si_item_id;
                     $stockin -> save();
+
+
                 }
+
+                return redirect() -> back () -> with('store-undamaged-success', 'Item/s successfully stocked in!');
             }             
         }
         else //UPDATING
         {
             $input = Input::all();
 
-            $item = Inventory::find($id);     
-            $item -> inventory_supplier_id = $input['supplier_id'];
-            $item -> inventory_qty += $input['view_inventory_quantity'];
-            $item -> save();
 
-            $stockin = StockIn::find($input['si_id']);
-            $stockin -> si_user_id = $input['view_pic'];
-            $stockin-> si_qty += $input['view_inventory_quantity'];
-            $stockin -> si_inventory_id = $input['item_id'];
-            $stockin-> si_date = $input['view_received_at'];
-            $stockin -> save();   
+            $validator = Validator::make($request->all(), [
+                'view_inventory_quantity' => 'nullable'
+            ]);
+            
+            $attributeNames = array(
+                   'view_inventory_quantity.*' => "quantity",
+                );
+           $validator->setAttributeNames($attributeNames);
+
+            if ($validator->fails()) 
+            {
+                return redirect('/inventory')
+                    ->withErrors($validator, 'addUn')
+                    ->withInput($request->all());
+                    // ->with('input_error_id', $error_id);
+            }
+            else{   
+                $item = Inventory::find($id);     
+             
+                $item -> inventory_qty = $input['view_inventory_quantity'];
+                $item -> save(); 
+                return redirect() -> back() -> with ('update-undamaged-success', 'Item successfully edited!');
+            }
         }
-        return redirect('/inventory');
     }
 
     /**
@@ -223,7 +261,7 @@ class InventoryController extends Controller
         $item -> inventory_status = 0;
         $item -> save();
         //dd($supply); //for debugging purposes
-        return redirect('/inventory');
+        return redirect() -> back() -> with ('destroy-undamaged-success', 'Item successfully removed!');
         //Session::flash('message', 'User has been successfully removed!');*/
     }
 }

@@ -35,9 +35,7 @@ class UserController extends Controller
         }else{
             $users = User::join('profiles as p1',  'users.user_id', '=', 'p1.profile_user_id')
                 -> select('users.*', 'p1.*')
-                -> where([
-                        ['users.user_status' , '=', 1]
-                    ])
+                ->orderByRaw("CASE WHEN users.updated_at > p1.updated_at THEN users.updated_at ELSE p1.updated_at END DESC")
                 -> paginate(5);
                 // -> toSql();
         } 
@@ -46,6 +44,7 @@ class UserController extends Controller
 
     public function store(StoreUser $request)
     {
+        
         $user = User::create([
                 'username' => $request-> username,
                 'password' => $request-> password,
@@ -62,9 +61,8 @@ class UserController extends Controller
         $profile -> bday = $request-> bday;
         $profile -> cnum = $request-> cnum;
         $profile -> save();
-        
-        //session()->flash('message', 'Successfully created a new user!');
-        return redirect('/usrmgmt');
+
+        return redirect('/usrmgmt') ->with('store-success','User was successfully created!');
     }
 
     public function getUser($id)
@@ -83,26 +81,37 @@ class UserController extends Controller
             'profile_fname' => array(
                          'required',
                          'max:50',
-                         'string',
-                         'regex:/^[a-zA-Z-]/'), 
+                         'alpha'), 
             'profile_mname' => array(
                          'required',
                          'max:1',
-                         'string',
-                         'regex:/^[a-zA-Z]/'),
+                         'alpha'),
             'profile_lname' => array(
                          'required',
                          'max:50',
-                         'string',
-                         'regex:/^[a-zA-Z-]/'),
+                         'alpha'),
             'profile_gender' => 'required|string',
             'profile_bday' => 'required|date',
             'profile_cnum' => 'required|digits:11',
+            'profile_username' => 'required|alpha_dash|min:4|max:50|alphanum|unique:users,username,' .$id .',user_id,user_status,1',
             'profile_user_type' => 'required|string'
         ]);
 
+        $attributeNames = array(
+           'profile_fname' => 'first name',
+           'profile_mname' => 'middle initial',
+           'profile_lname' => 'last name',
+           'profile_user_type' => 'user type',
+           'profile_bday' => 'birthdate',
+           'profile_cnum' => 'contact number',
+           'profile_gender' => 'gender',
+           'profile_username' => 'username'    
+        );
+        $validator->setAttributeNames($attributeNames);
+
         if ($validator->fails()) {
-            return redirect('usrmgmt')
+
+            return redirect()->back()
                 ->withErrors($validator, 'editUser')
                 ->withInput($request->all())
                 ->with('error_id', $id);
@@ -125,7 +134,7 @@ class UserController extends Controller
             $profile -> cnum = $request-> profile_cnum;
             $profile -> save();
 
-            return redirect('usrmgmt');
+            return redirect('usrmgmt') -> with('update-success','User was successfully edited!');
         }
     }
 
@@ -135,7 +144,7 @@ class UserController extends Controller
         $user -> user_status = 0;
         $user -> save();
         //dd($user); //for debugging purposes
-        return redirect('/usrmgmt');
+        return redirect()-> back() -> with('destroy-success','User was successfully removed!');
         //Session::flash('message', 'User has been successfully removed!');*/
     }
 
@@ -158,23 +167,31 @@ class UserController extends Controller
             'new_password_confirmation' => 'required'
         ]);
 
+        $attributeNames = array(
+                   'new_password' => 'new password',
+                   'current_password' => 'current password',
+                   'new_password_confirmation' => 'confirmed new password',  
+                );
+        $validator->setAttributeNames($attributeNames);
+
         if (!(Hash::check($request->get('current_password'), $user-> password))) {
             // The passwords matches
-           $validator->getMessageBag()->add('password', 'Your current password does not match with the password you provided. Please try again.');
+           $validator->getMessageBag()->add('password', 'The current password does not match with the password you provided. Please try again.');
            return redirect('usrmgmt')
                 ->withErrors($validator, 'editPass')
-                ->with("pass_error","Your current password does not match with the password you provided. Please try again.");
+                ->with("pass_error","The current password does not match with the password you provided. Please try again.");
         }
 
         if ($validator->fails()) {
             return redirect('usrmgmt')
-                ->withErrors($validator, 'editPass');
+                ->withErrors($validator, 'editPass')
+                ->with('error_id', $id);
         }
         else{
             //Change Password
             $user -> password = $request-> new_password;
             $user -> save();
-            return redirect('usrmgmt');
+            return redirect() -> back() -> with('password-success','User password was successfully edited!');
         }
     }
 }
