@@ -17,9 +17,9 @@ class CreateStockinsTable extends Migration
             $table ->increments('si_id');
             $table ->integer('si_inventory_id') -> unsigned();
             $table ->integer('si_si_id') -> unsigned();
-            $table ->integer('si_term_id') -> unsigned() -> nullable();
-
+            
             $table ->integer('si_qty');
+            $table ->dateTime('si_date');
 
             $table ->foreign('si_inventory_id')
                     ->references('inventory_id')
@@ -30,12 +30,6 @@ class CreateStockinsTable extends Migration
             $table ->foreign('si_si_id')
                     ->references('si_item_id')
                     ->on('stockin_items')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
-
-            $table ->foreign('si_term_id')
-                    ->references('term_id')
-                    ->on('terms')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
                     

@@ -17,8 +17,13 @@ class CreateStockinItemsTable extends Migration
             $table ->increments('si_item_id');
 
             $table ->integer('si_user_id') -> unsigned();
+            $table ->integer('si_term_id') -> unsigned() -> nullable();
 
-            $table ->dateTime('si_date');
+            $table ->foreign('si_term_id')
+                    ->references('term_id')
+                    ->on('terms')
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
 
             $table ->foreign('si_user_id')
                     ->references('user_id')
