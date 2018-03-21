@@ -53,7 +53,7 @@ class SaleController extends Controller
         $sale -> sale_term_id = $request -> term_id;
         $sale -> save();
 
-        return redirect('/termsprofile/' .$request-> term_id);
+        return redirect('/termsprofile/' .$request-> term_id) -> with('store-collection-success','Collection was successfully added to term!');
     }
 
     /**
@@ -94,7 +94,7 @@ class SaleController extends Controller
         $sale -> sale_term_id = $request -> term_id;
         $sale -> save();
 
-        return redirect('/termsprofile/' .$request-> term_id);
+        return redirect('/termsprofile/' .$request-> term_id) -> with('update-collection-success','Collection was successfully edited!');
     }
 
     /**
@@ -109,7 +109,7 @@ class SaleController extends Controller
         $term = $collection -> sale_term_id;
       
         $collection = Sale::destroy($id);
-        return redirect('/termsprofile/' .$term);
+        return redirect('/termsprofile/' .$term) -> with('destroy-collection-success','Collection was successfully removed from term!');
     }
 
     public function getSale($id)

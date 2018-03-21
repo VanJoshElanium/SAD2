@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
 use App\Repair;
+use App\Stockin_Item;
+use App\Stockin;
 use Carbon\Carbon;
 use App\Inventory;
 use Illuminate\Http\Request;
@@ -43,45 +46,62 @@ class RepairController extends Controller
      */
     public function store(Request $request)
     {  
+      
         $input = Input::all();
 
-            //dd( $input['supply_name'][0]);
-            // dd($request);
+        for ($i=0; $i < count($input['dm_item_name']); ++$i) {
 
-        if ($validator->fails()) {
-            return redirect('/inventory')
-                ->withErrors($validator, 'addRepair')
-                ->withInput($request->all());
-                // ->with('input_error_id', $error_id);
-        }
-        else{
-            for ($i=0; $i < count($input['dm_item_name']); ++$i) {
-            
-                $inrepair = Repair::where([
-                                ['repair_inventory_id', '=', $input['dm_item_name'][$i]],
-                                ['repair_status', '=', $input['dm_item_state'][$i]],
-                                ['repair_user_id', '=', $request -> inventory_user_id],
-                                ['repair_date', '=', $request -> received_at]
-                            ]) 
-                            -> get();
+            $item_qty = Inventory::where('inventories.inventory_id', '=', $input['dm_item_name'][$i])
+                    -> select ('inventory_qty')
+                    -> get();
 
-                if (!empty($inrepairs)){
-                        $inrepair -> repair_qty += $input['dm_qty'][$i];
-                }
-                else {
-                    $repair = new Repair;
-                    $repair -> repair_inventory_id = $input['dm_item_name'][$i];
-                    $repair -> repair_user_id = $request -> inventory_user_id;
-                    $repair -> repair_date = $request -> received_at;
-                    $repair -> repair_qty = $input['dm_qty'][$i];
-                    $repair -> repair_status = $input['dm_item_state'][$i];
-                    $repair -> save(); 
+            $validator = Validator::make($request->all(), [
+                // 'dm_qty.' .$i  => 'numeric|min:1|max:' .$item_qty[0] -> inventory_qty,
+                'dm_item_name.*' => 'distinct'
+            ]);
+
+            $attributeNames = array(
+                   'dm_qty.*' => "quantity",
+                   'dm_item_name.*' => 'item name'
+                );
+            $validator->setAttributeNames($attributeNames);
+
+            if ($validator->fails()) {
+                return redirect('/inventory')
+                    ->withErrors($validator, 'addRepair')
+                    ->withInput($request->all());
+                    // ->with('input_error_id', $error_id);
+            }
+            else{
+                for ($i=0; $i < count($input['dm_item_name']); ++$i) {
+                
+                    $inrepair = Repair::where([
+                                    ['repair_inventory_id', '=', $input['dm_item_name'][$i]],
+                                    ['repair_status', '=', $request -> repair_type],
+                                ]) 
+                                -> get();
+
+                    if (!empty($inrepairs)){
+                            $inrepair -> repair_qty = $input['dm_qty'][$i];
+                            $inrepair -> save();
+                    }
+                    else {
+                        $repair = new Repair;
+                        $repair -> repair_inventory_id = $input['dm_item_name'][$i];
+                        $repair -> repair_user_id = $request -> inventory_user_id;
+                        $repair -> repair_ddate = $request -> received_at;
+                        $repair -> repair_qty = $input['dm_qty'][$i];
+                        $repair -> repair_status = $request -> repair_type;
+                        $repair -> save(); 
+                    } 
                 } 
+
+                 return redirect() -> back() -> with('store-damaged-success', 'Item successfully added to damaged inventory!');
             } 
-        } 
+        }
         
         //session()->flash('message', 'Successfully created a new supplier!');
-        return redirect('/inventory');
+       
     }
 
     /**
@@ -125,14 +145,35 @@ class RepairController extends Controller
             $inventory_item = Inventory::find($repair->repair_inventory_id);
             $inventory_item -> inventory_qty += $request -> qty_fixed;
             $inventory_item -> save();
+
+
+            $si_item = new Stockin_Item;
+            $si_item -> si_user_id = $request-> handled_by;
+            $si_item -> save();
+
+            $stockin = new Stockin;
+            $stockin -> si_qty = $request -> qty_fixed;
+            $stockin -> si_date = $request-> fixed_at;
+            $stockin -> si_inventory_id = $repair-> repair_inventory_id;
+            $stockin -> si_si_id = $si_item -> si_item_id;
+            $stockin -> save();
+
+
+            if ($repair -> repair_qty == 0)
+            {
+                $repair = Repair::destroy($id);   
+            }
+
+            return redirect() -> back() -> with('update-damaged-success', 'Item/s fixed,  successfully moved to undamaged inventory!');
         }
         else{
             //EDIT DAMAGED ITEM
-            $repair -> repair_user_id = $request -> edit_handler;
-            $repair -> repair_date = $request -> edit_received_at;
+            $repair -> repair_qty = $request -> edit_item_dmqty;
+            $repair -> repair_status = 1; //repairable
             $repair -> save();
+
+            return redirect() -> back() -> with('update-damaged-success', 'Item successfully edited!');
         }
-        return redirect('/inventory');
     }
 
     /**
@@ -150,8 +191,9 @@ class RepairController extends Controller
         $repairdata = DB::table('repairs')
                     -> join('inventories', 'inventories.inventory_id', '=', 'repairs.repair_inventory_id')
                     -> join('suppliers', 'suppliers.supplier_id','=','inventories.inventory_supplier_id')
-                    -> join('profiles', 'profiles.profile_user_id', '=', 'repairs.repair_user_id')
-                    -> select('inventories.inventory_name', 'repairs.*', 'profiles.fname', 'profiles.mname', 'profiles.lname', 'suppliers.supplier_name', 'suppliers.supplier_id')
+                    // -> join('profiles', 'profiles.profile_user_id', '=', 'repairs.repair_user_id')
+                    // -> select('inventories.inventory_name', 'repairs.*', 'profiles.fname', 'profiles.mname', 'profiles.lname', 'suppliers.supplier_name', 'suppliers.supplier_id')
+                    -> select('inventories.inventory_name', 'repairs.*','suppliers.supplier_name', 'suppliers.supplier_id')
                     -> where('repairs.repair_id', '=', $id)
                     -> get();
        
