@@ -224,20 +224,24 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="row form-group">
-                            <div class="col-md-6">    
+                            <div class="col-md-4">    
                                 <label for="sel1">Handler</label>
                                 <p id="handler"> <span></span> </p>      
                             </div>
-
-                            <div class="col-md-6">    
+                            <div class="col-md-4">    
+                                <label>From</label>
+                                <p id="from"> <span></span> </p> 
+                            </div>
+                            <div class="col-md-4">    
                                 <label>Date Received</label>
                                 <p id="date"> <span></span> </p> 
                             </div>
                         </div>
-                        <div class="row form-group">    
+                        <div class="row form-group">
+                            <div class="col-md-2"> <label>#</label></div>    
                             <div class="col-md-4"> <label>Item Name</label></div>
                             <div class="col-md-4"> <label>Supplier</label></div>
-                            <div class="col-md-4"> <label>Quantity</label></div>
+                            <div class="col-md-2"> <label>Quantity</label></div>
                         </div>
                         <div class="add-here"></div>
                     </div>
@@ -277,13 +281,21 @@
                             console.log(response);
                             $('#handler span').html(response[0].fname +" " +response[0].mname +". " 
                                 +response[0].lname);
-                            $('#date span').html(response[0].si_date);                      
+                            $('#date span').html(response[0].si_date);    
+
+                             
+
                             for (i = 0; i < response.length; i++) {
+                                if (response[i].si_term_id != null)
+                                    $('#from span').html("Term");
+                                else  $('#from span').html("Inventory"); 
+
                                 $('.add-here').append(
                                     "<div class='row form-group'>" +
+                                        "<div class='col-md-2'> <p> <span> " +(i + 1) +" </span> </p>  </div>"+
                                         "<div class='col-md-4'> <p> <span> " +response[i].inventory_name +" </span> </p>  </div>"+
                                         "<div class='col-md-4'> <p> <span> " +response[i].supplier_name +"</span> </p> </div>"+
-                                        "<div class='col-md-4'> <p> <span> " +response[i].si_qty +"</span> </p> </div>"+
+                                        "<div class='col-md-2'> <p> <span> " +response[i].si_qty +"</span> </p> </div>"+
                                     "</div>"
                                 );
                             }

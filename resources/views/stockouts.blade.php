@@ -226,20 +226,24 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="row form-group">
-                            <div class="col-md-6">    
+                            <div class="col-md-4">    
                                 <label for="sel1">Handler</label>
                                 <p id="handler"> <span></span> </p>      
                             </div>
-
-                            <div class="col-md-6">    
+                            <div class="col-md-4">    
+                                <label>Stocked Out To</label>
+                                <p id="location"> <span></span> </p> 
+                            </div>
+                            <div class="col-md-4">    
                                 <label>Date Stocked Out</label>
                                 <p id="date"> <span></span> </p> 
                             </div>
                         </div>
                         <div class="row form-group">    
+                            <div class="col-md-2"> <label>#</label></div>
                             <div class="col-md-4"> <label>Item Name</label></div>
                             <div class="col-md-4"> <label>Supplier</label></div>
-                            <div class="col-md-4"> <label>Quantity</label></div>
+                            <div class="col-md-2"> <label>Qty</label></div>
                         </div>
                         <div class="add-here"></div>
                     </div>
@@ -279,13 +283,15 @@
                             console.log(response);
                             $('#handler span').html(response[0].fname +" " +response[0].mname +". " 
                                 +response[0].lname);
+                            $('#location span').html(response[0].location); 
                             $('#date span').html(response[0].ti_date);                      
                             for (i = 0; i < response.length; i++) {
                                 $('.add-here').append(
                                     "<div class='row form-group'>" +
+                                        "<div class='col-md-2'> <p> <span> " +(i+1) +" </span> </p>  </div>"+
                                         "<div class='col-md-4'> <p> <span> " +response[i].inventory_name +" </span> </p>  </div>"+
                                         "<div class='col-md-4'> <p> <span> " +response[i].supplier_name +"</span> </p> </div>"+
-                                        "<div class='col-md-4'> <p> <span> " +response[i].ti_original +"</span> </p> </div>"+
+                                        "<div class='col-md-2'> <p> <span> " +response[i].ti_original +"</span> </p> </div>"+
                                     "</div>"
                                 );
                             }

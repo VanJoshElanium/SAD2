@@ -62,13 +62,33 @@
         }
 
     </style>
+    <script type="text/javascript">
+        $(document).ready(function(){ 
+            var nv_collectors = document.getElementsByClassName("nv-collector");
+            var sidebar = document.getElementById("sidebar");
+
+            //Current User => Collector
+            @if(\Auth::user() -> user_type == "Collector")
+                sidebar.remove(); 
+                for (var x = 0; x < nv_collectors.length; x++){
+                    nv_collectors[x].style.display = "none";
+                }
+                $("#main-panel").removeClass("main-panel");
+        
+             @endif
+        });
+
+        $(document).on("click", ".toLocation", function () {
+            window.location = $(this).data("href");
+        }); 
+    </script>
 </head>
 
 <body>
     <div class="wrapper">
         
         <!-- SIDEBAR -->
-        <div class="sidebar" data-color="none" data-image="/images/lol.png">
+        <div id="sidebar" class="sidebar" data-color="none" data-image="/images/lol.png">
             <div class="sidebar-wrapper">
                 <div class="logo">
                     <a href="{{ route('dashboard') }}" class="simple-text">
@@ -129,7 +149,7 @@
             </div>
         </div>
 
-        <div class="main-panel bgd">
+        <div id="main-panel" class="main-panel bgd">
 
             <!-- NAVBAR -->
             <nav class="navbar navbar-default">
@@ -193,7 +213,7 @@
                                     </form>
 
                                     <div class="col-md-2" style="margin-top:8px;">
-                                        <button type="button" data-target="#addModal" data-toggle="modal" class="btn btn-success btn-fill" id="add-btn"> 
+                                        <button type="button" data-target="#addModal" data-toggle="modal" class="nv-collector btn btn-success btn-fill" id="add-btn"> 
                                             Add User
                                         </button>
                                     </div> 
@@ -209,8 +229,8 @@
                                                     <th>Middle Initial</th>
                                                     <th>Last Name</th>
                                                     <th>Contact Number</th>
-                                                    <th>Position</th>
-                                                    <th>Status</th>
+                                                    <th class="nv-collector">Position</th>
+                                                    <th class="nv-collector">Status</th>
                                                 @endif
                                             </tr>
                                         </thead>
@@ -223,8 +243,8 @@
                                                     <td>{{$user->mname}}</td>
                                                     <td>{{$user->lname}}</td>
                                                     <td>{{$user->cnum}}</td>
-                                                    <td>{{$user->user_type}}</td>
-                                                    <td>
+                                                    <td class="nv-collector">{{$user->user_type}}</td>
+                                                    <td class="nv-collector">
                                                         @if($user->user_status == 0)
                                                         <span class="red-dot"></span>
                                                         @else 
@@ -232,12 +252,12 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <button data-target="#profileModal" id="view-edit-{{$user->user_id}}" data-toggle="modal" data-id='{{$user->user_id}}' class="edit-btn btn btn-primary btn-fill">
+                                                        <button data-target="#profileModal" id="view-edit-{{$user->user_id}}" data-toggle="modal" data-id='{{$user->user_id}}' class="nv-collector edit-btn btn btn-primary btn-fill">
                                                             View
                                                         </button>
                                                     </td>
                                                     <td>
-                                                        <button data-target="#removeModal" data-toggle="modal" data-id='{{$user->user_id}}' class="del-btn btn btn-danger btn-fill">
+                                                        <button data-target="#removeModal" data-toggle="modal" data-id='{{$user->user_id}}' class="nv-collector del-btn btn btn-danger btn-fill">
                                                             Remove
                                                         </button>
                                                     </td>
@@ -741,7 +761,7 @@
                                 <div class="row form-group">                       
                                     <div class=""> 
                                         <div class="col-md-12">   
-                                            You are about to remove a user. Do you want to proceed?
+                                            You are about to change the status of this user to inactive. Do you want to proceed?
                                         </div>
                                     </div>
                                 </div>

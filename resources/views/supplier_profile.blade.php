@@ -146,7 +146,7 @@
                     <div class="row">
                         <div class="col-md-8">
                             <div class="card box">
-                                    <div class="row">
+                                    <div class="col-md-12 row">
                                         <div class="col-md-4">
                                             <div class="header">
                                                 <h4 class="title">Supplied Items</h4> 
@@ -254,53 +254,53 @@
                     <div class="row">
                         <!-- USER ADD FORM -->
                         <div class="col-md-12"> 
-                            <form class="form-horizontal" method="POST" action="/supplies">
+                            <form class="form-horizontal" onsubmit="return validateAddSupply()" method="POST" action="/supplies">
                                 {{ csrf_field() }}
 
                                 <!-- SUPPLIER NAME & ADDR DETAILS-->       
 
-                                <div class="row form-group">   
-                                    <div class="{{$errors->has('supply_name') ? ' has-error' : ''}}"> 
-                                        <div class="col-md-8">    
-                                            <label>Item Name</label>
-                                            <input type="text" id="supply_name" class="form-control"  name="supply_name" required> 
-                                            @if ($errors->has('supply_name'))
-                                                <span class="help-block">
-                                                    <strong>
-                                                        {{ $errors->first('supply_name') }}
-                                                    </strong>
-                                                </span>
-                                            @endif
+                                <div id="dynamic-form">
+                                    <div class="row form-group">   
+                                        <div class="{{$errors->has('supply_name') ? ' has-error' : ''}}"> 
+                                            <div class="col-md-4">    
+                                                <label>Item Name</label>
+                                                <input type="text" id="supply_name" class="add-supply-dynamic form-control"  name="supply_name[]" required> 
+                                                @if ($errors->has('supply_name'))
+                                                    <span class="help-block">
+                                                        <strong>
+                                                            {{ $errors->first('supply_name') }}
+                                                        </strong>
+                                                    </span>
+                                                @endif
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="{{$errors->has('supply_price') ? ' has-error' : ''}}"> 
-                                        <div class="col-md-4">    
-                                            <label>Item Price</label>
-                                            <input type="number" id="supply_price" class="form-control"  min="1" name="supply_price" required> 
-                                            @if ($errors->has('supply_price'))
-                                                <span class="help-block">
-                                                    <strong>
-                                                        {{ $errors->first('supply_price') }}
-                                                    </strong>
-                                                </span>
-                                            @endif
+                                        <div class="{{$errors->has('supply_price') ? ' has-error' : ''}}"> 
+                                            <div class="col-md-2">    
+                                                <label>Price</label>
+                                                <input type="number" id="supply_price" class="add-supply-dynamic form-control"  min="1" name="supply_price[]" required> 
+                                                @if ($errors->has('supply_price'))
+                                                    <span class="help-block">
+                                                        <strong>
+                                                            {{ $errors->first('supply_price') }}
+                                                        </strong>
+                                                    </span>
+                                                @endif
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>   
-
-                                <div class="row form-group">   
-                                    <div class="{{$errors->has('supply_desc') ? ' has-error' : ''}}"> 
-                                        <div class="col-md-12">    
-                                            <label>Item Description</label>
-                                            <textarea rows='2' id="supply_desc" class="form-control"  name="supply_desc" ></textarea>
-                                            @if ($errors->has('supply_desc'))
-                                                <span class="help-block">
-                                                    <strong>
-                                                        {{ $errors->first('supply_desc') }}
-                                                    </strong>
-                                                </span>
-                                            @endif
+                                    
+                                        <div class="{{$errors->has('supply_desc') ? ' has-error' : ''}}"> 
+                                            <div class="col-md-4">    
+                                                <label>Description</label>
+                                                <textarea rows='1' id="supply_desc[]" class="add-supply-dynamic form-control"  name="supply_desc[]" ></textarea>
+                                                @if ($errors->has('supply_desc'))
+                                                    <span class="help-block">
+                                                        <strong>
+                                                            {{ $errors->first('supply_desc') }}
+                                                        </strong>
+                                                    </span>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
                                 </div>  
@@ -308,9 +308,14 @@
                                 <!-- IN-SYSTEM USER DETAILS -->
                                 <input type="hidden" value="{{$supplier->supplier_id}}" name="supply_supplier_id" id="supply_supplier_id">
 
+                                <button type="button" class="btn btn-info btn-fill pull-left" id="add-form">
+                                    Add Item Form
+                                 </button>
+
+
                                 <!-- SUBMIT BUTTON -->
                                 <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-add">
-                                    Create
+                                    Add
                                 </button>
 
                                 <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic pull-right" style="margin-right: 2%">
@@ -715,5 +720,63 @@
             $("#view-edit-supplier").attr("action", "/suppliers/" +id);
             
         });  
+    </script>
+
+    <script>
+        // ADD ITEM FORM
+        $('#add-form').click(function() {
+            i=1;
+            i++;
+
+            $('#dynamic-form').append(
+                "<div class='row form-group' id='row-" +i +"'>"+
+                    "<div class='col-md-4'>"+ 
+                        "<input type='text' id='supply_name' id='item-row-"+i+"' class='add-supply-dynamic form-control'  name='supply_name[]' required>" +
+                    "</div>"+
+
+                    "<div class='col-md-2'>"+ 
+                        "<input type='number' id='supply_price' class='add-supply-dynamic form-control'  min='1' name='supply_price[]' required>"+
+                    "</div>"+
+
+                    "<div class='col-md-4'>"+ 
+                        "<textarea rows='1' id='supply_desc' class='add-supply-dynamic form-control'  name='supply_desc[]' > </textarea>"+
+                    "</div>"+
+                    
+                    "<div class='col-md-2'>"+ 
+                        "<button id='"+i +"' type='button' class='btn_remove btn btn-danger btn-fill'> - </button>"+
+                    "</div>"+
+                "</div>"
+            );
+
+        });
+
+        // REMOVE ITEM FORM
+        $(document).on('click', '.btn_remove', function(){  
+           var button_id = $(this).attr("id");   
+           $('#row-'+button_id+'').remove();  
+        });
+    </script>
+
+    <script>
+        // UPDATE QTY DYNAMIC FORM VALIDATION
+        function validateAddSupply() {
+            var item_inputs = $(".add-supply-dynamic");
+            return hasDuplicates(item_inputs);
+        }
+
+        function hasDuplicates(array) {
+            for (var i = 0; i < array.length; i++) {
+                for (var j = 0; j < array.length; j++) {
+                    if (i != j) {
+                        if (array[i].value == array[j].value) {
+                            // $("addModal-un").notify("Error! Duplicate items." ,"error");
+                            alert ("Error! Duplicate items." ,"error");
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
     </script>
 @endsection

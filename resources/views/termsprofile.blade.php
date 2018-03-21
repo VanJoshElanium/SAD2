@@ -44,7 +44,7 @@
 <body>
     <div class="wrapper">
         <!-- SIDEBAR -->
-        <div class="sidebar" data-color="none" data-image="/images/lol.png">
+        <div id="sidebar" class="sidebar" data-color="none" data-image="/images/lol.png">
             <div class="sidebar-wrapper">
                 <div class="logo">
                     <a href="{{ route('dashboard') }}" class="simple-text">
@@ -105,7 +105,7 @@
             </div>
         </div>
 
-        <div class="main-panel bgd">
+        <div id="main-panel" class="main-panel bgd">
             <!-- NAVBAR -->
             <nav class="navbar navbar-default navbar-fixed">
                 <div class="container-fluid">
@@ -144,7 +144,7 @@
                         <div class="card box">        
                             <!-- NAVIGATION TABS -->
                             <ul class="nav nav-tabs" role="tablist" id="myTab">
-                                <li role="presentation" class="active">
+                                <li role="presentation" class="active" id="members">
                                     <a href="#tl_members" aria-controls="home" role="tab" data-toggle="tab">
                                         <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the details of the people that are managing the term.">
                                             Members &amp; Location
@@ -152,7 +152,7 @@
                                     </a>
                                 </li>
 
-                                <li role="presentation">
+                                <li role="presentation" id="items">
                                     <a href="#tl_items" aria-controls="profile" role="tab" data-toggle="tab">
                                         <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the item details.">
                                             Items
@@ -160,7 +160,7 @@
                                     </a>
                                 </li>
                                 
-                                <li role="presentation">
+                                <li role="presentation" id="expenses">
                                     <a href="#tl_expenses" aria-controls="profile" role="tab" data-toggle="tab">
                                     <!-- <a> -->
                                         <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the expneses used for the term.">      Expenses
@@ -168,7 +168,7 @@
                                     </a>
                                 </li>  
                                 
-                                <li role="presentation">
+                                <li role="presentation" id="sales">
                                     <a href="#tl_sales" aria-controls="profile" role="tab" data-toggle="tab">
                                         <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the sales and share calculated in the term.">
                                             Collections
@@ -176,7 +176,7 @@
                                     </a>
                                 </li>
                                 
-                                <li role="presentation">
+                                <li role="presentation" id="customers">
                                     <a href="#tl_customers" aria-controls="profile" role="tab" data-toggle="tab">
                                         <span data-toggle="tooltip" data-placement="bottom" title="This tab contains the sales and share calculated in the term.">
                                             Customers
@@ -194,15 +194,17 @@
                                         <div class="col-md-12">
                                             <div class="col-md-8">
                                                 <div class="card">
+                                                    <div class="row">
                                                     <div class="header">
                                                         <div class="col-md-4">
                                                             <h4 class="title">Peddlers</h4>
                                                         </div>
                                                         <div class="col-md-8">
                                                             <span class="pull-right">      
-                                                                <button type="button" data-target="#addPeddler" data-toggle="modal" class="btn btn-success btn-fill" id="add-btn">Add Peddler</button>  
+                                                                <button type="button" data-target="#addPeddler" data-toggle="modal" class="nv-worker nv-collector btn btn-success btn-fill" id="add-btn">Add Peddler</button>  
                                                             </span>
                                                         </div>
+                                                    </div>
                                                     </div>
                                                     <div class="content table-responsive table-full-width">
                                                         <table class="table table-hover table-striped">
@@ -240,13 +242,13 @@
                                                                     
                                                                     <td>
                                                                         <span data-toggle="tooltip" data-placement="bottom" title="Edit the position of the peddler."> 
-                                                                            <button type="button" data-target="#editPeddler" data-id='{{$worker->worker_id}}' data-toggle="modal" class="ep_btn btn  btn-primary btn-fill" id="ep-{{$worker->worker_id}}"> 
+                                                                            <button type="button" data-target="#editPeddler" data-id='{{$worker->worker_id}}' data-toggle="modal" class="nv-worker nv-collector ep_btn btn  btn-primary btn-fill" id="ep-{{$worker->worker_id}}"> 
                                                                             Edit
                                                                             </button>
                                                                         </span>
                                                                     </td>
                                                                     <td>
-                                                                        <button type="button" data-target="#removePeddler" data-id='{{$worker->worker_id}}' data-toggle="modal" class="rp_btn btn  btn-danger btn-fill" id="rp_btn"> 
+                                                                        <button type="button" data-target="#removePeddler" data-id='{{$worker->worker_id}}' data-toggle="modal" class="nv-worker nv-collector rp_btn btn  btn-danger btn-fill" id="rp_btn"> 
                                                                         Remove
                                                                         </button>   
                                                                     </td>
@@ -268,7 +270,7 @@
                                                     <div class="header">
                                                         <div class="row">
                                                             <div class="col-md-12">
-                                                                <button type="button" id="editTermDetails_btn" data-target="#editTerm" data-toggle="modal" class="btn pull-right btn-basic btn-fill" data-id="{{$term[0]->term_id}}" style="margin-bottom: 3%"> 
+                                                                <button type="button" id="editTermDetails_btn" data-target="#editTerm" data-toggle="modal" class="nv-worker nv-collector btn pull-right btn-basic btn-fill" data-id="{{$term[0]->term_id}}" style="margin-bottom: 3%"> 
                                                                     Edit Details
                                                                 </button> 
                                                             </div>
@@ -334,23 +336,25 @@
                                             <div class="col-md-10">
                                                 <div class="card">
                                                     <div class="header">
+                                                    <div class="row">
                                                         <div class="col-md-4">
                                                             <h4 class="title">Item List</h4>
                                                         </div>
                                                         <div class="col-md-8">
                                                             <span class="pull-right">
                                                                   
-                                                                <button type="button" data-target="#addItem" data-toggle="modal" class="btn btn-success btn-fill"> 
+                                                                <button type="button" data-target="#addItem" data-toggle="modal" class="nv-collector nv-worker btn btn-success btn-fill"> 
                                                                     Add Item/s
                                                                 </button>
-                                                                <button type="button" data-target="#editItem" data-toggle="modal" class="btn btn-info btn-fill" > 
-                                                                    Edit Item
+                                                                <button type="button" data-target="#updateItem" data-toggle="modal" class="nv-collector btn nv-worker btn-primary btn-fill" > 
+                                                                    Update Item/s
                                                                 </button>
-                                                                <button type="button" data-target="#printItems" data-toggle="modal" class="btn btn-basic btn-fill"> 
+                                                                <button type="button" data-target="#printItems" data-toggle="modal" class="nv-collector btn nv-worker btn-basic btn-fill"> 
                                                                     Print Items
                                                                 </button> 
                                                             </span>    
                                                         </div>
+                                                    </div>
                                                     </div>
                                                     <div class="content table-responsive table-full-width">
                                                         <table class="table table-hover table-striped" cellspacing="0" width="100%">
@@ -402,9 +406,15 @@
                                                                         @else {{$term_item->ti_original}}
                                                                         @endif
                                                                     </td>
+
                                                                     <td>
-                                                                        <button type="button" data-target="#removeItem" data-toggle="modal" data-id="{{$term_item->ti_id}}" class="btn btn-sm  btn-danger btn-fill ri_btn"> 
-                                                                            -
+                                                                        <button type="button" data-target="#editItem" data-toggle="modal" data-id="{{$term_item->ti_id}}" class="nv-collector nv-worker edit-btn btn btn-sm  btn-info btn-fill ri_btn"> 
+                                                                            Edit                     
+                                                                        </button> 
+                                                                    </td>
+                                                                    <td>
+                                                                        <button type="button" data-target="#removeItem" data-toggle="modal" data-id="{{$term_item->ti_id}}" class="nv-collector nv-worker btn btn-sm  btn-danger btn-fill ri_btn"> 
+                                                                            Remove              
                                                                         </button> 
                                                                     </td>
                                                                 </tr>
@@ -467,16 +477,18 @@
                                         <div class="col-md-12">
                                             <div class="col-md-8">
                                                 <div class="card">
-                                                    <div class="header">
-                                                        <div class="col-md-4">
-                                                            <h4 class="title"> Expenses </h4>
-                                                        </div>
+                                                    <div class="row">
+                                                        <div class="header">
+                                                            <div class="col-md-4">
+                                                                <h4 class="title"> Expenses </h4>
+                                                            </div>
 
-                                                        <div class="col-md-8">
-                                                            <span class="pull-right">
-                                                                <button type="button" data-target="#addExpense" data-toggle="modal" class="btn btn-success btn-fill" id="ae_btn"> Add Expense
-                                                                </button>
-                                                            </span>
+                                                            <div class="col-md-8">
+                                                                <span class="pull-right">
+                                                                    <button type="button" data-target="#addExpense" data-toggle="modal" class="btn btn-success btn-fill" id="ae_btn"> Add Expense
+                                                                    </button>
+                                                                </span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="content table-responsive table-full-width">
@@ -552,13 +564,17 @@
                                             <div class="col-md-8">
 
                                                 <div class="card">
-                                                    <div class="header">
-                                                        <div class="col-md-4">
-                                                            <h4 class="title">Collections</h4>
+                                                    <div class="row">
+                                                        <div class="header">
+                                                            <div class="col-md-4">
+                                                                <h4 class="title">Collections</h4>
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                            <span class="pull-right">
+                                                                <button type="button" data-target="#addCollection" data-toggle="modal" class="nv-collector btn btn-success btn-fill" id="add-btn">Add Collection</button>
+                                                            </span>
+                                                            </div>
                                                         </div>
-                                                        <span class="pull-right">
-                                                            <button type="button" data-target="#addCollection" data-toggle="modal" class="btn btn-success btn-fill" id="add-btn">Add Collection</button>
-                                                        </span>
                                                     </div>
                                                     <div class="content table-responsive table-full-width">
                                                         <table class="table table-hover table-striped">
@@ -583,11 +599,11 @@
                                                                         &#8369;{{$sale->sales_amt}}
                                                                     </td>
                                                                     <td>
-                                                                        <button type="button" data-target="#editCollection" data-id="{{$sale->sale_id}}" data-toggle="modal" class="viewCollection_btn btn  btn-primary btn-fill" id="viewCollection_btn">  View
+                                                                        <button type="button" data-target="#editCollection" data-id="{{$sale->sale_id}}" data-toggle="modal" class="nv-collector viewCollection_btn btn  btn-primary btn-fill" id="viewCollection_btn">  View
                                                                         </button>
                                                                     </td>
                                                                     <td>
-                                                                        <button type="button" data-target="#removeCollection" data-toggle="modal" data-id="{{$sale->sale_id}}" class="removeCollection_btn btn  btn-danger btn-fill" id="removeCollection_btn">  Remove
+                                                                        <button type="button" data-target="#removeCollection" data-toggle="modal" data-id="{{$sale->sale_id}}" class="nv-collector removeCollection_btn btn  btn-danger btn-fill" id="removeCollection_btn">  Remove
                                                                         </button>
                                                                     </td>
                                                                 </tr>
@@ -607,7 +623,7 @@
                                                     <div class="header">
                                                     <div class="row">
                                                         <div class="col-md-12">
-                                                            <button type="button" data-target="#printSales" data-toggle="modal" class="btn pull-right btn-basic btn-fill"> 
+                                                            <button type="button" data-target="#printSales" data-toggle="modal" class="nv-collector btn pull-right btn-basic btn-fill"> 
                                                                         Print Sales
                                                                     </button> 
                                                         </div>
@@ -620,7 +636,7 @@
                                                             Total Expenses
                                                         </p>  
                                                         </div>
-                                                    </div><br><br>
+                                                    </div><br>
                                                     <!-- Total sale-->
                                                     <div class="row">
                                                         <div class="col-md-12">
@@ -634,7 +650,7 @@
                                                         <p class="category">
                                                             Total Sales</p>
                                                         </div>
-                                                    </div><br><br>
+                                                    </div><br>
                                                     <!-- Total revenue -->
                                                     <div class="row">
                                                         <div class="col-md-12">
@@ -643,16 +659,24 @@
                                                             Total Revenue
                                                         </p>
                                                         </div>
-                                                    </div><br><br>
+                                                    </div><br>
                                                     <!-- Collectable amount -->
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <h4 class="title"> &#8369;{{$total_sale + $total_expense +($total_sale * 0.25)}}</h4>
                                                         <p class="category">
+                                                           Total Collectable
+                                                        </p>
+                                                        </div>
+                                                    </div><br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <h4 class="title"> &#8369;{{($total_sale + $total_expense +($total_sale * 0.25))-$total_collected}}</h4>
+                                                        <p class="category">
                                                            Amount Collectable
                                                         </p>
                                                         </div>
-                                                    </div><br><br>
+                                                    </div><br>
                                                         <!-- Collected amount -->
                                                         <div class="modal-footer">
                                                             <h4 class="title">&#8369;{{$total_collected}}</h4>    
@@ -685,7 +709,7 @@
 
                                                                 <div class="col-md-2 pull-right">
                                                                     <button data-target="#addCustomer
-                                                                    " id="" data-toggle="modal" data-id='' class="edit-btn btn btn-success btn-fill pull-right">
+                                                                    " id="" data-toggle="modal" data-id='' class="btn btn-success btn-fill pull-right">
                                                                         Add Customer 
                                                                     </button>
                                                                 </div>
@@ -725,7 +749,7 @@
                                                                             </button>
                                                                         </td>
                                                                         <td>
-                                                                            <button data-target="#payCustomer" data-toggle="modal" data-id='{{$unpaid_customer -> co_id}}' class="payCustomer_btn btn btn-info btn-fill">
+                                                                            <button data-target="#payCustomer" data-toggle="modal" data-id='{{$unpaid_customer -> co_id}}' class="nv-worker payCustomer_btn btn btn-info btn-fill">
                                                                                 Paid
                                                                             </button>
                                                                         </td>
@@ -1150,10 +1174,10 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title"> 
-                        <center> Add Term Item </center>
+                        <center> Add Term Items </center>
                     </h4>
                 </div>             
-                <form method="POST" class="form-horizontal" id="addItem_form" action="/term_items">   
+                <form method="POST" class="form-horizontal" onsubmit="return validateAddTI()" id="addItem_form" action="/term_items">   
                     {{csrf_field()}} 
                     <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">
 
@@ -1202,7 +1226,7 @@
                                         <div class="{{$errors->addItem->has('add_ti_item_name') ? ' has-error' : ''}}"> 
                                             <div class="col-md-8">              
                                                 <label>Item Name</label>
-                                                <select  class="form-control" id="add_ti_item_name" name="add_ti_item_name[]" required> 
+                                                <select  class="add-ti-dynamic form-control" id="add_ti_item_name" name="add_ti_item_name[]" required> 
                                                     <option value="" selected> </option>
                                                     @foreach($a_items as $a_item)
                                                         <option value='{{$a_item -> inventory_id}}'> 
@@ -1223,7 +1247,7 @@
                                         <div class="{{$errors->addItem->has('add_ti_qty') ? ' has-error' : ''}}">
                                             <div class="col-md-2">              
                                                 <label>Quantity</label>
-                                                <input type="number" class="form-control" name="add_ti_qty[]" min="1" id="add_ti_qty" required>
+                                                <input type="number" class="add-tiqty-dynamic form-control" name="add_ti_qty[]" min="1" max="" id="add_ti_qty" required>
                                                 @if ($errors->addItem->has('add_ti_qty'))
                                                     <span class="help-block">
                                                         <strong>
@@ -1259,6 +1283,149 @@
         </div>
     </div> 
 
+    <!-- UPDATE ITEM -->
+    <div class="modal fade" role="dialog" id="updateItem">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"> 
+                        <center> Update Term Items </center>
+                    </h4>
+                </div>             
+                <form method="POST" class="form-horizontal" onsubmit="return validateUpdTI()" id="updItem_form" action="/updqty">   
+                    {{csrf_field()}} 
+                    <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">
+
+                    <div class="modal-body">
+                        <div id="view-edit-content" class="row">
+                            <div class="col-md-12">                                 
+                                <div class="row form-group">
+                                    <div class="{{ $errors->updItem->has('upd_ti_date') ? ' has-error' : '' }}">
+                                        <div class="col-md-4">
+                                            <label>Stock In Time</label>
+                                            <input type="datetime-local" id="upd_ti_date" class="form-control" max="{{Carbon\Carbon::now()->toDateString()}}" name="upd_ti_date"  value="{{App\Inventory::currdate()}}" > 
+                                                                                
+                                            @if ($errors->updItem->has('upd_ti_date'))
+                                                <span class="help-block">
+                                                    <strong>{{ $errors->updItem->first('upd_ti_date') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div> 
+
+                                    <div class="{{ $errors->updItem->has('upd_ti_worker') ? ' has-error' : '' }}"> 
+                                        <div class="col-md-4">   
+                                            <!--Acquires the list of workers within users table-->
+                                            <label class="sel1">Handler:</label>
+                                            <select class="form-control" name="upd_ti_worker" required id="upd_ti_worker">
+                                                <option value="" data-hidden="true" selected="selected">
+                                                </option>
+                                                @foreach($peddlers as $peddler)
+                                                    <option value="{{$peddler-> user_id}}">
+                                                        {{$peddler->fname}}&nbsp
+                                                        {{$peddler->mname}}.
+                                                        {{$peddler->lname}}
+                                                    </option>
+                                                @endforeach
+                                            </select>           
+                                            @if ($errors->updItem->has('upd_ti_worker'))
+                                                <span class="help-block">
+                                                    <strong>{{ $errors->updItem->first('upd_ti_worker') }}</strong>
+                                                </span>
+                                            @endif                   
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                    <div class="row form-group">   
+                                        <div class="{{$errors->addItem->has('upd_ti_item_name') ? ' has-error' : ''}}"> 
+                                            <div class="col-md-4">              
+                                                <label>Item Name</label>
+                                                <select  class="upd-ti-dynamic form-control" id="upd_ti_item_name" name="upd_ti_item_name[]" required> 
+                                                    <option value="" selected> </option>
+                                                    @foreach($term_items as $term_item)
+                                                        <option value='{{$term_item -> ti_id}}'> 
+                                                           {{$term_item -> inventory_name}}
+                                                        </option>
+                                                    @endforeach
+                                                </select> 
+                                                @if ($errors->updItem->has('upd_ti_item_name'))
+                                                    <span class="help-block">
+                                                        <strong>
+                                                            {{ $errors->addItem->first('upd_ti_item_name') }}
+                                                        </strong>
+                                                    </span>
+                                                @endif
+
+                                            </div>
+                                        </div>
+                                        <div class="{{$errors->updItem->has('upd_return_qty') ? ' has-error' : ''}}">
+                                            <div class="col-md-2">              
+                                                <label>Returned</label>
+                                                <input type="number" class="upd-returns-dynamic form-control" name="upd_return_qty[]" min="0" value="0" id="upd_return_qty" required>
+                                                @if ($errors->addItem->has('upd_return_qty'))
+                                                    <span class="help-block">
+                                                        <strong>
+                                                            {{ $errors->updItem->first('upd_return_qty') }}
+                                                        </strong>
+                                                    </span>
+                                                @endif
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="{{$errors->updItem->has('upd_rqty') ? ' has-error' : ''}}">
+                                            <div class="col-md-2">              
+                                                <label>Repairable</label>
+                                                <input type="number" class="upd-rqty-dynamic form-control" name="upd_rqty[]" min="0" value="0" id="upd_rqty" required>
+                                                @if ($errors->updItem->has('upd_rqty'))
+                                                    <span class="help-block">
+                                                        <strong>
+                                                            {{ $errors->updItem->first('upd_rqty') }}
+                                                        </strong>
+                                                    </span>
+                                                @endif
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="{{$errors->updItem->has('upd_uqty') ? ' has-error' : ''}}">
+                                            <div class="col-md-2">              
+                                                <label>Irreparable</label>
+                                                <input type="number" class="upd-uqty-dynamic form-control" name="upd_uqty[]" min="0" value="0" id="upd_uqty" required>
+                                                @if ($errors->updItem->has('upd_uqty'))
+                                                    <span class="help-block">
+                                                        <strong>
+                                                            {{ $errors->updItem->first('upd_uqty') }}
+                                                        </strong>
+                                                    </span>
+                                                @endif
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="upd-form">    
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-info btn-fill pull-left" id="add-upd-form">
+                            Add Item Form
+                        </button>
+
+                        <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">
+                            Cancel
+                        </button>
+
+                        <button type="submit" class="btn btn-bg btn-success btn-fill">
+                            Add Item/s
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div> 
     <!--EDIT ITEM-->    
     <div class="modal fade" role="dialog" id="editItem">
         <div class="modal-dialog  modal-md">
@@ -1300,43 +1467,6 @@
                                     </div>
                                 </div>
 
-                                <div class="row form-group">
-                                    <div class="{{ $errors->editItem->has('edit_item_handler') ? ' has-error' : '' }}"> 
-                                        <div class="col-md-6">   
-                                            <!--Acquires the list of workers within users table-->
-                                            <label class="sel1">Handler:</label>
-                                            <select class="form-control" name="edit_item_handler" required id="edit_item_handler">
-                                                <option value="" data-hidden="true" selected="selected" >
-                                                </option>
-                                                @foreach($peddlers as $peddler)
-                                                    <option value="{{$peddler->user_id}}">
-                                                        {{$peddler->fname}}&nbsp
-                                                        {{$peddler->mname}}.
-                                                        {{$peddler->lname}}
-                                                    </option>
-                                                @endforeach
-                                            </select>           
-                                            @if ($errors->editItem->has('edit_item_handler'))
-                                                <span class="help-block">
-                                                    <strong>{{ $errors->editItem->first('edit_item_handler') }}</strong>
-                                                </span>
-                                            @endif                   
-                                        </div>
-                                    </div>
-
-                                    <div class="{{ $errors->editItem->has('edit_item_date') ? ' has-error' : '' }}">
-                                        <div class="col-md-6">
-                                            <label>Date</label>
-                                            <input type="datetime-local" id="edit_item_date" class="form-control"  name="edit_item_date" required value="{{App\Inventory::currdate()}}"> 
-                                                                                
-                                            @if ($errors->editItem->has('edit_item_date'))
-                                                <span class="help-block">
-                                                    <strong>{{ $errors->editItem->first('edit_item_date') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </div> 
-                                </div><br><br><br>
 
                                  <div class="row form-group">
                                     <div class="{{ $errors->editItem->has('edit_item_original') ? ' has-error' : '' }}">
@@ -1750,7 +1880,7 @@
                     </center>
                 </div>    
 
-                <form method="POST" class="form-horizontal" id="editCustomer_form"> 
+                <form method="POST" onsubmit="return validateEditCO()" class="form-horizontal" id="editCustomer_form"> 
                     {{csrf_field()}} 
                     {{method_field('PUT')}}
 
@@ -1898,7 +2028,7 @@
                     </center>
                 </div>    
 
-                <form method="POST" class="form-horizontal" id="addCustomer_form" action="/customers">
+                <form method="POST" onsubmit="return validateAddCO()" class="form-horizontal" id="addCustomer_form" action="/customers">
                     {{csrf_field()}}   
                     <input type="hidden" name="term_id" id="term_id" value="{{$term[0]->term_id}}">
 
@@ -2014,7 +2144,7 @@
                                         <div class="{{$errors->addCustomer->has('item_name') ? ' has-error' : ''}}"> 
                                             <div class="col-md-8">              
                                                 <label>Item Name</label>
-                                                <select  class="form-control" id="item_name" name="item_name[]" required> 
+                                                <select  class="add-co-dynamic form-control" id="item_name" name="item_name[]" required> 
                                                     <option value="" selected> </option>
                                                     @foreach($term_items as $term_item)
                                                         <option value='{{$term_item->ti_id}}'> 
@@ -2034,7 +2164,7 @@
                                         <div class="{{$errors->addCustomer->has('item_qty') ? ' has-error' : ''}}">
                                             <div class="col-md-2">              
                                                 <label>Quantity</label>
-                                                <input type="number" class="form-control" name="item_qty[]" min="1" id="item_qty" required>
+                                                <input type="number" class="add-coqty-dynamic form-control" name="item_qty[]" min="1" id="item_qty" required>
                                                 @if ($errors->addCustomer->has('item_qty'))
                                                     <span class="help-block">
                                                         <strong>
@@ -2276,6 +2406,14 @@
                     jQuery(document).ready(function($){
                         $.notify( "{{session()-> get('store-item-success' )}}", "success");
                         {{session()->forget('store-item-success')}}
+                    });
+                </script>
+            @endif
+            @if(session('upd-item-success'))
+                <script> 
+                    jQuery(document).ready(function($){
+                        $.notify( "{{session()-> get('upd-item-success' )}}", "success");
+                        {{session()->forget('upd-item-success')}}
                     });
                 </script>
             @endif
@@ -2621,12 +2759,12 @@
                     $('#item-form').append(                                      
                         "<div class='row form-group' id='ti-form-row-" +i +"'>"+   
                             "<div class='col-md-8'>" +             
-                                "<select  class='form-control' id='ti-row-" +i +"' name='add_ti_item_name[]' required>" + 
+                                "<select  class='add-ti-dynamic form-control' id='ti-row-" +i +"' name='add_ti_item_name[]' required>" + 
                                 "</select>"+  
                             "</div>"+
 
                             "<div class='col-md-2'>"+              
-                                "<input type='number' min='1' class='form-control' name='add_ti_qty[]' id='add_ti_qty' required>"+
+                                "<input type='number' min='1' class='add-tiqty-dynamic form-control' name='add_ti_qty[]' id='add_ti_qty' required>"+
                             "</div>"+
 
                             "<div class='col-md-2'>"+ 
@@ -2639,21 +2777,62 @@
                 });
 
 
-                // REMOVE ITEM FORM
+                // REMOVE ADD ITEM FORM
                 $(document).on('click', '.btn_remove', function(){  
                    var button_id = $(this).attr("id");  
                    var removed = $("#ti-form-row-"+button_id).remove();
                 });
 
-                // EDIT ITEM
-                $('#edit_ti_item_name').on('change', function() {
-                    $id = $('#edit_ti_item_name').val();
+                // CREATE ADDITIONAL UPD ITEM FORM
+                $('#add-upd-form').click(function() {
+                    var options = $("#upd_ti_item_name > option").clone();
+                    i++;
+                    $('#upd-form').append(                                      
+                        "<div class='row form-group' id='ti-upd-row-" +i +"'>"+   
+                            "<div class='col-md-4'>" +             
+                                "<select  class='upd-ti-dynamic form-control' id='upd-ti-row-" +i +"' name='upd_ti_item_name[]' required>" + 
+                                "</select>"+  
+                            "</div>"+
+
+                            "<div class='col-md-2'>"+              
+                                "<input type='number'  class='upd-returns-dynamic form-control' name='upd_return_qty[]' value='0' required>"+
+                            "</div>"+
+
+                            "<div class='col-md-2'>"+              
+                                "<input type='number' class='upd-rqty-dynamic form-control' name='upd_rqty[]'  value='0' required>"+
+                            "</div>"+
+
+                            "<div class='col-md-2'>"+              
+                                "<input type='number'  class='upd-uqty-dynamic form-control' name='upd_uqty[]'  min='0' value='0' required>"+
+                            "</div>"+
+
+                            "<div class='col-md-2'>"+ 
+                                "<button id='"+i +"' type='button' class='upd_btn_remove btn btn-danger btn-fill'> - </button>"+
+                            "</div>"+
+                        "</div>"    
+                    );
+
+                    $('#upd-ti-row-'+i).append(options);
+                });
+
+
+                // REMOVE UPD ITEM FORM
+                $(document).on('click', '.upd_btn_remove', function(){  
+                   var button_id = $(this).attr("id");  
+                   var removed = $("#ti-upd-row-"+button_id).remove();
+                });
+
+                $(document).on('click', '.edit-btn', function(){  
+                    var id = $(this).data('id');
+                  
+                    $("#edit_ti_item_name option[value='"+id+"']").attr('selected', true);
                     
+
                     $.ajax({
-                        url: "/getTermItem/" + $id,
+                        url: "/getTermItem/" + id,
                         type: 'GET',    
                         dataType: 'json',         
-                        data: { 'id' : $id },
+                        data: { 'id' : id },
                         success: function(response){
                             // DEBUGGING
                             console.log(response);
@@ -2661,8 +2840,6 @@
                             // SET FORM INPUTS
                             $("#edit_item_original").val(response.ti_original);
                             $("#edit_item_returns").val(response.ti_returned);
-                            $("#edit_item_handler option[value='"+response.ti_user_id+"']").attr('selected', true);
-                            
                             $("#edit_item_udamages").val(response.ti_udamaged);
                             $("#edit_item_rdamages").val(response.ti_rdamaged);
                         
@@ -2696,12 +2873,12 @@
                     $('#item-form-collector').append(                                      
                         "<div class='row form-group' id='collector-form-row-" +i +"'>"+   
                             "<div class='col-md-8'>" +             
-                                "<select  class='form-control item_name' id='collector-row-" +i +"' name='item_name[]' required>" + 
+                                "<select  class='add-co-dynamic form-control item_name' id='collector-row-" +i +"' name='item_name[]' required>" + 
                                 "</select>"+  
                             "</div>"+
 
                             "<div class='col-md-2'>"+              
-                                "<input type='number' min='1' class='form-control' name='item_qty[]' id='item_qty' required>"+
+                                "<input type='number' min='1' class='add-coqty-dynamic form-control' name='item_qty[]' id='item_qty' required>"+
                             "</div>"+
 
                             "<div class='col-md-2'>"+ 
@@ -2752,7 +2929,7 @@
                                     '<div class="row form-group">'+
                                         '<div class="{{$errors->editCustomer->has("edit_item_name") ? " has-error" : ""}}">'+
                                             '<div class="col-md-8">'+
-                                                '<select  class="form-control" id="edit_item_name_' +x +'"'  
+                                                '<select  class="edit-co-dynamic form-control" id="edit_item_name_' +x +'"'  
                                                     +'name="edit_item_name[]" required>'+
                                                     '@foreach($term_items as $term_item)'+
                                                         '<option value="{{$term_item->ti_id}}">'+ 
@@ -2771,7 +2948,7 @@
                                         '</div>'+
                                         '<div class="{{$errors->editCustomer->has("edit_item_qty") ? " has-error" : ""}}">'+
                                             '<div class="col-md-2">'+
-                                                '<input type="number" class="form-control" name="edit_item_qty[]" id="edit_item_qty" required min="1" value="' +response[x].order_qty +'">'+
+                                                '<input type="number" class="edit-coqty-dynamic form-control" name="edit_item_qty[]" id="edit_item_qty" required min="1" value="' +response[x].order_qty +'">'+
                                                 '@if ($errors->editCustomer->has("edit_item_qty"))'+
                                                     '<span class="help-block">'+
                                                         '<strong>'+
@@ -2852,5 +3029,220 @@
                 }); 
         </script>
     <!-- END OF TERM CUSTOMERS -->
+
+    <!-- VALIDATING DYNAMIC FORMS -->
+    <script>
+        // UPDATE QTY DYNAMIC FORM VALIDATION
+        
+        function validateAddTI() {
+            var names = $(".add-ti-dynamic");
+            var qtys = $(".add-tiqty-dynamic");
+            var msg = "ERROR!\n";
+            var toAlert = false; 
+
+            if (hasDuplicates(names) == false){
+                 msg += "There are duplicate items."; 
+                 toAlert = true;
+            }
+
+            if (overMax(qtys,names) == false){
+                 msg += "\nAn inputted quantity is greater than one in stock.";
+                 toAlert = true;
+            }
+            
+            if (toAlert == true) alert(msg);       
+            return(overMax(qtys, names) && hasDuplicates(names))
+        }
+
+        function validateUpdTI() {
+            var inputs = $(".upd-ti-dynamic");
+            var returns = $(".upd-returns-dynamic");
+            var rqty = $(".upd-rqty-dynamic");
+            var uqty = $(".upd-uqty-dynamic");
+            var msg = "ERROR!\n";
+            var toAlert = false;
+            var isZero = true;
+
+            if (hasDuplicates(inputs) == false){
+                msg += "There are duplicate items.\n"; 
+                toAlert = true;
+            }
+
+            if (overSOMax(returns, rqty, uqty, inputs) == false){
+                msg += "Inputted quantities exceed original stocked out quantity\n"; 
+                toAlert = true;
+            }
+            
+            for (var x = 0; x < returns.length; x++){
+                if (returns[x].value == 0 && rqty[x].value == 0 && uqty[x].value == 0){
+                    msg+="Inputted quantites are all zero.";
+                    toAlert = true;
+                    isZero = false;
+                }
+            }
+
+            if (toAlert == true) alert(msg);
+            return (hasDuplicates(inputs) && overSOMax(returns, rqty, uqty, inputs) && isZero)
+            
+        }
+
+        function validateAddCO() {
+            var items = $(".add-co-dynamic");
+            var qtys = $(".add-coqty-dynamic");
+            var msg = "ERROR!\n";
+            var toAlert = false;
+
+            if (hasDuplicates(items) == false){
+                msg += "There are duplicate items.\n"; 
+                toAlert = true;
+            }    
+
+            if (overCOMax(qtys, items) == false){
+                msg += "Inputted quantities exceed original stocked out quantity."; 
+                toAlert = true;
+            }
+            
+            if (toAlert == true) alert(msg);
+            return (hasDuplicates(items) && overCOMax(qtys, items));
+        }
+
+        function validateEditCO() {
+            var items = $(".edit-co-dynamic");
+            var qtys = $(".edit-coqty-dynamic");
+            var msg = "ERROR!\n";
+            var toAlert = false;
+
+            if (hasDuplicates(items) == false){
+                msg += "There are duplicate items.\n"; 
+                toAlert = true;
+            }    
+
+            if (overCOMax(qtys, items) == false){
+                msg += "Inputted quantities exceed original stocked out quantity."; 
+                toAlert = true;
+            }
+            
+            if (toAlert == true) alert(msg);
+            return (hasDuplicates(items) && overCOMax(qtys, items));
+        }
+
+        function hasDuplicates(array) {
+            for (var i = 0; i < array.length; i++) {
+                for (var j = 0; j < array.length; j++) {
+                    if (i != j) {
+                        if (array[i].value == array[j].value) {
+                            // $("addModal-un").notify("Error! Duplicate items." ,"error");
+                            // console.log(array[i].value +" - " +array[j].value);
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
+        function overMax(qty, name){
+            for (var i = 0; i < qty.length; i++) {
+                var max = name[i].selectedOptions[0].text.substr((name[i].selectedOptions[0].text).indexOf(' :') + 3);
+                console.log(qty[i].value+" - " +max);
+                if (parseInt(qty[i].value) > max)
+                    return false;
+            }
+            return true;
+        }
+
+        function overCOMax(qty, name){
+            var overmax = true;
+
+            for(var i = 0; i < name.length; i++){
+                $.ajax({
+                    url: "/getTermItem/" + name[i].value,
+                    indexValue : i,
+                    async: false,
+                    dataType: 'json', 
+                    type: 'GET',             
+                    data: {'id' : name[i].value },
+                    success: function(response){
+                        return check(response, this.indexValue);
+
+                        function check(response, i) {
+                            if (parseInt(qty[i].value) > response.ti_original)
+                                overmax = false;
+                        }
+                    },
+                    error: function(data){
+                        console.log(data);
+                    }
+                });
+            }
+            return overmax;
+        }
+
+        function overSOMax(returns, rqty, uqty, name){
+            // console.log(rqty[1].value +" - " +uqty[1].value +" - " +returns[1].value);
+
+            var overmax = true;
+            for(var i = 0; i < name.length; i++){
+                $.ajax({
+                    url: "/getTermItem/" + name[i].value,
+                    indexValue : i,
+                    returns : returns,
+                    rqty : rqty,
+                    uqty : uqty,
+                    async:false,
+                    dataType: 'json', 
+                    type: 'GET',             
+                    data: {'id' : name[i].value },
+                    success: function(response){
+                        return check(response, this.indexValue, this.returns, this.rqty, this.uqty);
+
+                        function check(response, i, returns, rqty, uqty) {
+                            if ((parseInt(returns[i].value) +parseInt(rqty[i].value) +parseInt(uqty[i].value)) > response.ti_original)
+                                overmax = false;
+                        }
+                    },
+                    error: function(data){
+                        console.log(data);
+                    }
+                });
+            }
+            return overmax;
+        }
+    </script>
+
+    <script>
+         $(document).ready(function(){ 
+            var sidebar = document.getElementById("sidebar");
+            var expenses = document.getElementById("expenses");
+            var sales = document.getElementById("sales");
+            var nv_workers = document.getElementsByClassName("nv-worker");
+            var nv_collectors = document.getElementsByClassName("nv-collector");
+
+            @if (\Auth::user() -> user_type == "Administrator" || \Auth::user() -> user_type == "Owner") 
+                sidebar.style.display = "block"; 
+
+            //Current User => Collector
+            @elseif (\Auth::user() -> user_type == "Collector")
+                sidebar.remove(); 
+                expenses.style.display = "none"; 
+                for (var x = 0; x < nv_collectors.length; x++){
+                    nv_collectors[x].style.display = "none";
+                }
+                $("#main-panel").removeClass("main-panel");
+                
+
+            //Current User => Staff
+            @else
+                sidebar.remove();
+                expenses.style.display = "none"; 
+                sales.style.display = "none";
+                for (var x = 0; x < nv_workers.length; x++){
+                    nv_workers[x].style.display = "none";
+                }
+                $("#main-panel").removeClass("main-panel");
+            
+            @endif
+        });
+    </script>
 @endsection
 

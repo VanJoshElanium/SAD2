@@ -15,7 +15,8 @@
 
     <!-- Animation library for notifications   -->
     <link href="/css/animate.min.css" rel="stylesheet"/>
-<script src="/js/jquery.3.2.1.min.js" type="text/javascript"></script>
+    <script src="/js/jquery.3.2.1.min.js" type="text/javascript"></script>
+
     <!--  Light Bootstrap Table core CSS    -->
     <link href="/css/light-bootstrap-dashboard.css" rel="stylesheet"/>
 
@@ -26,6 +27,32 @@
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
     <link href="/css/pe-icon-7-stroke.css" rel="stylesheet" />
+
+    <script type="text/javascript">
+        $(document).ready(function(){ 
+            var nv_collectors = document.getElementsByClassName("nv-collector");
+            var sidebar = document.getElementById("sidebar");
+            var inven2 = document.getElementById("2b");
+            var inven3 = document.getElementById("3b");
+
+            //Current User => Collector
+            @if(\Auth::user() -> user_type == "Collector")
+                inven2.style.display = "none";
+                inven3.style.display = "none";
+                sidebar.remove(); 
+                for (var x = 0; x < nv_collectors.length; x++){
+                    nv_collectors[x].style.display = "none";
+                }
+                $("#main-panel").removeClass("main-panel");
+        
+             @endif
+        });
+
+        $(document).on("click", ".toLocation", function () {
+            window.location = $(this).data("href");
+        }); 
+    </script>
+
 
     <style type="text/css">
         .box{
@@ -49,12 +76,28 @@
           background-color: #ffffff;
           padding : 5px 15px;
         }    
+
+        .red-dot{
+            height: 15px;
+            width: 15px;
+            background-color: #801515;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .green-dot{
+            height: 15px;
+            width: 15px;
+            background-color: #1E6912;
+            border-radius: 50%;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
     <div class="wrapper">
         <!-- SIDEBAR -->
-        <div class="sidebar" data-color="none" data-image="/images/lol.png">
+        <div id="sidebar" class="sidebar" data-color="none" data-image="/images/lol.png">
             <div class="sidebar-wrapper">
                 <div class="logo">
                     <a href="{{ route('dashboard') }}" class="simple-text">
@@ -116,7 +159,7 @@
         </div>
 
 
-        <div class="main-panel bgd">
+        <div id="main-panel" class="main-panel bgd">
 
             <!-- NAVBAR -->
             <nav class="navbar navbar-default">
@@ -128,7 +171,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="#">Inventory Management</a>
+                        <a class="navbar-brand" href="#">Inventories</a>
                    </div>
                     <div class="collapse navbar-collapse">
                         <ul class="nav navbar-nav navbar-right">
@@ -163,13 +206,13 @@
                         <div class="col-md-12">      
                             <div class="card box"> 
                                 <ul  class="nav nav-tabs">
-                                    <li class="active">
+                                    <li class="active" id="inven1">
                                         <a  href="#1b" data-toggle="tab">Undamaged Items</a>
                                     </li>
-                                    <li>
+                                    <li id="inven2" class="nv-collector">
                                         <a href="#2b" data-toggle="tab">Repairable Items</a>
                                     </li>
-                                    <li>
+                                    <li id="inven3" class="nv-collector">
                                         <a href="#3b" data-toggle="tab">Irreparable Items</a>
                                     </li>
                                 </ul>
@@ -194,7 +237,7 @@
                                             </form>
 
                                             <div class="col-md-2" style="margin-top:8px;">
-                                                <button type="button" data-target="#addModal-un" data-toggle="modal" class="btn btn-success btn-fill" id="add-btn"> 
+                                                <button type="button" data-target="#addModal-un" data-toggle="modal" class="nv-collector btn btn-success btn-fill" id="add-btn"> 
                                                     Stock In
                                                 </button>
                                             </div> 
@@ -210,6 +253,7 @@
                                                         <th>Supplier</th>
                                                         <th>Price</th>
                                                         <th>Quantity</th>
+                                                        <th>Status</th>
                                                         <!-- <th>@sortablelink('received_at', 'Received At')</th> -->
                                                         @endif
                                                     </tr>
@@ -223,16 +267,22 @@
                                                             <td>{{$item->supplier_name}}</td>
                                                             <td>&#8369;{{$item->inventory_price}}</td>
                                                             <td>{{$item->inventory_qty}}</td>
-                                                            
+                                                            <td>
+                                                                @if($item->inventory_status == 0)
+                                                                <span class="red-dot"></span>
+                                                                @else 
+                                                                <span class="green-dot"></span>
+                                                                @endif
+                                                            </td>
                                                             
                                                             <!-- <td>{{$item->received_at}}</td> -->
                                                             <td> 
-                                                                <button data-target="#editModal-un" data-toggle="modal" data-id='{{$item->inventory_id}}' class="edit-btn-un btn btn-primary btn-fill">
+                                                                <button data-target="#editModal-un" data-toggle="modal" data-id='{{$item->inventory_id}}' class="nv-collector edit-btn-un btn btn-primary btn-fill">
                                                                     View
                                                                 </button>
                                                             </td>
                                                             <td>
-                                                                <button data-target="#removeUnItem_modal" data-toggle="modal" data-id='{{$item->inventory_id}}' class="del-btn-un btn btn-danger btn-fill">
+                                                                <button data-target="#removeUnItem_modal" data-toggle="modal" data-id='{{$item->inventory_id}}' class="nv-collector del-btn-un btn btn-danger btn-fill">
                                                                     Remove
                                                                 </button>
                                                             </td>
@@ -395,14 +445,21 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Update Quantities</h4>
+                    <h4 class="modal-title">Stock In</h4>
                 </div>
                                     
                 <div class="modal-body">
                     <div class="row">
                         <!-- USER ADD FORM -->
                         <div class="col-lg-12"> 
-                            <form class="form-horizontal" method="POST" action="/inventory/-999">
+                            <form class="form-horizontal" onsubmit="return validateAddUndamaged()" method="POST" action="/inventory/-999">
+
+                          <!--   @if (session('upd-form-error'))
+                                <div class="alert alert-danger col-md-12">
+                                    {{ session('upd-form-error') }}
+                                </div>
+                            @endif -->
+
                                 {{ csrf_field() }}
                                 {{ method_field('PUT') }}
                                 <div class="row form-group">   
@@ -452,7 +509,7 @@
                                         <div class="{{$errors->addUn->has('supply_name') ? ' has-error' : ''}}"> 
                                             <div class="col-md-4">              
                                                 <label>Item Name</label>
-                                                <select class="form-control item_name" name="supply_name[]" required id="first_item_name">
+                                                <select class="un-item-dynamic form-control item_name" name="supply_name[]" required id="first_item_name">
                                                 </select> 
                                                 @if ($errors->addUn->has('supply_name'))
                                                     <span class="help-block">
@@ -472,7 +529,7 @@
                                         
                                         <div class="col-md-2">              
                                             <label>Item Quantity</label>
-                                             <input type="number" min="1" class="form-control" required name="inventory_quantity[]"> 
+                                             <input type="number" min="1" class="un-qty-dynamic form-control" required name="inventory_quantity[]"> 
                                         </div>
                                     </div>                           
                                 </div>
@@ -484,11 +541,11 @@
                                         Add Item Form
                                     </button>
 
-                                    <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-add">
+                                    <button type="submit" class="btn btn-success btn-fill pull-right" id="un-form-btn">
                                         Add Item/s
                                     </button>
 
-                                    <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic pull-right" style="margin-right: 2%">
+                                    <button  id="test"  data-dismiss="modal" aria-hidden="true" class="btn btn-basic pull-right" style="margin-right: 2%">
                                         Cancel
                                     </button>             
                                     <div class="clearfix"></div>  
@@ -514,7 +571,7 @@
                     <div class="row">
                         <!-- USER ADD FORM -->
                         <div class="col-lg-12"> 
-                            <form class="form-horizontal" method="POST" action="/repair">
+                            <form class="form-horizontal" onsubmit="return validateAddDamaged()" method="POST" action="/repair">
                                 {{ csrf_field() }}
 
                                 <!-- SUPPLIER NAME & ADDR DETAILS--> 
@@ -573,7 +630,7 @@
                                         <div class="{{$errors->addRepair->has('dm_item_name') ? ' has-error' : ''}}"> 
                                             <div class="col-md-4">    
                                                 <label>Item Name</label>
-                                                <select class="form-control dm_item_name" name="dm_item_name[]" required>
+                                                <select class="dm-item-dynamic form-control dm_item_name" name="dm_item_name[]" required>
                                                 </select>  
                                                 @if ($errors->addRepair->has('dm_item_name'))
                                                     <span class="help-block">
@@ -664,7 +721,7 @@
                                         Add Damage/s
                                     </button>
 
-                                    <button  data-dismiss="modal" aria-hidden="true" class="btn btn-basic pull-right" style="margin-right: 2%">
+                                    <button data-dismiss="modal" aria-hidden="true" class="btn btn-basic pull-right" style="margin-right: 2%">
                                         Cancel
                                     </button>             
                                     <div class="clearfix"></div>
@@ -710,9 +767,9 @@
                                         <label for="sel1">Last Handler</label>
                                         <select class="form-control" name="view_pic" required id="view_pic" disabled>
                                         <option value="" data-hidden="true" selected="selected"> </option>
-                                            @foreach($workers as $worker)
-                                                <option value="{{$worker->user_id}}">
-                                                    {{$worker->fname}} {{$worker->mname}}. {{$worker->lname}}
+                                            @foreach($users as $user)
+                                                <option value="{{$user->user_id}}">
+                                                    {{$user->fname}} {{$user->mname}}. {{$user->lname}}
                                                 </option>
                                             @endforeach
                                         </select>         
@@ -1023,16 +1080,12 @@
 </body>
 
 <!--   Core JS Files   -->
-  <script src="/js/notify.js" type="text/javascript"></script>
+   
     <script src="/js/bootstrap.min.js" type="text/javascript"></script>
 
     <!--  Charts Plugin -->
     <script src="/js/chartist.min.js"></script>
-
-
-    <!--  Google Maps Plugin    -->
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
-
+    <script src="/js/notify.js"></script>
     <!-- Light Bootstrap Table Core javascript and methods for Demo purpose -->
     <script src="/js/light-bootstrap-dashboard.js?v=1.4.0"></script>
 
@@ -1095,7 +1148,7 @@
                     "<div class='row form-group' id='row-" +i +"'>"+
                         "<div class='col-md-4'>"+           
                             // "<label>Item Name</label>"+
-                            "<select class='form-control item_name' name='supply_name[]' id='item-row-"+i+"'  required>"+
+                            "<select class='un-item-dynamic form-control item_name' name='supply_name[]' id='item-row-"+i+"'  required>"+
                                 
                             "</select>"+ 
                             "@if ($errors->addUn->has('supply_name'))"+
@@ -1114,7 +1167,7 @@
                         
                         "<div class='col-md-2'>"+             
                             // "<label>Item Quantity</label>"+
-                             "<input type='number' class='form-control' required name='inventory_quantity[]'>"+ 
+                             "<input type='number' class='un-qty-dynamic form-control' required name='inventory_quantity[]'>"+ 
                         "</div>"+
 
                         "<div class='col-md-2'>"+ 
@@ -1171,7 +1224,7 @@
                     "<div class='row form-group' id='dm-row-" +i +"'>"+   
                         "<div class='col-md-4'>"+    
                             // "<label>Item Name</label>"+
-                                "<select class='form-control dm_item_name' id='dm-item-row-"+i+"' name='dm_item_name[]' required>"+
+                                "<select class='dm-item-dynamic form-control dm_item_name' id='dm-item-row-"+i+"' name='dm_item_name[]' required>"+
                                 "</select> "+ 
                                 "@if ($errors->addRepair->has('dm_item_name'))"+
                                 "<span class='help-block'>"+
@@ -1180,15 +1233,6 @@
                                     "</strong>"+
                                 "</span>"+
                             "@endif"+
-                        "</div>"+
-
-                        "<div class='col-md-4'>"+    
-                            // "<label>State</label>"+
-                                "<select class='form-control dm_item_state' id='dm-item-row-"+i+"' name='dm_item_state[]' required>"+
-                                    "<option value='' selected='selected'> </option>"+
-                                    "<option value='1'> Repairable </option>" +
-                                    "<option value='0'> Irreparable </option>" +
-                                "</select> "+ 
                         "</div>"+
 
                         "<div class='col-md-2'> "+   
@@ -1344,5 +1388,35 @@
                 $('a[data-toggle="tab"][href="' + selectedTab + '"]').tab('show');
             }
         });
+    </script>
+
+   
+    <script>
+        // UPDATE QTY DYNAMIC FORM VALIDATION
+        function validateAddUndamaged() {
+            var item_inputs = $(".un-item-dynamic");
+            return hasDuplicates(item_inputs);
+        }
+
+        function validateAddDamaged() {
+            var item_inputs = $(".dm-item-dynamic");
+            return hasDuplicates(item_inputs);
+        }
+
+        function hasDuplicates(array) {
+            for (var i = 0; i < array.length; i++) {
+                for (var j = 0; j < array.length; j++) {
+                    if (i != j) {
+                        if (array[i].value == array[j].value) {
+                            // $("addModal-un").notify("Error! Duplicate items." ,"error");
+                            alert ("Error! Duplicate items." ,"error");
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
     </script>
 @endsection

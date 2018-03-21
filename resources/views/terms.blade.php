@@ -188,7 +188,7 @@
                                 
                                     <thead>
                                         @if(count($og_terms)>0)
-                                        <th>ID</th>
+                                        <th>#</th>
                                     	<th>Date Started</th>
                                         <th>Date Peddling Ended</th>
                                         <th>Date Collecting Ended</th>
@@ -197,9 +197,11 @@
                                         <!-- <th>View Details</th> -->
                                     </thead>
                                     <tbody>
+                                    <?php $x = 0 ?>
                                         @forelse($og_terms as $og_term)
                                             <tr data-target="" data-toggle="modal" class="" data-id='{{$og_term->term_id}}'>    
-                                                <td>{{$og_term->term_id}}</td>
+                                                
+                                                <td>{{$x+=1}}</td>
                                                 <td>{{$og_term->start_date}}</td>
                                                 <td>
                                                     @if(empty($og_term->end_date))
@@ -266,7 +268,7 @@
                                  
                                     <thead>
                                         @if(count($cd_terms) > 0 )
-                                        <th>ID</th>
+                                        <th>#</th>
                                         <th>Date Started</th>
                                         <th>Date Peddling Ended</th>
                                         <th>Date Collecting Ended</th>
@@ -275,9 +277,11 @@
                                         <!-- <th>View Details</th> -->
                                     </thead>
                                     <tbody>
+                                    <?php $x = 0 ?>
                                         @forelse($cd_terms as $cd_term)
                                             <tr data-target="" data-toggle="modal" class="" data-id='{{$cd_term->term_id}}'>    
-                                                <td>{{$cd_term->term_id}}</td>
+                                                
+                                                <td>{{$x+=1}}</td>
                                                 <td>{{$cd_term->start_date}}</td>
                                                 <td>{{$cd_term->end_date}}</td>
                                                 <td>{{$cd_term->finish_date}}</td>
@@ -394,7 +398,7 @@
                         </button>
 
                         <button type="submit" class="btn btn-success btn-fill pull-right" id="form-button-add">
-                          Create
+                          Add
                         </button>      
                     </div>
                 </form>
@@ -563,6 +567,15 @@
                 jQuery(document).ready(function($){
                     $.notify( "{{session()-> get('destroy-success' )}}", "success");
                     {{session()->forget('destroy-success')}}
+                });
+            </script>
+        @endif
+
+        @if(session('destroy-fail'))
+            <script> 
+                jQuery(document).ready(function($){
+                    $.notify( "{{session()-> get('destroy-fail' )}}", "error");
+                    {{session()->forget('destroy-fail')}}
                 });
             </script>
         @endif
