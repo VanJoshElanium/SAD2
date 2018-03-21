@@ -54,14 +54,19 @@ class SupplyController extends Controller
      */
     public function store(StoreSupply $request)
     {
-        //dd($request);
-        $item = new Inventory;
-        $item -> inventory_supplier_id = $request -> supply_supplier_id;
-        $item -> inventory_name = $request-> supply_name;
-        $item -> inventory_desc = $request-> supply_desc;
-        $item -> inventory_qty = 0;
-        $item -> inventory_price = $request-> supply_price;
-        $item -> save();
+        $input = Input::all();
+
+        for ($i=0; $i < count($input['supply_name']); ++$i) {
+
+            $item = new Inventory;
+            $item -> inventory_supplier_id = $request -> supply_supplier_id;
+            $item -> inventory_name = $input['supply_name'][$i];
+            $item -> inventory_desc = $input['supply_desc'][$i];
+            $item -> inventory_qty = 0;
+            $item -> inventory_price = $input['supply_price'][$i];
+            $item -> save();
+        }
+        
         //session()->flash('message', 'Successfully created a new supplier!');
         return redirect()->back() -> with('store-item-success','Supplier item was successfully created!');
     }

@@ -21,6 +21,7 @@ class StockOutController extends Controller
         $stockouts = DB::table('term_items')
                     -> join ('profiles', 'profile_user_id', '=', 'ti_user_id')
                     -> join ('terms', 'term_id', '=', 'ti_term_id')
+                    -> join ('workers', 'worker_term_id', '=', 'term_id')
                     -> select ('term_items.ti_term_id', 'profiles.fname', 'profiles.mname', 'profiles.lname', 'term_items.ti_date')
                     -> groupBy('ti_term_id')
                     -> orderBy('term_items.ti_date', 'DESC')
@@ -102,7 +103,7 @@ class StockOutController extends Controller
                     -> join ('terms', 'term_id', '=', 'ti_term_id')
                     -> join ('inventories', 'inventory_id', '=', 'ti_inventory_id')
                     -> join ('suppliers', 'supplier_id', '=', 'inventory_supplier_id')
-                    -> select ('inventories.inventory_name', 'suppliers.supplier_name', 'profiles.fname', 'profiles.mname', 'profiles.lname', 'term_items.ti_date', 'term_items.ti_original')
+                    -> select ('inventories.inventory_name', 'suppliers.supplier_name', 'profiles.fname', 'profiles.mname', 'profiles.lname', 'term_items.ti_date', 'term_items.ti_original', 'terms.location')
                     -> where ('term_id', '=', $request -> id)
                     -> get();
 

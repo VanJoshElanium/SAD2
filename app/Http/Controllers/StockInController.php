@@ -98,6 +98,8 @@ class StockInController extends Controller
 
     public function getSI(Request $request){
 
+        $stockin_item = Stockin_Item::find($request -> id);
+
         $sidatas = DB::table('stockins')
                 -> join ('stockin_items', 'si_item_id', '=', 'si_si_id')
                 -> join ('profiles', 'profile_user_id', '=', 'si_user_id')
@@ -105,7 +107,7 @@ class StockInController extends Controller
                 -> join ('suppliers', 'supplier_id', '=', 
                     'inventory_supplier_id')
                 -> select ('inventories.inventory_name', 'suppliers.supplier_name', 'profiles.fname', 'profiles.mname', 'profiles.lname', 'stockins.*', 'stockin_items.*')
-                -> where ('si_item_id', '=', $request -> id)
+                -> where ('si_si_id', '=', $request -> id)
                 -> get();
 
         return $sidatas;

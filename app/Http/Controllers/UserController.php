@@ -33,11 +33,38 @@ class UserController extends Controller
                 -> paginate(5);
             $users -> load('profiles');
         }else{
-            $users = User::join('profiles as p1',  'users.user_id', '=', 'p1.profile_user_id')
-                -> select('users.*', 'p1.*')
-                ->orderByRaw("CASE WHEN users.updated_at > p1.updated_at THEN users.updated_at ELSE p1.updated_at END DESC")
-                -> paginate(5);
+
+            if (\Auth::user() -> user_type == "Owner")
+                $users = User::join('profiles as p1',  'users.user_id', '=', 'p1.profile_user_id')
+                    -> select('users.*', 'p1.*')
+                    -> orderByRaw("CASE WHEN users.updated_at > p1.updated_at THEN users.updated_at ELSE p1.updated_at END DESC")
+                    -> where ('user_type', '!=', '0')
+                    -> paginate(5);
+            elseif (\Auth::user() -> user_type == "Administrator")
+                $users = User::join('profiles as p1',  'users.user_id', '=', 'p1.profile_user_id')
+                    -> select('users.*', 'p1.*')
+                    -> orderByRaw("CASE WHEN users.updated_at > p1.updated_at THEN users.updated_at ELSE p1.updated_at END DESC")
+                    -> paginate(5);
+            else
+                $users = DB::table('profiles as T1')
+                    -> join('users as T2', 'T2.user_id', '=', 'T1.profile_user_id')
+                    -> whereNotIn('user_id', function($query){
+                        $query -> select('worker_user_id')
+                               -> from('workers')
+                               -> join('terms', 'term_id', '=', 'worker_term_id')
+                               -> where([
+                                    ['term_status' , '=', 1],
+                                    ['terms.end_date', '=', null]
+                               ]);
+                        })
+                    -> select('user_id', 'fname', 'mname', 'lname', 'cnum', 'user_status', 'user_type')
+                    -> where([
+                            ['user_type' , '=', 3],
+                            ['user_status' , '=', 1]
+                        ])
+                    -> paginate (10);
                 // -> toSql();
+           
         } 
         return view('usrmgmt', compact('users', 'curr_usr', 'error_id', 'pass_error'));
     }
@@ -179,7 +206,8 @@ class UserController extends Controller
            $validator->getMessageBag()->add('password', 'The current password does not match with the password you provided. Please try again.');
            return redirect('usrmgmt')
                 ->withErrors($validator, 'editPass')
-                ->with("pass_error","The current password does not match with the password you provided. Please try again.");
+                ->with("pass_error","The current password does not match with the password you provided. Please try again.")
+                ->with('error_id', $id);
         }
 
         if ($validator->fails()) {

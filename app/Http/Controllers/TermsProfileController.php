@@ -151,6 +151,7 @@ class TermsProfileController extends Controller
                         ['terms.term_status', '=', 1],
                         ['workers.worker_type', '!=', 0]
                     ])
+                -> orderBy('workers.updated_at', 'desc')
                 -> paginate(5);
     
         //TERM EXPENSES
@@ -160,6 +161,7 @@ class TermsProfileController extends Controller
                         ['terms.term_status', '=', '1'],
                         ['terms.term_id', '=', $id]
                     ])
+                    -> orderBy('expenses.updated_at', 'desc')
                     -> paginate(5);
 
         $total_expense = DB::table('expenses')
@@ -175,7 +177,8 @@ class TermsProfileController extends Controller
                         ['terms.term_status', '=', '1'],
                         ['terms.term_id', '=', $id]
                     ])
-                    -> paginate(5);
+                    -> orderBy('term_items.updated_at', 'desc')
+                    -> paginate(10);
 
         //AVAILABLE ITEMS
         $a_items = Inventory::join('suppliers', 'suppliers.supplier_id', '=', 'inventory_supplier_id')
@@ -230,6 +233,7 @@ class TermsProfileController extends Controller
                         ['terms.term_status', '=', '1'],
                         ['terms.term_id', '=', $id]
                     ])
+                    -> orderBy('sales.updated_at', 'desc')
                     -> paginate(5);
                     
         //TERM CUSTOMERS

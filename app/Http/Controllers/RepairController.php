@@ -56,7 +56,7 @@ class RepairController extends Controller
                     -> get();
 
             $validator = Validator::make($request->all(), [
-                'dm_qty.' .$i  => 'numeric|min:1|max:' .$item_qty[0] -> inventory_qty,
+                // 'dm_qty.' .$i  => 'numeric|min:1|max:' .$item_qty[0] -> inventory_qty,
                 'dm_item_name.*' => 'distinct'
             ]);
 
@@ -148,13 +148,13 @@ class RepairController extends Controller
 
 
             $si_item = new Stockin_Item;
-            $si_item -> si_date = $request-> fixed_at;
             $si_item -> si_user_id = $request-> handled_by;
             $si_item -> save();
 
             $stockin = new Stockin;
-            $stockin-> si_qty = $request -> qty_fixed;
-            $stockin -> si_inventory_id = $repair->repair_inventory_id;
+            $stockin -> si_qty = $request -> qty_fixed;
+            $stockin -> si_date = $request-> fixed_at;
+            $stockin -> si_inventory_id = $repair-> repair_inventory_id;
             $stockin -> si_si_id = $si_item -> si_item_id;
             $stockin -> save();
 

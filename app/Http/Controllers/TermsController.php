@@ -116,8 +116,8 @@ class TermsController extends Controller
         $worker -> worker_user_id = $request -> collector;
         $worker -> worker_type = 0; //collector
         $worker -> save();
-        //session()->flash('message', 'Successfully created a new supplier!');
-        return redirect('/terms') -> with('store-term-success','Term was successfully removed!');
+        
+        return redirect('/terms') -> with('store-term-success','Term was successfully created!');
     }
 
     /**
@@ -211,11 +211,12 @@ class TermsController extends Controller
      */
     public function destroy($id)
     {
-        $term = Term::find($id);
-        $term -> term_status = 0;
-        $term -> save();
-        //dd($supplier); //for debugging purposes
-        return redirect('/terms') -> with('destroy-success','Term was successfully removed!');
-        //Session::flash('message', 'User has been successfully removed!');*/
+        $term = Term::has('term_items') -> find($id);
+
+        if (!$term){
+            Term::destroy($id);
+            return redirect('/terms') -> with('destroy-success','Term was successfully removed!');
+        }
+        else return redirect('/terms') -> with('destroy-fail','Error! Term contains data, cannot be removed.');
     }
 }

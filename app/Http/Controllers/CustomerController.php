@@ -239,7 +239,7 @@ class CustomerController extends Controller
         }
         else{
             $customer_order = Customer_Order::find($id);
-            $customer_order -> co_collect_date = $input['collect_date'];
+            $customer_order -> co_collect_date = $request -> collect_date;
             $customer_order -> co_status = 1;
             $customer_order -> save();        
         }
