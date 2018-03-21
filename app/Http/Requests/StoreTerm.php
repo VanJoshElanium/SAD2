@@ -29,9 +29,9 @@ class StoreTerm extends FormRequest
     public function rules()
     {
         return [
-            'collector' => 'required|string',
-            'date_started' => 'required|date|unique:terms,start_date,null,null,location,' .$this->location,
-            'location' => 'required|string|unique:terms,location,null,null,start_date,' .$this->et_startdate
+            'collector' => 'required',
+            'date_started' => "required|date|unique:terms,start_date,null,null,end_date,null,location," .$this -> location,
+            'location' => "required|string|unique:terms,location,null,null,end_date,null,start_date," .$this-> date_started
         ];
     }
 }

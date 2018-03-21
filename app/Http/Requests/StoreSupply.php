@@ -18,9 +18,9 @@ class StoreSupply extends FormRequest
 
     public function attributes(){
         return [
-            'supply_name' => 'item name',
-            'supply_desc' => 'description',
-            'supply_price' => 'price'
+            'supply_name.*' => 'item name',
+            'supply_desc.*' => 'description',
+            'supply_price.*' => 'price'
         ];
     }
     /**
@@ -31,9 +31,9 @@ class StoreSupply extends FormRequest
     public function rules()
     {
         return [
-            'supply_name' => 'required|string|unique:inventories,inventory_name,null,null,inventory_status,1',
-            'supply_price' => 'required|numeric|min:1',
-            'supply_desc' => 'nullable|string'
+            'supply_name.*' => 'distinct|required|string|unique:inventories,inventory_name,null,null,inventory_status,1',
+            'supply_price.*' => 'required|numeric|min:1',
+            'supply_desc' => 'nullable'
         ];
     }
 }
