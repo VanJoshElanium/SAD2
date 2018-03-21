@@ -13,11 +13,11 @@ class Stockin_Item extends Model
     protected $table = 'stockin_items';
 
     protected $fillable = [
-         'si_user_id,', 'si_date',  
+         'si_user_id,',  'si_term_id'
     ];
 
     protected static $logAttributes = [
-         'si_user_id,', 'si_date', 
+         'si_user_id,', 'si_term_id'
     ];
 
     protected static $logOnlyDirty = true;
@@ -42,4 +42,8 @@ class Stockin_Item extends Model
     	return $this->belongsToMany('App\Inventory', 'stockins', 'si_item_id', 'inventory_id');
     }
 
+        public function term()
+    {
+        return $this->belongsTo('App\Term', 'si_term_id', 'term_id');
+    }
 }

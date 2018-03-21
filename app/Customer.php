@@ -14,11 +14,11 @@ class Customer extends Model
     protected $primaryKey = 'customer_id';
 
     protected $fillable = [
-        'customer_fname', 'customer_mname', 'customer_lname', 'customer_gender', 'customer_addr', 'customer_cnum', 'customer_status',
+        'customer_fname', 'customer_mname', 'customer_lname', 'customer_gender', 'customer_addr', 'customer_cnum', 'customer_status','order_collect_date', 'order_order_date'
     ];
 
     protected static $logAttributes = [
-        'customer_fname', 'customer_mname', 'customer_lname', 'customer_gender', 'customer_addr', 'customer_cnum', 'customer_status',
+        'customer_fname', 'customer_mname', 'customer_lname', 'customer_gender', 'customer_addr', 'customer_cnum', 'customer_status','order_collect_date', 'order_order_date'
     ];
 
 	protected static $logOnlyDirty = true;

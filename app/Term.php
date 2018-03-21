@@ -45,7 +45,7 @@ class Term extends Model
 
     public function stockins()
     {
-        return $this->hasMany('App\Stockin', 'si_term_id');
+        return $this->hasMany('App\Stockin_Item', 'si_term_id');
     } 
 
     public function repairs()
@@ -66,5 +66,10 @@ class Term extends Model
     public function inventories()
     {
         return $this->belongsToMany('App\Inventories', 'term_items', 'term_id', 'inventory_id');
+    } 
+
+    public function term_items()
+    {
+        return $this->hasMany('App\Term_Item', 'ti_term_id');
     } 
 }

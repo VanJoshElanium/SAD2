@@ -16,11 +16,11 @@ class Customer_Order extends Model
     protected $table = 'customer_orders';
 
     protected $fillable = [
-        'co_term_id', 'co_customer_id', 'co_collect_date', 'co_status', 
+        'co_term_id', 'co_customer_id', 'co_status', 'co_collect_date'
     ];
 
     protected static $logAttributes = [
-        'co_term_id', 'co_customer_id', 'co_collect_date', 'co_status', 
+        'co_term_id', 'co_customer_id', 'co_status', 'co_collect_date'
     ];
 
     protected static $logOnlyDirty = true;

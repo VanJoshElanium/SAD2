@@ -12,11 +12,11 @@ class Stockin extends Model
     protected $primaryKey = 'si_id';
 
     protected $fillable = [
-        'si_inventory_id', 'si_qty', 'si_si_id', 'si_term_id'
+        'si_inventory_id', 'si_qty', 'si_si_id', 'si_date'
     ];
 
     protected static $logAttributes = [
-        'si_inventory_id', 'si_qty', 'si_si_id', 'si_term_id'
+        'si_inventory_id', 'si_qty', 'si_si_id', 'si_date'
     ];
 
     protected static $logOnlyDirty = true;
@@ -26,10 +26,6 @@ class Stockin extends Model
             return ucfirst($eventName) . " stock-in";
         }
 
-    public function term()
-    {
-        return $this->belongsTo('App\Term', 'si_term_id', 'term_id');
-    }
 
     public function user()
     {
