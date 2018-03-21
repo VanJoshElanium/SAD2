@@ -54,16 +54,21 @@ class SupplyController extends Controller
      */
     public function store(StoreSupply $request)
     {
-        //dd($request);
-        $item = new Inventory;
-        $item -> inventory_supplier_id = $request -> supply_supplier_id;
-        $item -> inventory_name = $request-> supply_name;
-        $item -> inventory_desc = $request-> supply_desc;
-        $item -> inventory_qty = 0;
-        $item -> inventory_price = $request-> supply_price;
-        $item -> save();
+        $input = Input::all();
+
+        for ($i=0; $i < count($input['supply_name']); ++$i) {
+
+            $item = new Inventory;
+            $item -> inventory_supplier_id = $request -> supply_supplier_id;
+            $item -> inventory_name = $input['supply_name'][$i];
+            $item -> inventory_desc = $input['supply_desc'][$i];
+            $item -> inventory_qty = 0;
+            $item -> inventory_price = $input['supply_price'][$i];
+            $item -> save();
+        }
+        
         //session()->flash('message', 'Successfully created a new supplier!');
-        return redirect()->back();
+        return redirect()->back() -> with('store-item-success','Supplier item was successfully created!');
     }
 
     /**
@@ -85,6 +90,7 @@ class SupplyController extends Controller
                     ['inventory_supplier_id' , '=', $id], 
                     ['inventory_status', '=', 1]
                 ])
+                -> orderBy('updated_at', 'desc')
                 -> paginate(5);
             //dd($supplies); //debugging purposes
         } 
@@ -115,13 +121,20 @@ class SupplyController extends Controller
         //dd($request-> all()); //for debugging purposes
 
         $validator = Validator::make($request->all(), [
-            'edit_supply_name' => 'required|string',
-            'edit_supply_desc' => 'required|string',
-            'edit_supply_price' => 'required|numeric'
+            'edit_supply_name' => 'required|string|unique:inventories,inventory_name,' .$id .',inventory_id,inventory_status,1',
+            'edit_supply_desc' => 'nullable|string',
+            'edit_supply_price' => 'required|numeric|min:1'
         ]);
 
+        $attributeNames = array(
+                   'edit_supply_name' => "item name",
+                   'edit_supply_desc' => 'descripion',
+                   'edit_supply_price' => 'price',
+                );
+        $validator->setAttributeNames($attributeNames);
+
         if ($validator->fails()) {
-            return redirect('/supplies/' .$supply-> inventory_supplier_id)
+            return redirect() -> back()
                 ->withErrors($validator, 'editSupply')
                 ->withInput($request->all())
                 ->with('error_id', $id);
@@ -131,7 +144,7 @@ class SupplyController extends Controller
             $supply -> inventory_price = $request-> edit_supply_price;
             $supply -> inventory_desc = $request-> edit_supply_desc;
             $supply -> save();
-            return redirect('/supplies/' .$supply-> inventory_supplier_id);
+            return redirect() -> back() -> with('update-item-success','Supplier item was successfully edited!');
         }
         
     }
@@ -147,7 +160,7 @@ class SupplyController extends Controller
         $supply -> inventory_status = 0;
         $supply -> save();
         //dd($supply); //for debugging purposes
-        return redirect('/supplies/' .$supply-> inventory_supplier_id);
+        return redirect('/supplies/' .$supply-> inventory_supplier_id) -> with('destroy-item-success','Supplier item was successfully removed!');
         //Session::flash('message', 'User has been successfully removed!');*/
     }
 

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateStockinsTable extends Migration
+class CreateStockinItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,15 @@ class CreateStockinsTable extends Migration
      */
     public function up()
     {
-        Schema::create('stockins', function (Blueprint $table) {
-            $table ->increments('si_id');
-            $table ->integer('si_inventory_id') -> unsigned();
-            $table ->integer('si_user_id') -> unsigned();
-            
-            $table ->dateTime('si_date');
-            $table ->integer('si_qty');
+        Schema::create('stockin_items', function (Blueprint $table) {
+            $table ->increments('si_item_id');
 
-            $table ->foreign('si_inventory_id')
-                    ->references('inventory_id')
-                    ->on('inventories')
+            $table ->integer('si_user_id') -> unsigned();
+            $table ->integer('si_term_id') -> unsigned() -> nullable();
+
+            $table ->foreign('si_term_id')
+                    ->references('term_id')
+                    ->on('terms')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
 
@@ -32,7 +30,8 @@ class CreateStockinsTable extends Migration
                     ->on('users')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
-            $table ->timestamps();
+
+            $table->timestamps();
         });
     }
 
@@ -43,6 +42,6 @@ class CreateStockinsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stockins');
+        Schema::dropIfExists('stockin_items');
     }
 }

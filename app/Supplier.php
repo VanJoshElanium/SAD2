@@ -5,10 +5,11 @@ namespace App;
 use Laravel\Scout\Searchable;
 use Kyslik\ColumnSortable\Sortable;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Supplier extends Model
 {
-    
+    use LogsActivity;
 
     protected $primaryKey = 'supplier_id';
 
@@ -16,11 +17,22 @@ class Supplier extends Model
         'supplier_name', 'supplier_addr', 'supplier_email', 'supplier_cnum', 'supplier_status',
     ];
 
+    protected static $logAttributes = [
+        'supplier_name', 'supplier_addr', 'supplier_email', 'supplier_cnum', 'supplier_status',
+    ];
+
+    protected static $logOnlyDirty = true;
+
     public $sortable = ['supplier_id', 'suuplier_name', 'supplier_addr'];
 
     protected $hidden = [
         'remember_token',
     ];
+
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return ucfirst($eventName) . " supplier";
+    }
 
     /* MUTATORS */
     public function setSupplierNameAttribute($value){

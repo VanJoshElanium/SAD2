@@ -17,7 +17,8 @@ class CreateTableOrders extends Migration
             $table ->increments('order_id');
             $table ->integer('order_ti_id') -> unsigned();
             $table ->integer('order_co_id') -> unsigned();
-            
+        
+
             $table ->integer('order_qty');
 
             $table ->foreign('order_co_id')

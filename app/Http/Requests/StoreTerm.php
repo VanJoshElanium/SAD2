@@ -21,12 +21,17 @@ class StoreTerm extends FormRequest
      *
      * @return array
      */
+    public function attributes(){
+        return [
+            'date_started' => 'starting date',
+        ];
+    }
     public function rules()
     {
         return [
-            'collector' => 'required|string',
-            'date_started' => 'required|date|unique:terms,start_date',
-            'location' => 'required|string'
+            'collector' => 'required',
+            'date_started' => "required|date|unique:terms,start_date,null,null,end_date,null,location," .$this -> location,
+            'location' => "required|string|unique:terms,location,null,null,end_date,null,start_date," .$this-> date_started
         ];
     }
 }

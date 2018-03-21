@@ -16,6 +16,14 @@ class StoreSupplier extends FormRequest
         return true;
     }
 
+    public function attributes(){
+        return [
+            'supplier_name' => "supplier's name",
+            'supplier_addr' => "address",
+            'supplier_email' => "email",
+            'supplier_cnum' => 'contact number'
+        ];
+    }
     /**
      * Get the validation rules that apply to the request.
      *
@@ -27,7 +35,8 @@ class StoreSupplier extends FormRequest
             'supplier_name' => array(
                          'required',
                          'max:50',
-                         'string'),
+                         'string',
+                         'unique:suppliers,supplier_name'),
             'supplier_addr' => array(
                          'required',
                          'max:100',

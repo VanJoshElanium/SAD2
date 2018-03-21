@@ -15,6 +15,18 @@ class StoreUser extends FormRequest
     {
         return true;
     }
+
+    public function attributes()
+    {
+       return [
+           'fname' => 'first name',
+           'mname' => 'middle initial',
+           'lname' => 'last name',
+           'user_type' => 'user type',
+           'bday' => 'birthdate',
+           'cnum' => 'contact number',
+        ];
+    }
     /**
      * Get the validation rules that apply to the request.
      *
@@ -26,20 +38,17 @@ class StoreUser extends FormRequest
             'fname' => array(
                          'required',
                          'max:50',
-                         'string',
-                         'regex:/^[a-zA-Z-]/'), 
+                         'alpha_dash',), 
             'mname' => array(
                          'required',
                          'max:1',
-                         'string',
-                         'regex:/^[a-zA-Z]/'),
+                         'alpha',),
             'lname' => array(
                          'required',
                          'max:50',
-                         'string',
-                         'regex:/^[a-zA-Z-]/'),
-            'username' => 'required|string|max:50|alphanum|unique:users',
-            'password' => 'required|string|min:4|',
+                         'alpha_dash',),
+            'username' => 'required|string|min:4|max:50|alphanum|unique:users,username,null,null,user_status,1',
+            'password' => 'required|string|min:4|confirmed',
             'gender' => 'required|string',
             'bday' => 'required|date',
             'cnum' => 'required|digits:11',
