@@ -96,6 +96,7 @@
 
 	Route::get('/stockouts', 'StockOutController@index')->name('stockouts');
 	Route::get('/stockins', 'StockInController@index')->name('stockins');
+	Route::post('/printSI/{id}', 'StockinController@printSI');
 
 	Route::get('getSI', 'StockInController@getSI');
 	Route::get('getSO', 'StockOutController@getSO');
