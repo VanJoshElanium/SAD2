@@ -102,7 +102,8 @@ class StockOutController extends Controller
                     -> join ('profiles', 'profile_user_id', '=', 'ti_user_id')
                     -> join ('terms', 'term_id', '=', 'ti_term_id')
                     -> join ('inventories', 'inventory_id', '=', 'ti_inventory_id')
-                    -> join ('suppliers', 'supplier_id', '=', 'inventory_supplier_id')
+                    -> join ('supplies', 'inventory_id', '=', 'supplies_inventory_id')
+                    -> join ('suppliers', 'supplier_id', '=', 'supplies_supplier_id')
                     -> select ('inventories.inventory_name', 'suppliers.supplier_name', 'profiles.fname', 'profiles.mname', 'profiles.lname', 'term_items.ti_date', 'term_items.ti_original', 'terms.location')
                     -> where ('term_id', '=', $request -> id)
                     -> get();

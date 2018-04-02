@@ -61,6 +61,10 @@ class Term_ItemController extends Controller
                     -> select ('inventory_qty')
                     -> get();
 
+            $item_price = Inventory::where('inventories.inventory_id', '=', $input['add_ti_item_name'][$i])
+                    -> select ('inventory_price')
+                    -> get();
+
             $validator = Validator::make($request->all(), [
                 'add_ti_qty.' .$i  => 'numeric|min:1|max:' .$item_qty[0] -> inventory_qty,
                 'add_ti_item_name.*' => 'distinct',
@@ -77,6 +81,7 @@ class Term_ItemController extends Controller
                 $term_item = new Term_Item;
                 $term_item -> ti_date = $request -> add_ti_date;
                 $term_item -> ti_user_id = $request -> add_ti_worker;
+                $term_item -> ti_price = $item_price[0] -> inventory_price + ($item_price[0]-> inventory_price * 0.25);
                 $term_item -> ti_inventory_id = $input['add_ti_item_name'][$i];
                 $term_item -> ti_original = $input['add_ti_qty'][$i];
                 $term_item -> ti_udamaged = 0;
@@ -241,7 +246,7 @@ class Term_ItemController extends Controller
                     $repair -> save();
                 }  
 
-                if ($original_udamaged != 0  && $term_item -> ti_udamaged != $original_udamaged && $term_item -> ti_udamaged != 0) {
+                if ($original_udamaged != 0  && $term_item -> ti_udamaged != $original_udamaged) {
                     $urepair = Repair::where([
                                     ['repair_inventory_id', '=', $term_item -> ti_inventory_id],
                                     ['repair_term_id', '=', $term_item -> ti_term_id],
@@ -257,10 +262,12 @@ class Term_ItemController extends Controller
                         $urepair[0] -> repair_qty -= ($original_udamaged - $request-> edit_item_udamages);
                     }
                     $urepair[0] -> save();
-                    
+
+                    if ($urepair[0] -> repair_qty == 0)
+                        $bye = Repair::destroy($urepair[0] -> repair_id);
                 }
 
-                if ($original_rdamaged != 0 && $term_item -> ti_rdamaged != 0 && $term_item -> ti_rdamaged != $original_rdamaged){
+                if ($original_rdamaged != 0 && $term_item -> ti_rdamaged != $original_rdamaged){
                     $rrepair = Repair::where([
                                     ['repair_inventory_id', '=', $term_item -> ti_inventory_id],
                                     ['repair_term_id', '=', $term_item -> ti_term_id],
@@ -277,6 +284,9 @@ class Term_ItemController extends Controller
                         $rrepair[0] -> repair_qty -= ($original_rdamaged - $request-> edit_item_rdamages);
                     }
                     $rrepair[0] -> save();
+
+                    if ($rrepair[0] -> repair_qty == 0)
+                        $bye = Repair::destroy($rrepair[0] -> repair_id);
                   
                 }
 
@@ -362,7 +372,8 @@ class Term_ItemController extends Controller
                     -> join ('profiles as handler', 'handler.profile_user_id', '=', 'ti_user_id')
                     -> join('profiles as worker', 'worker.profile_user_id', '=', 'worker_user_id')
                     -> join('inventories', 'inventories.inventory_id', '=', 'term_items.ti_inventory_id')
-                    -> join('suppliers', 'suppliers.supplier_id', '=', 'inventories.inventory_supplier_id')
+                    -> join ('supplies', 'supplies_inventory_id', '=', 'inventory_id')
+                    -> join('suppliers', 'suppliers.supplier_id', '=', 'supplies_supplier_id')
                     -> select ('terms.*', 'term_items.*', 'inventories.inventory_name', 'inventories.inventory_price', 'suppliers.supplier_name', 'suppliers.supplier_id', 'worker.fname as cfname', 'worker.mname as cmname', 'worker.lname as clname', 'handler.fname as hfname', 'handler.mname as hmname', 'handler.lname as hlname')
                     -> where ([
                         ['terms.term_id', '=', $id],
@@ -372,7 +383,7 @@ class Term_ItemController extends Controller
                     -> get();
         // dd($term_items);
         $pdf = PDF::loadView('termitems', compact('term_items'));
-        return $pdf->download('termitems.pdf');
+        return $pdf->stream();
     }
 
     public function udpateQty(Request $request){
@@ -434,13 +445,14 @@ class Term_ItemController extends Controller
                 }
 
                 // UPDATE DAMAGED INVENTORY
-                if ($original_udamaged == 0 && $input['upd_rqty'][$i] != 0){                
+                if ($original_udamaged == 0 && $input['upd_uqty'][$i] != 0){  
+                              
                     //Update repairs.repair_qty using new udamages_qty; Irreparable
                     $term_item -> ti_udamaged += $input['upd_uqty'][$i];
                     $term_item -> save();
 
                     $repair = new Repair;
-                    $repair -> repair_inventory_id = $input['upd_ti_item_name'][$i];
+                    $repair -> repair_inventory_id = $inventory_item -> inventory_id;
                     $repair -> repair_term_id = $term_item -> ti_term_id;
                     $repair -> repair_user_id = $input['upd_ti_worker'];
                     $repair -> repair_qty = $input['upd_uqty'][$i];
@@ -449,13 +461,14 @@ class Term_ItemController extends Controller
                     $repair -> save();
                 } 
 
-                if ($original_rdamaged == 0 && $input['upd_uqty'][$i] != 0){                
+                if ($original_rdamaged == 0 && $input['upd_rqty'][$i] != 0){  
+                                 
                     //Update repairs.repair_qty using nre rdamages_qty; Repairable
                     $term_item -> ti_rdamaged += $input['upd_rqty'][$i];
                     $term_item -> save();
 
                     $repair = new Repair;
-                    $repair -> repair_inventory_id = $input['upd_ti_item_name'][$i];
+                    $repair -> repair_inventory_id = $inventory_item -> inventory_id;
                     $repair -> repair_term_id = $term_item -> ti_term_id;
                     $repair -> repair_user_id = $input['upd_ti_worker'];
                     $repair -> repair_qty = $input['upd_rqty'][$i];
@@ -467,27 +480,32 @@ class Term_ItemController extends Controller
 
                 if ($original_udamaged != 0  && $input['upd_uqty'][$i] != 0) {
                     $urepair = Repair::where([
-                                    ['repair_inventory_id', '=', $term_item -> ti_inventory_id],
+                                    ['repair_inventory_id', '=', $inventory_item -> inventory_id],
                                     ['repair_term_id', '=', $term_item -> ti_term_id],
                                     ['repair_status', '=', 0]
                                 ])
                                 -> get();
-
+                    $term_item -> ti_udamaged = $input['upd_uqty'][$i];
                     $urepair[0] -> repair_qty += $input['upd_uqty'][$i];
+
                     $urepair[0] -> save();
+                    $term_item -> save();
                 }
 
                 if ($original_rdamaged != 0 && $input['upd_rqty'][$i] != 0){
                     $rrepair = Repair::where([
-                                    ['repair_inventory_id', '=', $term_item -> ti_inventory_id],
+                                    ['repair_inventory_id', '=', $inventory_item -> inventory_id],
                                     ['repair_term_id', '=', $term_item -> ti_term_id],
                                     ['repair_status', '=', 1]
                                 ])
                                 -> get();
-                   
+                    $term_item -> ti_rdamaged = $input['upd_rqty'][$i];
                     $rrepair[0]-> repair_qty += $input['upd_rqty'][$i];
+
                     $rrepair[0]-> save();
+                    $term_item -> save();
                 }
+
             } 
         }
 

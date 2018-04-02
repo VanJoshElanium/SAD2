@@ -28,6 +28,7 @@ class SupplierController extends Controller
                 -> paginate(5);
         }else{
             $suppliers = Supplier::where('supplier_status' , '=', 1)
+                -> orWhere('supplier_status' , '=', 0)
                 -> orderBy('updated_at', 'desc')
                 -> paginate(5);
         } 
@@ -61,7 +62,7 @@ class SupplierController extends Controller
     {
         Supplier::create($request->all());
         //session()->flash('message', 'Successfully created a new supplier!');
-        return redirect('/suppliers') -> with('store-success','Supplier was successfully removed!');
+        return redirect('/suppliers') -> with('store-success','Supplier was successfully created!');
     }
 
     /**
@@ -110,10 +111,12 @@ class SupplierController extends Controller
         ]);
 
         $attributeNames = array(
-                   'edit_supplier_name' => "supplier's name",
-                   'edit_supplier_addr' => 'address',
-                   'edit_supplier_email' => 'email',  
-                   'edit_supplier_cnum' => 'contact number'
+                    'edit_supplier_name' => "supplier's name",
+                    'edit_supplier_addr' => 'address',
+                    'edit_supplier_email' => 'email',  
+                    'edit_supplier_cnum' => 'contact number',
+                    'edit_supplier_cp' => 'contact person',
+                    'edit_supplier_owner' => 'contact owner'
                 );
         $validator->setAttributeNames($attributeNames);
 
@@ -130,6 +133,8 @@ class SupplierController extends Controller
             $supplier -> supplier_addr = $request-> edit_supplier_addr;
             $supplier -> supplier_email = $request-> edit_supplier_email;
             $supplier -> supplier_cnum = $request-> edit_supplier_cnum;
+            $supplier -> supplier_cp = $request-> edit_supplier_cp;
+            $supplier -> supplier_owner = $request-> edit_supplier_owner;
             $supplier -> save();
 
             return redirect('/supplies/' .$id) -> with('update-profile-success','Supplier was successfully edited!');
@@ -145,9 +150,32 @@ class SupplierController extends Controller
     public function destroy($id)
     {
         $supplier = Supplier::find($id);
-        $supplier -> supplier_status = 0;
-        $supplier -> save();
-        //dd($supplier); //for debugging purposes
-        return redirect('/suppliers') -> with('destroy-success','Supplier was successfully removed!');
+
+        //reset to active
+        if ($supplier-> supplier_status == 0){
+            $supplier -> supplier_status = 1;
+            $supplier -> save();
+
+            $supplies = Supplier::find($id)->inventories;
+
+            foreach($supplies as $supply){
+                $supply -> inventory_status = 1;
+                $supply -> save();
+            }
+            return redirect() -> back() -> with('destroy-success','Supplier was successfully reset to active!');
+        }
+        //set to inactive
+        else{
+            $supplier -> supplier_status = 0;
+            $supplier -> save();
+            $supplies = Supplier::find($id)->inventories;
+
+            foreach($supplies as $supply){
+                $supply -> inventory_status = 0;
+                $supply -> save();
+            }
+
+            return redirect() -> back() -> with('destroy-success','Supplier was successfully set to inactive!');
+        }
     }
 }

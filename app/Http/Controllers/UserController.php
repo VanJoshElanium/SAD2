@@ -108,7 +108,7 @@ class UserController extends Controller
             'profile_fname' => array(
                          'required',
                          'max:50',
-                         'alpha'), 
+                         'alpha_dash'), 
             'profile_mname' => array(
                          'required',
                          'max:1',
@@ -116,7 +116,7 @@ class UserController extends Controller
             'profile_lname' => array(
                          'required',
                          'max:50',
-                         'alpha'),
+                         'alpha_dash'),
             'profile_gender' => 'required|string',
             'profile_bday' => 'required|date',
             'profile_cnum' => 'required|digits:11',
@@ -168,11 +168,17 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::find($id);
-        $user -> user_status = 0;
-        $user -> save();
-        //dd($user); //for debugging purposes
-        return redirect()-> back() -> with('destroy-success','User was successfully removed!');
-        //Session::flash('message', 'User has been successfully removed!');*/
+
+        if ($user-> user_status == 0){
+            $user -> user_status = 1;
+            $user -> save();
+            return redirect() -> back() -> with('destroy-success','User was successfully reset to active!');
+        }
+        else{
+            $user -> user_status = 0;
+            $user -> save();
+            return redirect() -> back() -> with('destroy-success','User was successfully set to inactive!');
+        }
     }
 
     public function show($id)

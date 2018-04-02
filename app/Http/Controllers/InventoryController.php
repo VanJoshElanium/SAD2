@@ -55,7 +55,8 @@ class InventoryController extends Controller
         }else{
             //DAMAGED ITEMS
             $rrepairs = Repair::join('inventories', 'inventories.inventory_id', '=', 'repairs.repair_inventory_id')
-                -> join('suppliers', 'suppliers.supplier_id', '=', 'inventories.inventory_supplier_id')
+                -> join ('supplies', 'inventory_id', '=', 'supplies_inventory_id')
+                -> join ('suppliers', 'supplier_id', '=', 'supplies_supplier_id')
                 -> select('inventories.*',  'repairs.*', 'suppliers.supplier_name', 'suppliers.supplier_id')
                 -> where('repair_status', '1')
                 -> groupBy('inventory_id')
@@ -63,7 +64,8 @@ class InventoryController extends Controller
                 -> paginate(10);
 
             $urepairs = Repair::join('inventories', 'inventories.inventory_id', '=', 'repairs.repair_inventory_id')
-                -> join('suppliers', 'suppliers.supplier_id', '=', 'inventories.inventory_supplier_id')
+                -> join ('supplies', 'inventory_id', '=', 'supplies_inventory_id')
+                -> join ('suppliers', 'supplier_id', '=', 'supplies_supplier_id')
                 -> select('inventories.*',  'repairs.*', 'suppliers.supplier_name', 'suppliers.supplier_id')
                 -> where('repair_status', '0')
                 -> groupBy('inventory_id')
@@ -71,10 +73,13 @@ class InventoryController extends Controller
                 -> paginate(10);
             
             //ACTIVE INVENTORY ITEMS
-            $items = Inventory::join('suppliers', 'suppliers.supplier_id', '=', 'inventories.inventory_supplier_id')
+            $items = Inventory::join('supplies', 'supplies_inventory_id', '=', 'inventory_id')
+                -> join ('suppliers', 'supplier_id', '=', 'supplies_supplier_id')
                 // -> join('suppliers', 'suppliers.supplier_id', '=', 'supplies.supply_supplier_id')
                 -> select('inventories.*',  'suppliers.supplier_name')
                 -> orderBy('inventories.updated_at', 'desc')
+                -> where('inventory_status', '!=', 0)
+                -> orWhere('inventory_qty', '!=', 0)
                 -> paginate(10);
         } 
         return view('inventory', compact('items', 'curr_usr', 'suppliers', 'workers', 'rrepairs', 'urepairs', 'users'));
@@ -82,11 +87,12 @@ class InventoryController extends Controller
 
     public function getItem($id)
     {
-        $itemdata= Inventory::join('stockins', 'si_inventory_id', '=', 'inventories.inventory_id')
+        $itemdata= Inventory::join('stockins', 'si_inventory_id', '=', 'inventory_id')
                 -> join('stockin_items', 'si_item_id','=', 'si_si_id')
                 -> join('users', 'users.user_id', '=', 'stockin_items.si_user_id')
                 -> join('profiles', 'profiles.profile_user_id', '=', 'users.user_id')
-                -> join('suppliers', 'suppliers.supplier_id', '=', 'inventories.inventory_supplier_id')
+                -> join ('supplies', 'inventory_id', '=', 'supplies_inventory_id')
+                -> join ('suppliers', 'supplier_id', '=', 'supplies_supplier_id')
                 -> select('inventories.*', 'stockins.*', 'stockin_items.*', 'suppliers.supplier_id', 'suppliers.supplier_name', 'profiles.fname', 'profiles.mname', 'profiles.lname', 'users.user_id')
                 -> where('inventories.inventory_id', '=', $id)
                 -> orderBy ('si_date', 'desc')
@@ -101,9 +107,11 @@ class InventoryController extends Controller
         // $id = suppliers.supplier_id
         //GET SUPPLIERS SUPPLIED ITEMS
 
-        $supplies = Inventory::select('inventories.inventory_id', 'inventories.inventory_name', 'inventories.inventory_qty', 'inventories.inventory_price')
+        $supplies = Inventory::join ('supplies', 'inventory_id', '=', 'supplies_inventory_id')
+                    -> join ('suppliers', 'supplier_id', '=', 'supplies_supplier_id')
+                    -> select('inventories.inventory_id', 'inventories.inventory_name', 'inventories.inventory_qty', 'inventories.inventory_price')
                     -> where([
-                            ['inventory_supplier_id', '=', $id],
+                            ['supplier_id', '=', $id],
                             ['inventory_status', '!=', 0]
                         ])
                     -> get();
@@ -112,9 +120,11 @@ class InventoryController extends Controller
     }
 
     public function getSupplyDamaged($id){
-        $supplies = Inventory::select('inventories.inventory_id', 'inventories.inventory_name', 'inventories.inventory_qty', 'inventories.inventory_price')
+        $supplies = Inventory::join ('supplies', 'inventory_id', '=', 'supplies_inventory_id')
+                    -> join ('suppliers', 'supplier_id', '=', 'supplies_supplier_id')
+                    -> select('inventories.inventory_id', 'inventories.inventory_name', 'inventories.inventory_qty', 'inventories.inventory_price')
                     -> where([
-                            ['inventory_supplier_id', '=', $id]
+                            ['supplier_id', '=', $id]
                         ])
                     -> get();
         //Session::flash('message', 'User has been successfully created!');
@@ -200,8 +210,8 @@ class InventoryController extends Controller
                 for ($i=0; $i < count($input['inventory_quantity']); ++$i) {
                     $item = Inventory::find($input['supply_name'][$i]);
                     // $item -> inventory_user_id = $request->get('inventory_user_id');
-                    // $item -> received_at = $request->get('received_at');
-                    $item -> inventory_supplier_id = $input['supplier_name'];
+                    // // $item -> received_at = $request->get('received_at');
+                    // $item -> inventory_supplier_id = $input['supplier_name'];
                     // $item -> inventory_price = $input['inventory_price'][$i];
                     $item -> inventory_qty += $input['inventory_quantity'][$i];
                     $item -> inventory_status = 1;

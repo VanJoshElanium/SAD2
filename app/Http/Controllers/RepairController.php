@@ -190,7 +190,8 @@ class RepairController extends Controller
     public function getRepair($id){
         $repairdata = DB::table('repairs')
                     -> join('inventories', 'inventories.inventory_id', '=', 'repairs.repair_inventory_id')
-                    -> join('suppliers', 'suppliers.supplier_id','=','inventories.inventory_supplier_id')
+                    -> join ('supplies', 'supplies_inventory_id', '=', 'inventory_id')
+                    -> join('suppliers', 'suppliers.supplier_id','=','supplies_supplier_id')
                     // -> join('profiles', 'profiles.profile_user_id', '=', 'repairs.repair_user_id')
                     // -> select('inventories.inventory_name', 'repairs.*', 'profiles.fname', 'profiles.mname', 'profiles.lname', 'suppliers.supplier_name', 'suppliers.supplier_id')
                     -> select('inventories.inventory_name', 'repairs.*','suppliers.supplier_name', 'suppliers.supplier_id')

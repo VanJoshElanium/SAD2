@@ -59,16 +59,20 @@ class SupplyController extends Controller
         for ($i=0; $i < count($input['supply_name']); ++$i) {
 
             $item = new Inventory;
-            $item -> inventory_supplier_id = $request -> supply_supplier_id;
             $item -> inventory_name = $input['supply_name'][$i];
             $item -> inventory_desc = $input['supply_desc'][$i];
             $item -> inventory_qty = 0;
             $item -> inventory_price = $input['supply_price'][$i];
             $item -> save();
+
+            $supply = new Supply;
+            $supply -> supplies_supplier_id = $request -> supply_supplier_id;
+            $supply -> supplies_inventory_id = $item -> inventory_id; 
+            $supply -> save();
         }
         
         //session()->flash('message', 'Successfully created a new supplier!');
-        return redirect()->back() -> with('store-item-success','Supplier item was successfully created!');
+        return redirect()->back() -> with('store-item-success','Supplier item/s successfully created!');
     }
 
     /**
@@ -86,11 +90,12 @@ class SupplyController extends Controller
             $supplies = Inventory::search($request->input('titlesearch')) 
                 -> paginate(5);
         }else{
-            $supplies = Inventory::where([
-                    ['inventory_supplier_id' , '=', $id], 
-                    ['inventory_status', '=', 1]
+            $supplies = Supply::join('suppliers', 'supplier_id', '=', 'supplies_supplier_id')
+                -> join('inventories', 'inventory_id', '=', 'supplies_inventory_id')
+                -> where([
+                    ['supplier_id' , '=', $id]
                 ])
-                -> orderBy('updated_at', 'desc')
+                -> orderBy('inventories.updated_at', 'desc')
                 -> paginate(5);
             //dd($supplies); //debugging purposes
         } 
@@ -121,7 +126,7 @@ class SupplyController extends Controller
         //dd($request-> all()); //for debugging purposes
 
         $validator = Validator::make($request->all(), [
-            'edit_supply_name' => 'required|string|unique:inventories,inventory_name,' .$id .',inventory_id,inventory_status,1',
+            'edit_supply_name' => 'required|string',
             'edit_supply_desc' => 'nullable|string',
             'edit_supply_price' => 'required|numeric|min:1'
         ]);
@@ -156,11 +161,30 @@ class SupplyController extends Controller
      */
     public function destroy($id)
     {
+        $supplier = Supply::join ('inventories', 'inventory_id', '=', 'supplies_inventory_id')
+                            -> join ('suppliers', 'supplier_id', '=', 'supplies_supplier_id')
+                            -> where ([
+                                    ['supplies_inventory_id', '=', $id],
+                                    ['inventory_id', '=', $id],
+                                ])
+                            -> select ('supplier_id')
+                            -> get();
+        $supplier = $supplier[0] -> supplier_id;
+
         $supply = Inventory::find($id);
-        $supply -> inventory_status = 0;
-        $supply -> save();
+        if ($supply->inventory_status == 0){
+            $supply -> inventory_status = 1;
+            $supply -> save();
+            return redirect('/supplies/' .$supplier) -> with('destroy-item-success','Supplier item was successfully reset to active!');
+        }
+        else{
+            $supply -> inventory_status = 0;
+            $supply -> save();
+            return redirect('/supplies/' .$supplier) -> with('destroy-item-success','Supplier item was successfully set to inactive!');
+        }
+        
         //dd($supply); //for debugging purposes
-        return redirect('/supplies/' .$supply-> inventory_supplier_id) -> with('destroy-item-success','Supplier item was successfully removed!');
+        
         //Session::flash('message', 'User has been successfully removed!');*/
     }
 

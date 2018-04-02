@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Term;
 use App\User;
+use App\Profile;
 use Validator;
 use App\Worker;
 use App\Term_Item;
@@ -100,14 +101,28 @@ class CustomerController extends Controller
             }
             else
             {
+                $profile = Profile::where ([ 
+                                                ['fname', '=', $input['fname']],
+                                                ['mname', '=', $input['mname']],
+                                                ['lname', '=', $input['lname']],
+                                                ['gender', '=', $input['gender']]
+                                           ])
+                            -> get();
+                if (!$profile){
+                    $profile = new Profile;
+                    $profile -> fname = $input['fname'];
+                    $profile -> mname = $input['mname'];
+                    $profile -> lname = $input['lname'];
+                    $profile -> gender = $input['gender'];
+                    // $profile -> bday = $input['addr'];
+                    $profile -> cnum = $input['cnum'];
+                    $profile -> save();
+                }
+                else $profile = $profile[0];
+
                 $customer = new Customer;
-                $customer -> customer_fname = $input['fname'];
-                $customer -> customer_mname = $input['mname'];
-                $customer -> customer_lname = $input['lname'];
-                $customer -> customer_gender = $input['gender'];
                 $customer -> customer_addr = $input['addr'];
-                $customer -> customer_cnum = $input['cnum'];
-                $customer -> customer_status = 0;
+                $customer -> customer_profile_id = $profile -> profile_id;
                 $customer -> save();
 
                 $customer_order = new Customer_Order;
@@ -215,15 +230,17 @@ class CustomerController extends Controller
                     -> select ('co_customer_id')
                     -> get();
             $customer = Customer::find($customer[0] -> co_customer_id);
-
-            $customer -> customer_fname = $input['edit_fname'];
-            $customer -> customer_mname = $input['edit_mname'];
-            $customer -> customer_lname = $input['edit_lname'];
-            $customer -> customer_gender = $input['edit_gender'];
             $customer -> customer_addr = $input['edit_addr'];
-            $customer -> customer_cnum = $input['edit_cnum'];
-            $customer -> customer_status = 0;
             $customer -> save();
+
+            $profile = Profile::find($customer -> customer_profile_id);
+            $profile -> fname = $input['edit_fname'];
+            $profile -> mname = $input['edit_mname'];
+            $profile -> lname = $input['edit_lname'];
+            $profile -> cnum = $input['edit_cnum'];
+            $profile -> gender = $input['edit_gender'];
+            $profile -> save();
+            
 
             $orders = Order::join('customer_orders', 'co_id', '=', 'order_co_id')
                         -> where ('co_id', '=', $id)
@@ -267,12 +284,14 @@ class CustomerController extends Controller
 
     public function getCustomerOrder(Request $request){
         $codata = Customer_Order::join('customers', 'customer_id', '=', 'co_customer_id')
+                    -> join ('profiles', 'customer_profile_id', '=', 'profile_id')
                     -> join ('orders', 'order_co_id', '=', 'co_id')
                     -> join ('terms', 'term_id', '=', 'co_term_id')
                     -> join ('term_items', 'order_ti_id', '=', 'ti_id')
                     -> join ('inventories', 'ti_inventory_id', '=', 'inventory_id')
-                    -> join ('suppliers', 'inventory_supplier_id', '=', 'supplier_id')
-                    -> select ('customers.*', 'inventory_name', 'supplier_name', 'ti_id', 'order_qty', 'inventory_price', 'co_id')
+                    -> join ('supplies', 'supplies_inventory_id', '=', 'inventory_id')
+                    -> join ('suppliers', 'supplies_supplier_id', '=', 'supplier_id')
+                    -> select ('customers.*', 'profiles.*', 'inventory_name', 'supplier_name', 'ti_id', 'order_qty', 'inventory_price', 'co_id')
                     -> where ([
                         ['terms.term_status', '=', '1'],
                         ['terms.term_id', '=', $request -> term_id],

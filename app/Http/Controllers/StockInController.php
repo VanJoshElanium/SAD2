@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
 use App\Stockin;
 use App\Stockin_Item;
 use Illuminate\Support\Facades\Auth;
@@ -104,12 +105,30 @@ class StockInController extends Controller
                 -> join ('stockin_items', 'si_item_id', '=', 'si_si_id')
                 -> join ('profiles', 'profile_user_id', '=', 'si_user_id')
                 -> join ('inventories', 'inventory_id' , '=', 'si_inventory_id')
-                -> join ('suppliers', 'supplier_id', '=', 
-                    'inventory_supplier_id')
+                -> join ('supplies', 'inventory_id', '=', 'supplies_inventory_id')
+                -> join ('suppliers', 'supplier_id', '=', 'supplies_supplier_id')
                 -> select ('inventories.inventory_name', 'suppliers.supplier_name', 'profiles.fname', 'profiles.mname', 'profiles.lname', 'stockins.*', 'stockin_items.*')
                 -> where ('si_si_id', '=', $request -> id)
                 -> get();
 
         return $sidatas;
+    }
+
+    public function printSI($id){
+
+        $sidatas = DB::table('stockins')
+                -> join ('stockin_items', 'si_item_id', '=', 'si_si_id')
+                -> join ('profiles', 'profile_user_id', '=', 'si_user_id')
+                -> join ('inventories', 'inventory_id' , '=', 'si_inventory_id')
+                -> join ('supplies', 'inventory_id', '=', 'supplies_inventory_id')
+                -> join ('suppliers', 'supplier_id', '=', 'supplies_supplier_id')
+                -> select ('inventories.*', 'suppliers.supplier_name', 'profiles.fname', 'profiles.mname', 'profiles.lname', 'stockins.*', 'stockin_items.*')
+                -> where ('si_si_id', '=', $id)
+                -> get();
+
+        $x = 1;
+
+        $pdf = PDF::loadView('si', compact('sidatas', 'x'));
+        return $pdf->stream();
     }
 }

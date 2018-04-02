@@ -114,14 +114,14 @@ class TermsProfileController extends Controller
                                -> where([
                                     ['term_status' , '=', 1]
                                 ])
-                               -> where(function($q) use ($term) {
-                                   $q->where([
-                                        ['end_date', '>=', $term[0]->start_date]
-                                      ])
-                                     ->orWhere([
+                               // -> where(function($q) use ($term) {
+                               //     $q->where([
+                               //          ['end_date', '>=', $term[0]->start_date]
+                               //        ])
+                                     ->Where([
                                          ['terms.end_date', '=', null]
                                      ]);
-                               });
+                               // });
                         })
                     -> select('user_id', 'fname', 'mname', 'lname')
                     -> where([
@@ -171,7 +171,8 @@ class TermsProfileController extends Controller
         //TERM ITEMS
         $term_items = Term::join('term_items', 'terms.term_id', '=', 'term_items.ti_term_id')
                     -> join('inventories', 'inventories.inventory_id', '=', 'term_items.ti_inventory_id')
-                    -> join('suppliers', 'suppliers.supplier_id', '=', 'inventories.inventory_supplier_id')
+                    -> join ('supplies', 'supplies_inventory_id', '=', 'inventory_id')
+                    -> join('suppliers', 'suppliers.supplier_id', '=', 'supplies_supplier_id')
                     -> select ('terms.term_id', 'term_items.*', 'inventories.inventory_name', 'inventories.inventory_price', 'suppliers.supplier_name', 'suppliers.supplier_id')
                     -> where ([
                         ['terms.term_status', '=', '1'],
@@ -181,7 +182,8 @@ class TermsProfileController extends Controller
                     -> paginate(10);
 
         //AVAILABLE ITEMS
-        $a_items = Inventory::join('suppliers', 'suppliers.supplier_id', '=', 'inventory_supplier_id')
+        $a_items = Inventory::join ('supplies', 'supplies_inventory_id', '=', 'inventory_id')
+                            -> join('suppliers', 'suppliers.supplier_id', '=', 'supplies_supplier_id')
                             -> select('inventories.*', 'suppliers.supplier_name')
                             -> where([
                                     ['inventory_status', '=', '1'],
@@ -238,11 +240,12 @@ class TermsProfileController extends Controller
                     
         //TERM CUSTOMERS
         $unpaid_customers = Customer_Order::join('customers', 'customer_id', '=', 'co_customer_id')
+                    -> join ('profiles', 'customer_profile_id', '=', 'profile_id')
                     -> join ('orders', 'order_co_id', '=', 'co_id')
                     -> join ('terms', 'term_id', '=', 'co_term_id')
                     -> join ('term_items', 'order_ti_id', '=', 'ti_id')
                     -> join ('inventories', 'ti_inventory_id', '=', 'inventory_id')
-                    -> select ('co_id', 'customers.*', (DB::raw('SUM((inventories.inventory_price + (inventories.inventory_price * 0.25)) * orders.order_qty) as total_payable')))
+                    -> select ('co_id', 'customers.*', 'profiles.*', (DB::raw('SUM((inventories.inventory_price + (inventories.inventory_price * 0.25)) * orders.order_qty) as total_payable')))
                     -> where ([
                         ['terms.term_status', '=', '1'],
                         ['terms.term_id', '=', $id],
@@ -254,11 +257,12 @@ class TermsProfileController extends Controller
                     -> paginate(5);
 
         $paid_customers = Customer_Order::join('customers', 'customer_id', '=', 'co_customer_id')
+                    -> join ('profiles', 'customer_profile_id', '=', 'profile_id')
                     -> join ('orders', 'order_co_id', '=', 'co_id')
                     -> join ('terms', 'term_id', '=', 'co_term_id')
                     -> join ('term_items', 'order_ti_id', '=', 'ti_id')
                     -> join ('inventories', 'ti_inventory_id', '=', 'inventory_id')
-                    -> select ('co_id', 'customers.*', 'co_collect_date', (DB::raw('SUM((inventories.inventory_price + (inventories.inventory_price * 0.25)) * orders.order_qty) as total_payable')))
+                    -> select ('co_id', 'customers.*', 'profiles.*', 'co_collect_date', (DB::raw('SUM((inventories.inventory_price + (inventories.inventory_price * 0.25)) * orders.order_qty) as total_payable')))
                     -> where ([
                         ['terms.term_status', '=', '1'],
                         ['terms.term_id', '=', $id],
@@ -394,7 +398,8 @@ class TermsProfileController extends Controller
                     -> join ('profiles as handler', 'handler.profile_user_id', '=', 'ti_user_id')
                     -> join('profiles as worker', 'worker.profile_user_id', '=', 'worker_user_id')
                     -> join('inventories', 'inventories.inventory_id', '=', 'term_items.ti_inventory_id')
-                    -> join('suppliers', 'suppliers.supplier_id', '=', 'inventories.inventory_supplier_id')
+                    -> join ('supplies', 'supplies_inventory_id', '=', 'inventory_id')
+                    -> join ('suppliers', 'suppliers.supplier_id', '=', 'supplies_supplier_id')
                     -> select ('terms.*', 'term_items.*', 'inventories.inventory_name', 'inventories.inventory_price', 'suppliers.supplier_name', 'suppliers.supplier_id', 'worker.fname as cfname', 'worker.mname as cmname', 'worker.lname as clname', 'handler.fname as hfname', 'handler.mname as hmname', 'handler.lname as hlname')
                     -> where ([
                         ['terms.term_id', '=', $id],
@@ -402,7 +407,7 @@ class TermsProfileController extends Controller
                     ])
                     -> groupBy('ti_id')
                     -> get();
-
+                    
       $workers = Term::join('workers', 'terms.term_id', '=', 'worker_term_id')
             -> join('users', 'workers.worker_user_id', '=', 'users.user_id')
             -> join('profiles', 'users.user_id', '=', 'profiles.profile_user_id')
@@ -452,7 +457,7 @@ class TermsProfileController extends Controller
 
       $pdf = PDF::loadView('termsales', compact('term_items', 'expenses', 'total_expense', 'total_sales', 'total_items', 'total_quantity', 'total_damages', 'total_returns', 'workers'));
 
-      return $pdf->download('termsales.pdf');
+      return $pdf->stream();
     }
 
     public function getTermDetails($id){
