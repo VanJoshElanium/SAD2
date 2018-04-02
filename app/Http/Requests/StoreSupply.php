@@ -31,7 +31,7 @@ class StoreSupply extends FormRequest
     public function rules()
     {
         return [
-            'supply_name.*' => 'distinct|required|string|unique:inventories,inventory_name,null,null,inventory_status,1',
+            'supply_name.*' => 'distinct|required|string',
             'supply_price.*' => 'required|numeric|min:1',
             'supply_desc' => 'nullable'
         ];
