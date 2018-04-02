@@ -33,4 +33,9 @@ class Customer extends Model
     {
         return $this->hasMany('App\Customer_Order', 'co_customer_id');
     }
+
+    public function profile()
+    {
+        return $this->hasOne('App\Profile', 'customer_profile_id');
+    }
 }

@@ -42,6 +42,11 @@ class Profile extends Model
         return $this->belongsTo('App\User', 'profile_user_id', 'user_id');
     }
 
+    public function customer()
+    {
+        return $this->belongsTo('App\Customer', 'customer_profile_id', 'customer_id');
+    }
+
     /* MUTATORS */
     public function setFnameAttribute($value){
         $this->attributes['fname'] = ucfirst($value);

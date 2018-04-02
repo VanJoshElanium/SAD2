@@ -10,34 +10,30 @@ use Spatie\Activitylog\Traits\LogsActivity;
 class Supply extends Model
 {
 
-    use LogsActivity;
+    protected $primaryKey = 'supply_id';
+    protected $table = 'supplies';
 
-    protected $primaryKey = 'inventory_id';
+    // use LogsActivity;
 
-    protected $fillable = ['inventory_supplier_id', 'inventory_name', 'inventory_price', 'inventory_qty'];
+    protected $fillable = ['supplies_supplier_id', 'supplies_inventory_id'];
 
-    public $sortable = [ 'inventory_id','inventory_name', 'inventory_price'];
 
-    protected $hidden = [
-       'remember_token',
-    ];
+    // protected static $logAttributes = ['supplies_supplier_id', 'supplies_inventory_id'];
 
-    protected static $logAttributes = ['inventory_supplier_id', 'inventory_name', 'inventory_price', 'inventory_qty'];
+    // protected static $logOnlyDirty = true;
 
-    protected static $logOnlyDirty = true;
+    // public function getDescriptionForEvent(string $eventName): string
+    // {
+    //     return ucfirst($eventName) . "supplier's item";
+    // }
 
-    public function getDescriptionForEvent(string $eventName): string
-    {
-        return ucfirst($eventName) . "supplier's item";
-    }
+	// /* MUTATORS */
+ //    public function setSupplyNameAttribute($value){
+ //        $this->attributes['inventory_name'] = ucfirst($value);
+ //    }
 
-	/* MUTATORS */
-    public function setSupplyNameAttribute($value){
-        $this->attributes['inventory_name'] = ucfirst($value);
-    }
-
-    public function searchableAs()
-    {
-        return 'supplies_index';
-    }
+    // public function searchableAs()
+    // {
+    //     return 'supplies_index';
+    // }
 }

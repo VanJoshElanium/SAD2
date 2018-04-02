@@ -16,11 +16,11 @@ class Inventory extends Model
     protected $primaryKey = 'inventory_id';
 
     protected $fillable = [
-        'inventory_qty', 'inventory_price', 'inventory_status', 'inventory_name', 'inventory_supplier_id', 'inventory_desc',
+        'inventory_qty', 'inventory_price', 'inventory_status', 'inventory_name', 'inventory_desc',
     ];
 
     protected static $logAttributes = [
-        'inventory_qty', 'inventory_price', 'inventory_status', 'inventory_name', 'inventory_supplier_id', 'inventory_desc',
+        'inventory_qty', 'inventory_price', 'inventory_status', 'inventory_name', 'inventory_desc',
     ];
 
     protected static $logOnlyDirty = true;

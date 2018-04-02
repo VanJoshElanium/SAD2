@@ -14,20 +14,16 @@ class Supplier extends Model
     protected $primaryKey = 'supplier_id';
 
     protected $fillable = [
-        'supplier_name', 'supplier_addr', 'supplier_email', 'supplier_cnum', 'supplier_status',
+        'supplier_name', 'supplier_addr', 'supplier_email', 'supplier_cnum', 'supplier_status', 
+        'supplier_cp', 'supplier_owner'
     ];
 
     protected static $logAttributes = [
-        'supplier_name', 'supplier_addr', 'supplier_email', 'supplier_cnum', 'supplier_status',
+        'supplier_name', 'supplier_addr', 'supplier_email', 'supplier_cnum', 'supplier_status', 'supplier_cp', 'supplier_owner'
     ];
 
     protected static $logOnlyDirty = true;
 
-    public $sortable = ['supplier_id', 'suuplier_name', 'supplier_addr'];
-
-    protected $hidden = [
-        'remember_token',
-    ];
 
     public function getDescriptionForEvent(string $eventName): string
     {
