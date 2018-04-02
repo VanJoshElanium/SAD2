@@ -19,6 +19,7 @@ class CreateTermItemsTable extends Migration
             $table ->integer('ti_inventory_id') -> unsigned();
             $table ->integer('ti_user_id') -> unsigned();
             
+            $table ->integer('ti_price');
             $table ->dateTime('ti_date');
             $table ->integer('ti_original');
             $table ->integer('ti_udamaged') -> nullable() -> default(0);

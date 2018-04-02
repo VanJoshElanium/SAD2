@@ -25,12 +25,12 @@ class CreateUsersTable extends Migration
 
         Schema::create('profiles', function (Blueprint $table) {
             $table->increments('profile_id');
-            $table->integer('profile_user_id')-> unsigned();
+            $table->integer('profile_user_id') -> unsigned() -> nullable;
             $table->string('fname', '50');
             $table->string('mname', '50');
             $table->string('lname', '50');
             $table->integer('gender');
-            $table->date('bday', '6');
+            $table->date('bday', '6') -> nullable;
             $table->string('cnum', '11');
             $table->foreign('profile_user_id')
                     ->references('user_id')
