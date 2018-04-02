@@ -36,6 +36,21 @@
         .modal-title{
             text-align:center;
         }
+        .red-dot{
+            height: 15px;
+            width: 15px;
+            background-color: #801515;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .green-dot{
+            height: 15px;
+            width: 15px;
+            background-color: #1E6912;
+            border-radius: 50%;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
@@ -178,6 +193,7 @@
                                                     <th>#</th>
                                                     <th>Name</th>
                                                     <th>Price</th>
+                                                    <th>Status</th>
                                                     @endif
                                                 </tr>
                                             </thead>
@@ -188,6 +204,13 @@
                                                         <td>{{$x+=1}}</td>
                                                         <td>{{$supply->inventory_name}}</td>
                                                         <td>&#8369; {{$supply->inventory_price}}</td>
+                                                        <td>
+                                                                @if($supply->inventory_status == 0)
+                                                                <span class="red-dot"></span>
+                                                                @else 
+                                                                <span class="green-dot"></span>
+                                                                @endif
+                                                            </td>
                                                         <td> 
                                                         <button data-target="#editModal" data-toggle="modal" id="view-edit-{{$supply->inventory_id}}" data-id='{{$supply->inventory_id}}' class="edit-btn btn btn-primary btn-fill">
                                                             View
@@ -195,7 +218,10 @@
                                                        </td>
                                                       <td>
                                                         <button data-target="#removeItem-modal" data-toggle="modal" data-id='{{$supply->inventory_id}}' class="del-btn btn btn-danger btn-fill">
-                                                            Remove
+                                                            @if($supply->inventory_status == 0)
+                                                                Set Active
+                                                            @else Set Inactive
+                                                            @endif
                                                         </button>
                                                       </td>
                                                     </tr>
@@ -219,13 +245,15 @@
                                     <div class="author">
                                         <img class="avatar border-gray" src="/images/faces/face-3.jpg" alt="..."/>
 
-                                          <h4 class="title">{{$supplier->supplier_name}} </h4>
-                                            <h5>{{$supplier->supplier_addr}}</h5>
+                                          <h4 class="title">Name: {{$supplier->supplier_name}} </h4>
+                                            <h5>Addr: {{$supplier->supplier_addr}}</h5>
                                    
                                         <hr>
                                         <h5 class="title text-center"> 
-                                            {{$supplier->supplier_email}} <br>
-                                            {{$supplier->supplier_cnum}}
+                                            Owner: {{$supplier->supplier_owner}} <br>
+                                            Owner's Number : {{$supplier->supplier_cp}} <br>
+                                            Company Number: {{$supplier->supplier_cnum}} <br>
+                                            Company Email: {{$supplier->supplier_email}}
                                         </h5>
                                          <button style="margin-top:5%; margin-bottom:5%" type="button" data-target="#editSupplierModal" data-toggle="modal" id="edit-supplier-btn" class="btn  btn-success btn-fill" data-id='{{$supplier->supplier_id}}'> 
                                             Edit Supplier
@@ -278,7 +306,7 @@
                                         <div class="{{$errors->has('supply_price') ? ' has-error' : ''}}"> 
                                             <div class="col-md-2">    
                                                 <label>Price</label>
-                                                <input type="number" id="supply_price" class="add-supply-dynamic form-control"  min="1" name="supply_price[]" required> 
+                                                <input type="number" id="supply_price" class="form-control"  min="1" name="supply_price[]" required> 
                                                 @if ($errors->has('supply_price'))
                                                     <span class="help-block">
                                                         <strong>
@@ -292,7 +320,7 @@
                                         <div class="{{$errors->has('supply_desc') ? ' has-error' : ''}}"> 
                                             <div class="col-md-4">    
                                                 <label>Description</label>
-                                                <textarea rows='1' id="supply_desc[]" class="add-supply-dynamic form-control"  name="supply_desc[]" ></textarea>
+                                                <textarea rows='1' id="supply_desc[]" class="form-control"  name="supply_desc[]" ></textarea>
                                                 @if ($errors->has('supply_desc'))
                                                     <span class="help-block">
                                                         <strong>
@@ -422,7 +450,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Remove Supplied Item</h4>
+                    <h4 class="modal-title">Change Item Status</h4>
                 </div>
                      
                 <form method="POST" class="form-horizontal" id="removeItem">  
@@ -435,7 +463,7 @@
                                 <div class="row form-group">                       
                                     <div class=""> 
                                         <div class="col-md-12">   
-                                            You are about to remove this supplier's item. Do you want to proceed?
+                                            You are about to change the status of this item. Do you want to proceed?
                                         </div>
                                     </div>
                                 </div>
@@ -446,7 +474,7 @@
                     <div class="modal-footer">
                             <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancel</button>
                           <!--ADD New Term button-->
-                          <button type="submit" class="btn btn-bg btn-success btn-fill">Remove</button>   
+                          <button type="submit" class="btn btn-bg btn-success btn-fill">Yes</button>   
                     </div>
                 </form>
             </div>
@@ -486,6 +514,35 @@
                                         </div>
                                     </div>
                                 </div>    
+
+                                <div class="row form-group">   
+                                    <div class="{{$errors->has('edit_supplier_owner') ? ' has-error' : ''}}"> 
+                                        <div class="col-md-6">    
+                                            <label>Owner's Name</label>
+                                            <input type="text" id="edit_supplier_owner" class="form-control"  name="edit_supplier_owner" value="{{old('edit_supplier_owner')}}"> 
+                                            @if ($errors->has('edit_supplier_owner'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{ $errors->first('edit_supplier_owner') }}
+                                                    </strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="{{$errors->has('edit_supplier_cp') ? ' has-error' : ''}}"> 
+                                        <div class="col-md-6">    
+                                            <label>Contact Person's Name</label>
+                                            <input type="text" id="edit_supplier_cp" class="form-control"  name="edit_supplier_cp" value="{{old('edit_supplier_cp')}}"> 
+                                            @if ($errors->has('edit_supplier_cp'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{ $errors->first('edit_supplier_cp') }}
+                                                    </strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div> 
 
                                 <div class="row form-group">
                                     <div class="{{$errors->editSupplier->has('edit_supplier_addr') ? ' has-error' : ''}}"> 
@@ -635,6 +692,8 @@
                     $('#edit_supplier_addr').val("{{old('edit_supplier_addr')}}"); 
                     $('#edit_supplier_cnum').val("{{old('edit_supplier_cnum')}}");
                     $('#edit_supplier_email').val("{{old('edit_supplier_email')}}");
+                    $('#edit_supplier_cp').val("{{old('edit_supplier_cp')}}");
+                    $('#edit_supplier_owner').val("{{old('edit_supplier_owner')}}");
 
                     var id = $(this).data('id');
                     $("#view-edit-supplier").attr("action", "/suppliers/" +id);
@@ -710,6 +769,8 @@
                     $('#edit_supplier_addr').val(response.supplier_addr); 
                     $('#edit_supplier_email').val(response.supplier_email);
                     $('#edit_supplier_cnum').val(response.supplier_cnum);
+                    $('#edit_supplier_cp').val(response.supplier_cp);
+                    $('#edit_supplier_owner').val(response.supplier_owner);
                 },
                 error: function(data){
                     console.log(data);
@@ -735,11 +796,11 @@
                     "</div>"+
 
                     "<div class='col-md-2'>"+ 
-                        "<input type='number' id='supply_price' class='add-supply-dynamic form-control'  min='1' name='supply_price[]' required>"+
+                        "<input type='number' id='supply_price' class='form-control'  min='1' name='supply_price[]' required>"+
                     "</div>"+
 
                     "<div class='col-md-4'>"+ 
-                        "<textarea rows='1' id='supply_desc' class='add-supply-dynamic form-control'  name='supply_desc[]' > </textarea>"+
+                        "<textarea rows='1' id='supply_desc' class='form-control'  name='supply_desc[]' > </textarea>"+
                     "</div>"+
                     
                     "<div class='col-md-2'>"+ 

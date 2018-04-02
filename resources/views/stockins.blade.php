@@ -248,10 +248,51 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-bg btn-fill btn-primary pull-left" data-target="#printSI" data-toggle="modal" data-dismiss="modal">Print</button>
+                <button type="button" class="btn  btn-default pull-right" data-dismiss="modal">Close</button>
             </div>
         </div>
       </div>
+    </div>
+    <!--PRINTING ITEMS MODAL-->    
+    <div class="modal fade" role="dialog" id="printSI" >
+        <div class="modal-dialog">
+          <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <center>
+                        <h4 class="modal-title"> Stock Ins </h4>
+                    </center>
+                </div>
+
+                <form method="POST" id="form-SI" action="/printSI/">
+                    {{csrf_field()}}
+                    <div class="modal-body">
+                        <div id="view-edit-content" class="row">
+                            <div class="col-md-12">                                     
+                                <div class="row form-group">                       
+                                    <div class=""> 
+                                        <div class="col-md-12">   
+                                            You are about to generate a pdf of this particular stock-in. Do you want to proceed?
+                                        </div>
+                                    </div>
+                                </div> 
+                            </div> 
+                        </div>                       
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancel
+                        </button>
+
+                        <button type="submit" id="gen-si" class="btn btn-bg btn-success btn-fill">
+                        Generate PDF
+                        </button> 
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </body>
 
@@ -288,7 +329,7 @@
                             for (i = 0; i < response.length; i++) {
                                 if (response[i].si_term_id != null)
                                     $('#from span').html("Term");
-                                else  $('#from span').html("Inventory"); 
+                                else  $('#from span').html("Supplier"); 
 
                                 $('.add-here').append(
                                     "<div class='row form-group'>" +
@@ -306,6 +347,14 @@
                     });
                 
             });
+        });
+    </script>
+
+    <script>
+        $(document).on('click', '.viewSI-btn', function(){  
+           var id = $(this).data('id');
+
+           $("#form-SI").attr("action", "/printSI/" +id);
         });
     </script>
 @endsection

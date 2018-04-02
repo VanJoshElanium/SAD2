@@ -175,7 +175,7 @@
                                                 @if(count($stockouts)>0)
                                                 <th>#</th>
                                                 <th>Stock Out Date</th>
-                                                <th>Handler</th>
+                                                <th>First Handler</th>
                                                 @endif
                                             </tr>
                                         </thead>
@@ -227,7 +227,7 @@
                     <div class="col-md-12">
                         <div class="row form-group">
                             <div class="col-md-4">    
-                                <label for="sel1">Handler</label>
+                                <label for="sel1">Last Handler</label>
                                 <p id="handler"> <span></span> </p>      
                             </div>
                             <div class="col-md-4">    

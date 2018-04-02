@@ -122,8 +122,10 @@
             <?php
                 echo '<p> Total Sales: PHP'; 
                     $total_sale = 0;
-                    foreach($term_items as $term_item) 
-                        $total_sale += ($term_item->ti_original -($term_item->ti_udamaged +$term_item->ti_rdamaged + $term_item->ti_returned)) * ($term_item -> inventory_price + ($term_item -> inventory_price * 0.25)); 
+                    foreach($term_items as $term_item){
+                        $sold_qty = $term_item -> ti_original - ($term_item -> ti_udamaged +$term_item-> ti_rdamaged + $term_item -> ti_returned);
+                        $total_sale +=  $sold_qty * $term_item -> ti_price;
+                    }    
                 echo "$total_sale </p>
                 <p> Total Revenue: PHP " .($total_sale * 0.25) ."</p> 
                 <p> Total Expense: PHP $total_expense </p>

@@ -242,6 +242,9 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <div style="margin-left: 1%"> 
+                                    {{$og_terms->links()}} 
+                                </div>
                         </div>
                     </div>
 
@@ -305,6 +308,9 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <div style="margin-left: 1%"> 
+                                    {{$cd_terms->links()}} 
+                                </div>
                             </div>
                         </div>
                     

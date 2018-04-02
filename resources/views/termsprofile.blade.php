@@ -389,7 +389,7 @@
                                                                         {{$term_item -> supplier_name}}
                                                                     </td>
                                                                     <td>
-                                                                        &#8369;{{$term_item -> inventory_price + ($term_item -> inventory_price * 0.25)}}
+                                                                        &#8369;{{$term_item -> ti_price}}
                                                                     </td>
                                                                     <td>
                                                                         {{$term_item->ti_original}}
@@ -643,7 +643,7 @@
                                                             @foreach($term_items as $term_item)
                                                                 <?php $total_sale += 
                                                                 ($term_item->ti_original -($term_item->ti_udamaged + $term_item->ti_rdamaged + $term_item->ti_returned)) *
-                                                                ($term_item -> inventory_price + ($term_item -> inventory_price * 0.25)) ?>
+                                                                ($term_item -> ti_price) ?>
                                                             @endforeach
                                                         <h4 class="title">&#8369; {{$total_sale}}</h4>    
                                                             
@@ -734,11 +734,11 @@
                                                                         <td> 
                                                                             {{$x+=1}} </td>
                                                                         <td> 
-                                                                            {{$unpaid_customer -> customer_fname}} 
-                                                                            {{$unpaid_customer -> customer_mname}}. {{$unpaid_customer -> customer_lname}}
+                                                                            {{$unpaid_customer -> fname}} 
+                                                                            {{$unpaid_customer -> mname}}. {{$unpaid_customer -> lname}}
                                                                         </td>
                                                                         <td> 
-                                                                            {{$unpaid_customer -> customer_cnum}} 
+                                                                            {{$unpaid_customer -> cnum}} 
                                                                         </td>
                                                                         <td>
                                                                             &#8369;{{$unpaid_customer -> total_payable}}
@@ -760,7 +760,7 @@
                                                                         </td>
                                                                     </tr>
                                                                 @empty
-                                                                    <h3> No unpaid customers for this term</h3>
+                                                                    <h3 style="text-align: center"> No unpaid customers for this term</h3>
                                                                 @endforelse
                                                                 </tbody>
                                                             </table>
@@ -798,9 +798,9 @@
                                                                     <tr>
                                                                         <td>{{$paid_customer -> customer_id}}</td>
                                                                         <td>
-                                                                            {{$paid_customer -> customer_fname}}
-                                                                            {{$paid_customer -> customer_mname}}.
-                                                                            {{$paid_customer -> customer_lname}}
+                                                                            {{$paid_customer -> fname}}
+                                                                            {{$paid_customer -> mname}}.
+                                                                            {{$paid_customer -> lname}}
                                                                         </td>
                                                                         <td>
                                                                             {{$paid_customer -> co_collect_date}}
@@ -820,7 +820,7 @@
                                                                         </td>
                                                                     </tr>
                                                                     @empty
-                                                                        <h3> No paid customers for this term</h3>
+                                                                        <h3 style="text-align: center"> No paid customers for this term</h3>
                                                                     @endforelse
                                                                 </tbody>
                                                             </table>
@@ -1005,8 +1005,7 @@
                                             <select name="position" required class="form-control" id="position">
                                                 <option value="" selected="selected"></option>
                                                 <option value="1">Team Leader</option>
-                                                <option value="2">Permanent Staff</option>
-                                                <option value="3">Temporary Staff</option>  
+                                                <option value="2">Member</option> 
                                             </select>
                                             @if ($errors->addPeddler->has('position'))
                                                 <span class="help-block">
@@ -1102,8 +1101,7 @@
                                             <label class="sel1">Position:</label>
                                             <select name="edit_position" required class="form-control" id="edit_position" required>
                                                 <option value="1">Team Leader</option>
-                                                <option value="2">Permanent Staff</option>
-                                                <option value="3">Temporary Staff</option>  
+                                                <option value="2">Member</option>
                                             </select>
                                             @if ($errors->editPeddler->has('edit_position'))
                                                 <span class="help-block">
@@ -1452,7 +1450,7 @@
                                                 <option value="" selected> </option>
                                                 @foreach($term_items as $term_item)
                                                     <option value='{{$term_item -> ti_id}}'> 
-                                                        {{$term_item -> supplier_name}}: {{$term_item -> inventory_name}} &#8369; {{$term_item -> inventory_price + ($term_item -> inventory_price * 0.25)}}
+                                                        {{$term_item -> supplier_name}}: {{$term_item -> inventory_name}} &#8369; {{$term_item -> ti_price}}
                                                     </option>
                                                 @endforeach
                                             </select> 
@@ -1500,7 +1498,7 @@
                                 <div class="row form-group">
                                     <div class="{{ $errors->editItem->has('edit_item_udamages') ? ' has-error' : '' }}">
                                         <div class="col-md-4">  
-                                            <label class="sel1">Unrepairable Qty</label>
+                                            <label class="sel1">Irreparable Qty</label>
                                             <input class="form-control" type="number" id="edit_item_udamages" name="edit_item_udamages" value="{{ old('edit_item_udamages') }}">
                                             @if ($errors->editItem->has('edit_item_udamages'))
                                                 <span class="help-block">
@@ -1946,7 +1944,7 @@
                                     </div>
                                     <div class="{{ $errors->editCustomer->has('edit_gender') ? ' has-error' : '' }}">
                                             <div class="col-md-4">
-                                                <label for="sel1">Gender</label>
+                                                <label for="sel1">Sex</label>
                                                 <select class="form-control" name="edit_gender" required id="edit_gender">
                                                     <option value="" data-hidden="true"  
                                                         selected="selected">
@@ -2093,7 +2091,7 @@
                                     </div>
                                     <div class="{{ $errors->addCustomer->has('gender') ? ' has-error' : '' }}">
                                             <div class="col-md-4">
-                                                <label for="sel1">Gender</label>
+                                                <label for="sel1">Sex</label>
                                                 <select class="form-control" name="gender" required id="gender">
                                                     <option value="" data-hidden="true"  
                                                         selected="selected">
@@ -2148,7 +2146,7 @@
                                                     <option value="" selected> </option>
                                                     @foreach($term_items as $term_item)
                                                         <option value='{{$term_item->ti_id}}'> 
-                                                            {{$term_item -> supplier_name}}: {{$term_item -> inventory_name}} &#8369; {{$term_item -> inventory_price + ($term_item -> inventory_price * 0.25)}}
+                                                            {{$term_item -> supplier_name}}: {{$term_item -> inventory_name}} &#8369; {{($term_item -> ti_price)}}
                                                         </option>
                                                     @endforeach
                                                 </select> 
@@ -2290,7 +2288,7 @@
                     </center>
                 </div>
 
-                <form method="POST" action="/printItems/{{$term[0]->term_id}}">
+                <form method="POST" onsubmit="return genpdf()" action="/printItems/{{$term[0]->term_id}}">
                     {{csrf_field()}}
                     <div class="modal-body">
                         <div id="view-edit-content" class="row">
@@ -2310,7 +2308,7 @@
                         <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancel
                         </button>
 
-                        <button type="submit" class="btn btn-bg btn-success btn-fill">
+                        <button type="submit" id="gen-pdf" class="btn btn-bg btn-success btn-fill">
                         Generate PDF
                         </button> 
                     </div>
@@ -2331,7 +2329,7 @@
                     </center>
                 </div>
 
-                <form method="POST" action="/printSales/{{$term[0]->term_id}}">
+                <form method="POST" onsubmit="return genpdf()" action="/printSales/{{$term[0]->term_id}}">
                     {{csrf_field()}}
                     <div class="modal-body">
                         <div id="view-edit-content" class="row">
@@ -2569,6 +2567,8 @@
 
                 if ({!!count($errors->addPeddler)!!} > 0)
                     $("#addPeddler").modal(); 
+
+                
 
                 if({!!count($errors->editPeddler)!!} > 0)
                     $("#ep-{{ session()-> get( 'error_id' ) }}").click();
@@ -2915,11 +2915,11 @@
                             $('#purchased-items').empty();
 
                             // SET FORM INPUTS
-                            $('#edit_fname').val(response[0].customer_fname);
-                            $('#edit_mname').val(response[0].customer_mname);
-                            $('#edit_lname').val(response[0].customer_lname);
-                            $('#edit_gender').val(response[0].customer_gender);
-                            $('#edit_cnum').val(response[0].customer_cnum);
+                            $('#edit_fname').val(response[0].fname);
+                            $('#edit_mname').val(response[0].mname);
+                            $('#edit_lname').val(response[0].lname);
+                            $('#edit_gender').val(response[0].gender);
+                            $('#edit_cnum').val(response[0].cnum);
                             $('#edit_addr').val(response[0].customer_addr);
 
                             var i = 0;
@@ -2933,7 +2933,7 @@
                                                     +'name="edit_item_name[]" required>'+
                                                     '@foreach($term_items as $term_item)'+
                                                         '<option value="{{$term_item->ti_id}}">'+ 
-                                                            '{{$term_item -> supplier_name}}: {{$term_item -> inventory_name}} &#8369; {{$term_item -> inventory_price + ($term_item -> inventory_price * 0.25)}}'+
+                                                            '{{$term_item -> supplier_name}}: {{$term_item -> inventory_name}} &#8369; {{$term_item -> ti_price}}'+
                                                         '</option>'+
                                                     '@endforeach'+
                                                 '</select>'+
@@ -3208,6 +3208,15 @@
             }
             return overmax;
         }
+
+        function genpdf(){
+            if ({!!count($term_items)!!} == 0){
+                alert ("Error! Unable to print, no term items.");
+                return false;
+            }
+            else return true;
+        }
+
     </script>
 
     <script>

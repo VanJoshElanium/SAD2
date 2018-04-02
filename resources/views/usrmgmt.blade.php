@@ -257,9 +257,16 @@
                                                         </button>
                                                     </td>
                                                     <td>
-                                                        <button data-target="#removeModal" data-toggle="modal" data-id='{{$user->user_id}}' class="nv-collector del-btn btn btn-danger btn-fill">
-                                                            Remove
-                                                        </button>
+                                                        @if ($user->user_id != $curr_usr->user_id)
+                                                            <button data-target="#removeModal" data-toggle="modal" data-id='{{$user->user_id}}' class="nv-collector del-btn btn btn-danger btn-fill">
+                                                                
+                                                                    @if ($user->user_status == 0)
+                                                                        Set Active
+                                                                    @else Set Inactive
+                                                                    @endif
+                                                                
+                                                            </button>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                             @empty
@@ -345,7 +352,7 @@
                                     <div class="row form-group">
                                         <div class="{{ $errors->has('gender') ? ' has-error' : '' }}">
                                             <div class="col-md-5">
-                                                <label for="sel1">Gender</label>
+                                                <label for="sel1">Sex</label>
                                                 <select class="form-control" name="gender" required id="gender">
                                                     <option value="" data-hidden="true"  
                                                         selected="selected">
@@ -451,7 +458,9 @@
                                                     
                                                     <option data-hidden="true" value="" @if (old('user_type') == "") selected="selected" @endif></option>
 
-                                                    <option value="0"   @if (old('user_type') == 0) selected="selected" @endif>Administrator</option>
+                                                    @if($curr_usr->user_type == "Administrator")
+                                                        <option value="0"   @if (old('user_type') == 0) selected="selected" @endif>Administrator</option>
+                                                    @endif
 
                                                     <option  value="1"  @if (old('user_type') == 1) selected="selected" @endif>Owner</option>
 
@@ -554,7 +563,7 @@
                                     <div class="row form-group">
                                         <div class="{{ $errors->editUser->has('profile_gender') ? ' has-error' : '' }}">
                                             <div class="col-md-5">
-                                                <label for="sel1">Gender</label>
+                                                <label for="sel1">Sex</label>
                                                 <select class="form-control select" name="profile_gender" required id="profile_gender">
                                                     <option data-hidden="true" 
                                                          @if (old('profile_gender') == '')  
@@ -633,8 +642,10 @@
                                                     
                                                     <option data-hidden="true" value="" @if (old('profile_user_type') == "") selected="selected" @endif></option>
 
+                                                    @if($curr_usr->user_type == "Administrator")
                                                     <option value="0"   @if (old('profile_user_type') == 0) selected="selected" @endif>Administrator</option>
-
+                                                    @endif
+                                                    
                                                     <option  value="1"  @if (old('profile_user_type') == 1) selected="selected" @endif>Owner</option>
 
                                                     <option  value="2"  @if (old('profile_user_type') == 2) selected="selected" @endif>Collector</option>
@@ -748,7 +759,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Remove User</h4>
+                    <h4 class="modal-title">Change User Status</h4>
                 </div>
                      
                 <form method="POST" class="form-horizontal" id="removeUser_form">  
@@ -761,7 +772,7 @@
                                 <div class="row form-group">                       
                                     <div class=""> 
                                         <div class="col-md-12">   
-                                            You are about to change the status of this user to inactive. Do you want to proceed?
+                                            You are about to change the status of this user. Do you want to proceed?
                                         </div>
                                     </div>
                                 </div>
@@ -772,7 +783,7 @@
                     <div class="modal-footer">
                             <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancel</button>
                           <!--ADD New Term button-->
-                          <button type="submit" class="btn btn-bg btn-success btn-fill">Remove</button>   
+                          <button type="submit" class="btn btn-bg btn-success btn-fill">Yes</button>   
                     </div>
                 </form>
             </div>

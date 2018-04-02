@@ -44,7 +44,7 @@
                 sidebar.style.display = "block"; 
 
             //Current User => Collector
-            @elseif(\Auth::user() -> user_type == "Collector")
+            @elseif (\Auth::user() -> user_type == "Collector")
                 worker.style.display = "none";
                 collector.style.display = "block"; 
                 owner_admin.style.display = "none";
@@ -165,13 +165,13 @@
                             <p>Logs</p>
                         </a>
                     </li>
-                    
+                  <!--   
                     <li>
                         <a href="{{ route('logs') }}">
                             <i class="pe-7s-help1"></i>
                             <p>Help</p>
                         </a>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
         </div>

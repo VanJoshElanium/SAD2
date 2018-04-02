@@ -36,6 +36,22 @@
         .modal-title{
             text-align:center;
         }
+
+        .red-dot{
+            height: 15px;
+            width: 15px;
+            background-color: #801515;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .green-dot{
+            height: 15px;
+            width: 15px;
+            background-color: #1E6912;
+            border-radius: 50%;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
@@ -180,9 +196,9 @@
                                                 @if(count($suppliers)>0)
                                                 <th>#</th>
                                                 <th>Name</th>
-                                                <th>Address</th>
                                                 <th>E-Mail</th>
                                                 <th>Contact Number</th>
+                                                <th>Status</th>
                                                 @endif
                                             </tr>
                                         </thead>
@@ -192,9 +208,15 @@
                                                 <tr>    
                                                   <td>{{$x+=1}}</td>
                                                   <td>{{$supplier->supplier_name}}</td>
-                                                  <td>{{$supplier->supplier_addr}}</td>
                                                   <td>{{$supplier->supplier_email}}</td>
                                                   <td>{{$supplier->supplier_cnum}}</td>
+                                                  <td class="nv-collector">
+                                                        @if($supplier->supplier_status == 0)
+                                                        <span class="red-dot"></span>
+                                                        @else 
+                                                        <span class="green-dot"></span>
+                                                        @endif
+                                                    </td>
 
                                                   <!-- <td class="clickable-row" data-href="{{ route('supplies.show', ['supply' => $supplier->supplier_id]) }}">{{$supplier->supplier_id}}</td>
                                                   <td class="clickable-row" data-href="{{ route('supplies.show', ['supply' => $supplier->supplier_id]) }}">{{$supplier->supplier_name}}</td>
@@ -210,7 +232,10 @@
                                                    <!-- data-href="{{ route('supplies.show', ['supply' => $supplier->supplier_id]) }}" -->
                                                   <td>
                                                     <button data-target="#removeModal" data-toggle="modal" data-id='{{$supplier->supplier_id}}' class="del-btn btn btn-danger btn-fill">
-                                                        Remove
+                                                        @if($supplier->supplier_status == 0)
+                                                            Set Active
+                                                        @else Set Inactive
+                                                        @endif
                                                     </button>
                                                   </td>
                                                 </tr>
@@ -264,6 +289,35 @@
                                     </div>
                                 </div>    
 
+                                <div class="row form-group">   
+                                    <div class="{{$errors->has('supplier_owner') ? ' has-error' : ''}}"> 
+                                        <div class="col-md-6">    
+                                            <label>Owner's Name</label>
+                                            <input type="text" id="supplier_owner" class="form-control"  name="supplier_owner" value="{{old('supplier_owner')}}"> 
+                                            @if ($errors->has('supplier_owner'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{ $errors->first('supplier_owner') }}
+                                                    </strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="{{$errors->has('supplier_cp') ? ' has-error' : ''}}"> 
+                                        <div class="col-md-6">    
+                                            <label> Owner's Contact Number</label>
+                                            <input type="number" id="supplier_cp" class="form-control"  name="supplier_cp" value="{{old('supplier_cp')}}"> 
+                                            @if ($errors->has('supplier_cp'))
+                                                <span class="help-block">
+                                                    <strong>
+                                                        {{ $errors->first('supplier_cp') }}
+                                                    </strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div> 
+
                                 <div class="row form-group">
                                     <div class="{{$errors->has('supplier_addr') ? ' has-error' : ''}}"> 
                                         <div class="col-md-12"> 
@@ -299,8 +353,8 @@
                                 <div class="row form-group">
                                     <div class="{{ $errors->has('supplier_cnum') ? ' has-error' : '' }}">
                                         <div class="col-md-12">  
-                                            <label>Contact Number</label>
-                                            <input type="number" required name="supplier_cnum" id="supplier_cnum" class="form-control" value="{{ old('supplier_cnum') }}">
+                                            <label>Company Contact Number</label>
+                                            <input type="number" required name="supplier_cnum" id="supplier_cnum" class="form-control" value="{{ old('supplier_cnum') }}" >
                                                                                 
                                             @if ($errors->has('supplier_cnum'))
                                                 <span class="help-block">
@@ -341,7 +395,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Remove Supplier</h4>
+                    <h4 class="modal-title">Change Supplier Status</h4>
                 </div>
                      
                 <form method="POST" class="form-horizontal" id="removeSupplier">  
@@ -354,7 +408,7 @@
                                 <div class="row form-group">                       
                                     <div class=""> 
                                         <div class="col-md-12">   
-                                            You are about to remove a supplier. Do you want to proceed?
+                                            You are about to change the status a supplier. Do you want to proceed?
                                         </div>
                                     </div>
                                 </div>
@@ -365,7 +419,7 @@
                     <div class="modal-footer">
                             <button type="button" class="btn btn-bg btn-default" data-dismiss="modal">Cancel</button>
                           <!--ADD New Term button-->
-                          <button type="submit" class="btn btn-bg btn-success btn-fill">Remove</button>   
+                          <button type="submit" class="btn btn-bg btn-success btn-fill">Yes</button>   
                     </div>
                 </form>
             </div>
