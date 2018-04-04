@@ -245,7 +245,7 @@ class TermsProfileController extends Controller
                     -> join ('terms', 'term_id', '=', 'co_term_id')
                     -> join ('term_items', 'order_ti_id', '=', 'ti_id')
                     -> join ('inventories', 'ti_inventory_id', '=', 'inventory_id')
-                    -> select ('co_id', 'customers.*', 'profiles.*', (DB::raw('SUM((inventories.inventory_price + (inventories.inventory_price * 0.25)) * orders.order_qty) as total_payable')))
+                    -> select ('co_id', 'customers.*', 'profiles.*', (DB::raw('SUM((ti_price) * orders.order_qty) as total_payable')))
                     -> where ([
                         ['terms.term_status', '=', '1'],
                         ['terms.term_id', '=', $id],
