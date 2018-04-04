@@ -108,7 +108,7 @@ class CustomerController extends Controller
                                                 ['gender', '=', $input['gender']]
                                            ])
                             -> get();
-                if (!$profile){
+                if (!empty($profile)){
                     $profile = new Profile;
                     $profile -> fname = $input['fname'];
                     $profile -> mname = $input['mname'];
